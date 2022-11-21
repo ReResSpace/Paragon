@@ -1,18 +1,17 @@
 package com.paragon.impl.managers
 
 import com.paragon.impl.module.Module
+import com.paragon.impl.module.client.*
+import com.paragon.impl.module.combat.*
 import com.paragon.impl.module.hud.impl.*
 import com.paragon.impl.module.hud.impl.graphs.GraphCPS
 import com.paragon.impl.module.hud.impl.graphs.GraphFPS
 import com.paragon.impl.module.hud.impl.graphs.GraphPing
 import com.paragon.impl.module.hud.impl.graphs.GraphSpeed
-import com.paragon.impl.module.client.*
-import com.paragon.impl.module.combat.*
 import com.paragon.impl.module.misc.*
 import com.paragon.impl.module.movement.*
 import com.paragon.impl.module.render.*
 import net.minecraftforge.common.MinecraftForge
-import java.util.*
 import java.util.function.Predicate
 
 class ModuleManager {
@@ -107,6 +106,7 @@ class ModuleManager {
             OnDeath,
             RotationLock,
             TimerModule,
+            UnfocusedCPU,
             XCarry,
 
             // Client

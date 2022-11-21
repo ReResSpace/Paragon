@@ -1,10 +1,9 @@
 package com.paragon.mixins;
 
 import com.paragon.Paragon;
+import com.paragon.impl.event.render.GetFramerateLimitEvent;
 import com.paragon.impl.event.render.gui.GuiUpdateEvent;
-import com.paragon.impl.ui.menu.ParagonMenu;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.client.settings.GameSettings;
@@ -44,6 +43,13 @@ public class MixinMinecraft {
      */
     @Overwrite
     public int getLimitFramerate() {
+        GetFramerateLimitEvent event = new GetFramerateLimitEvent();
+        Paragon.INSTANCE.getEventBus().post(event);
+
+        if (event.isCancelled()) {
+            return event.getLimit();
+        }
+
         return world == null && this.currentScreen != null ? MathHelper.clamp(this.gameSettings.limitFramerate, 0, 240) : this.gameSettings.limitFramerate;
     }
 

@@ -15,6 +15,7 @@ Added:
   - A panel to the HUD editor
   - Blur module
   - NewChunks module
+  - UnfocusedCPU module
 
 Reworked:
   - Main Menu
