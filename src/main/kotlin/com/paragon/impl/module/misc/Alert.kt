@@ -7,9 +7,9 @@ import com.paragon.impl.event.combat.PlayerDeathEvent
 import com.paragon.impl.event.combat.TotemPopEvent
 import com.paragon.impl.managers.notifications.Notification
 import com.paragon.impl.managers.notifications.NotificationType
-import com.paragon.impl.module.annotation.Aliases
 import com.paragon.impl.module.Category
 import com.paragon.impl.module.Module
+import com.paragon.impl.module.annotation.Aliases
 import com.paragon.impl.module.hud.HUDModule
 import com.paragon.impl.setting.Setting
 import com.paragon.util.anyNull
@@ -254,6 +254,11 @@ object Alert : Module("Alert", Category.MISC, "Alerts you about certain events")
     }
 
     private fun lessThanThreshold(stack: ItemStack): Boolean {
+        // should fix [ArithmeticException] that was reported by ByUfo4
+        if (stack.maxDamage == 0) {
+            return false
+        }
+
         return ((1 - stack.itemDamage.toFloat() / stack.maxDamage.toFloat()) * 100).toInt() <= armourThreshold.value
     }
 
