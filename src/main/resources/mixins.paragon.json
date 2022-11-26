@@ -47,6 +47,7 @@
     "render.gui.MixinGuiScreen",
     "render.tileentity.MixinTileEntityRendererDispatcher",
     "render.world.MixinBlockModelRenderer",
+    "render.world.MixinParticleManager",
     "render.world.MixinRenderGlobal",
     "world.MixinWorld",
     "world.block.MixinBlock",

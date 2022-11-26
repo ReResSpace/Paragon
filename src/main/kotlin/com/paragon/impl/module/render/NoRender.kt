@@ -5,14 +5,18 @@ import com.paragon.impl.event.render.entity.RenderEatingEvent
 import com.paragon.impl.module.Module
 import com.paragon.impl.setting.Setting
 import com.paragon.bus.listener.Listener
+import com.paragon.impl.event.render.world.ParticleSpawnEvent
 import com.paragon.impl.module.Category
 import com.paragon.util.anyNull
+import net.minecraft.client.particle.*
 import net.minecraft.entity.passive.EntityBat
 import net.minecraft.init.SoundEvents
+import net.minecraft.util.EnumParticleTypes
 import net.minecraftforge.client.event.RenderBlockOverlayEvent
 import net.minecraftforge.client.event.RenderGameOverlayEvent
 import net.minecraftforge.client.event.RenderLivingEvent
 import net.minecraftforge.event.entity.PlaySoundAtEntityEvent
+import net.minecraftforge.event.world.ExplosionEvent
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 
 object NoRender : Module("NoRender", Category.RENDER, "Cancels rendering certain things") {
@@ -36,6 +40,18 @@ object NoRender : Module("NoRender", Category.RENDER, "Cancels rendering certain
     private val portal = Setting(
         "Portal", true
     ) describedBy "Cancel rendering the portal effect"
+
+    private val explosion = Setting(
+        "Explosions", true
+    ) describedBy "Cancel explosion particles"
+
+    private val firework = Setting(
+        "Fireworks", true
+    ) describedBy "Cancel firework particles"
+
+    private val totem = Setting(
+        "Totems", true
+    ) describedBy "Cancel totem pop particles"
 
     private val bats = Setting(
         "Bats", true
@@ -98,6 +114,15 @@ object NoRender : Module("NoRender", Category.RENDER, "Cancels rendering certain
         }
         if (water.value && event.overlayType == RenderBlockOverlayEvent.OverlayType.WATER) {
             event.isCanceled = true
+        }
+    }
+
+    @Listener
+    fun onParticleSpawn(event: ParticleSpawnEvent) {
+        when (event.particle) {
+            is ParticleExplosion, is ParticleExplosionHuge, is ParticleExplosionLarge -> if (explosion.value) event.cancel()
+            is ParticleFirework.Overlay, is ParticleFirework.Spark, is ParticleFirework.Starter -> if (firework.value) event.cancel()
+            is ParticleTotem -> if (totem.value) event.cancel()
         }
     }
 
