@@ -93,6 +93,10 @@ class Paragon {
         rotationManager = RotationManager()
         logger.info("RotationManager initialised")
 
+        tpsManager = TPSManager()
+        lagCompensator = LagCompensator()
+        logger.info("TPS Utilities initialised")
+
         // Load
 
         storageManager.loadModules("current")
@@ -183,6 +187,12 @@ class Paragon {
         private set
 
     lateinit var pluginManager: PluginManager
+        private set
+
+    lateinit var tpsManager: TPSManager
+        private set
+
+    lateinit var lagCompensator: LagCompensator
         private set
 
     // GUIs

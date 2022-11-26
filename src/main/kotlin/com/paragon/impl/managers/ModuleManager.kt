@@ -125,6 +125,8 @@ class ModuleManager {
             CustomText,
             Direction,
             FPS,
+            TPS,
+            CPS,
             GraphCPS,
             GraphFPS,
             GraphPing,

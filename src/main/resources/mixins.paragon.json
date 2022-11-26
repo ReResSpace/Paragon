@@ -40,6 +40,7 @@
     "render.entity.MixinRenderLivingBase",
     "render.entity.MixinRenderPlayer",
     "render.gui.MixinGuiChat",
+    "render.gui.MixinGuiConnecting",
     "render.gui.MixinGuiMainMenu",
     "render.gui.MixinGuiMultiplayer",
     "render.gui.MixinGuiNewChat",
