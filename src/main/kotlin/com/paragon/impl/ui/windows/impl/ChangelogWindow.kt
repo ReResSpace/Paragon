@@ -48,6 +48,16 @@ class ChangelogWindow(x: Float, y: Float, width: Float, height: Float, grabbable
             0.0
         ).toFloat()
 
+        if (ClickGUI.blur.value) {
+            BlurUtil.blur(
+                x,
+                y + grabbableHeight,
+                (width * openAnimation.getAnimationFactor()).toFloat(),
+                ((height - grabbableHeight) * openAnimation.getAnimationFactor()).toFloat(),
+                ClickGUI.intensity.value
+            )
+        }
+
         RenderUtil.drawRect(
             x,
             y + grabbableHeight,
@@ -55,16 +65,6 @@ class ChangelogWindow(x: Float, y: Float, width: Float, height: Float, grabbable
             ((height - grabbableHeight) * openAnimation.getAnimationFactor()).toFloat(),
             Color(0, 0, 0, 120)
         )
-
-        if (ClickGUI.blur.value) {
-            BlurUtil.blur(
-                x,
-                y + grabbableHeight,
-                (width * openAnimation.getAnimationFactor()).toFloat(),
-                ((height - grabbableHeight + 1) * openAnimation.getAnimationFactor()).toFloat(),
-                ClickGUI.intensity.value
-            )
-        }
 
         RenderUtil.drawRect(
             x,

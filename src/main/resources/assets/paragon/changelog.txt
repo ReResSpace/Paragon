@@ -19,6 +19,7 @@ Added:
   - Particle settings to NoRender
   - Added TPS HUD module
   - Added CPS HUD module
+  - Packet, UpdatedNCP, and Minis modes to Criticals
 
 Reworked:
   - Main Menu

@@ -17,6 +17,7 @@
     "accessor.IMapItemRenderer",
     "accessor.IMapItemRendererInstance",
     "accessor.IMinecraft",
+    "accessor.INetworkManager",
     "accessor.IPlayerControllerMP",
     "accessor.IRenderGlobal",
     "accessor.IRenderManager",
