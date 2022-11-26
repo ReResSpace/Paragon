@@ -20,6 +20,7 @@ Added:
   - Added TPS HUD module
   - Added CPS HUD module
   - Packet, UpdatedNCP, and Minis modes to Criticals
+  - AutoSable module
 
 Reworked:
   - Main Menu

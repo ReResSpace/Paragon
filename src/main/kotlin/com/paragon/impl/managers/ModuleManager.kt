@@ -89,6 +89,7 @@ class ModuleManager {
             AntiGhast,
             AntiHunger,
             AutoLog,
+            AutoSable,
             AutoTranslate,
             BookBot,
             Blink,
