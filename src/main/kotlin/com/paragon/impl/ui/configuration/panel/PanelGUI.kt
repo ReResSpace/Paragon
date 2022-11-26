@@ -1,6 +1,7 @@
 package com.paragon.impl.ui.configuration.panel
 
 import com.paragon.impl.module.Category
+import com.paragon.impl.module.client.ClickGUI
 import com.paragon.impl.ui.configuration.GuiImplementation
 import com.paragon.impl.ui.configuration.panel.impl.CategoryPanel
 import com.paragon.impl.ui.configuration.panel.impl.setting.BindElement
@@ -22,6 +23,7 @@ class PanelGUI : GuiImplementation() {
     val panels = arrayListOf<CategoryPanel>()
 
     private val searchAnimation = Animation(400f, false, Easing.CUBIC_IN_OUT)
+    var doSearch = false
     var search = ""
 
     init {
@@ -40,7 +42,7 @@ class PanelGUI : GuiImplementation() {
 
         Keyboard.enableRepeatEvents(true)
 
-        searchAnimation.state = search.isNotEmpty()
+        searchAnimation.state = doSearch || search.isNotEmpty()
 
         val rectWidth = max(12 + FontUtil.getStringWidth("Search") * 1.5, FontUtil.getStringWidth(search).toDouble() + 12).toFloat()
 
@@ -74,13 +76,17 @@ class PanelGUI : GuiImplementation() {
             it.keyTyped(typedChar, keyCode)
         }
 
-        if (!setting && !sub) {
+        if (keyCode == Keyboard.KEY_TAB) {
+            search = ""
+            doSearch = !doSearch
+        }
+
+        if (!setting && !sub && doSearch) {
             if (keyCode == Keyboard.KEY_BACK) {
                 if (search.isNotEmpty()) {
                     search = search.substring(0, search.length - 1)
                 }
             }
-
             else if (ChatAllowedCharacters.isAllowedCharacter(typedChar)) {
                 search += typedChar
             }

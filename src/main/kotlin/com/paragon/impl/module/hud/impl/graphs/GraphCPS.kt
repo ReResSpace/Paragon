@@ -46,26 +46,40 @@ object GraphCPS : HUDModule("CPSGraph", "Graph showing your Crystals per second"
         graph = Graph("CPS", backgroundColor::value, borderColor::value, graphColor::value, background::value)
     }
 
+    override fun onDisable() {
+        attackedCrystals = 0.0
+        actualACrystals = 0.0
+        timer.reset()
+        atimer.reset()
+    }
+
     private var attackedCrystals = 0.0
+    private var actualACrystals = 0.0
 
     val timer = Timer()
+    val atimer = Timer()
 
     override fun onTick() {
         if (minecraft.anyNull) {
             return
         }
 
+        if (atimer.hasMSPassed(1000.0)) {
+            attackedCrystals = actualACrystals
+            actualACrystals = 0.0
+            atimer.reset()
+        }
+
         if (timer.hasMSPassed(updateDelay.value)) {
             graph.update(attackedCrystals)
-            attackedCrystals = 0.0
             timer.reset()
         }
     }
 
     @Listener
     fun onPacket(event: PacketEvent.PostSend) {
-        if (event.packet is CPacketUseEntity && event.packet.getEntityFromWorld(minecraft.world) is EntityEnderCrystal) {
-            attackedCrystals++
+        if (event.packet is CPacketUseEntity && event.packet.action == CPacketUseEntity.Action.ATTACK &&  event.packet.getEntityFromWorld(minecraft.world) is EntityEnderCrystal) {
+            actualACrystals++
         }
     }
 
