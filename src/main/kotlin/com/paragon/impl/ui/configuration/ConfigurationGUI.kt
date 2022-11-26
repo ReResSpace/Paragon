@@ -5,8 +5,10 @@ import com.paragon.impl.module.client.ClickGUI
 import com.paragon.impl.module.client.ClickGUI.darkenBackground
 import com.paragon.impl.ui.util.Click
 import com.paragon.impl.ui.windows.Window
+import com.paragon.util.render.RenderUtil
 import net.minecraft.client.gui.GuiScreen
 import org.lwjgl.input.Mouse
+import java.awt.Color
 
 /**
  * @author Surge
@@ -47,7 +49,7 @@ class ConfigurationGUI : GuiScreen() {
         }
 
         if (darkenBackground.value) {
-            drawDefaultBackground()
+            RenderUtil.drawRect(0f, 0f, width.toFloat(), height.toFloat(), Color(0, 0, 0, 150))
         }
 
         currentGUI?.width = width.toFloat()

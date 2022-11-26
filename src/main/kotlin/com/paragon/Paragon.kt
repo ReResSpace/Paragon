@@ -5,7 +5,9 @@ import com.paragon.impl.event.EventFactory
 import com.paragon.impl.managers.*
 import com.paragon.impl.ui.configuration.ConfigurationGUI
 import com.paragon.impl.ui.configuration.GuiImplementation
+import com.paragon.impl.ui.configuration.discord.DiscordGUI
 import com.paragon.impl.ui.configuration.panel.PanelGUI
+import com.paragon.impl.ui.configuration.phobos.PhobosGUI
 import com.paragon.impl.ui.configuration.retrowindows.Windows98
 import com.paragon.impl.ui.console.Console
 import com.paragon.impl.ui.taskbar.Taskbar
@@ -20,7 +22,6 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
 import org.lwjgl.opengl.Display
-import org.lwjgl.opengl.PixelFormat
 import java.awt.Desktop
 import java.net.URI
 import javax.swing.JOptionPane
@@ -122,6 +123,12 @@ class Paragon {
         windows98GUI = Windows98()
         logger.info("Windows98 GUI Initialised")
 
+        phobosGUI = PhobosGUI()
+        logger.info("Phobos GUI Initialised")
+
+        discordGUI = DiscordGUI()
+        logger.info("Discord GUI Initialised")
+
         console = Console("Paragon Console", 400f, 300f)
         logger.info("Console Initialised")
 
@@ -200,9 +207,15 @@ class Paragon {
         private set
 
     lateinit var panelGUI: PanelGUI
-        //private set
+        private set
 
     lateinit var windows98GUI: Windows98
+        private set
+
+    lateinit var phobosGUI: PhobosGUI
+        private set
+
+    lateinit var discordGUI: DiscordGUI
         private set
 
     lateinit var configurationGUI: ConfigurationGUI

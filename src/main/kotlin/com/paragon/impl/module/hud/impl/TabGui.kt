@@ -7,7 +7,7 @@ import com.paragon.util.render.font.FontUtil
 import com.paragon.impl.module.hud.HUDModule
 import com.paragon.impl.module.client.ClickGUI
 import com.paragon.impl.module.client.Colours
-import com.paragon.impl.ui.configuration.discord.GuiDiscord
+import com.paragon.impl.ui.configuration.discord.DiscordGUI
 import com.paragon.impl.module.Category
 import com.paragon.util.calculations.Timer
 import com.paragon.util.render.RenderUtil
@@ -83,20 +83,20 @@ object TabGui : HUDModule("TabGui", "Gui with tabs or smth") {
 
             ClickGUI.Style.DISCORD -> {
                 RenderUtil.drawRoundedRect(
-                    x, y - 1f, (catWidth + FontUtil.getStringWidth("# ")), catHeight + 1f, 5f, GuiDiscord.channelBarBackground
+                    x, y - 1f, (catWidth + FontUtil.getStringWidth("# ")), catHeight + 1f, 5f, DiscordGUI.channelBarBackground
                 )
                 RenderUtil.drawRoundedRect(
-                    x, (y + ((FontUtil.getHeight() + 1F) * Category.values().indexOf(focusedCategory))) - 1f, (catWidth + FontUtil.getStringWidth("# ")), FontUtil.getHeight() + 2f, 3.5f, GuiDiscord.channelHoveredColor
+                    x, (y + ((FontUtil.getHeight() + 1F) * Category.values().indexOf(focusedCategory))) - 1f, (catWidth + FontUtil.getStringWidth("# ")), FontUtil.getHeight() + 2f, 3.5f, DiscordGUI.channelHoveredColor
                 )
 
 
                 if (focusedModule != null && shownModules != null) {
                     moduleY = y + ((FontUtil.getHeight() + 1F) * Category.values().indexOf(focusedCategory))
                     RenderUtil.drawRoundedRect(
-                        (x + catWidth + FontUtil.getStringWidth("# ")), moduleY, (moduleWidth + FontUtil.getStringWidth("# ")), moduleHeight + 2f, 5f, GuiDiscord.channelBarBackground
+                        (x + catWidth + FontUtil.getStringWidth("# ")), moduleY, (moduleWidth + FontUtil.getStringWidth("# ")), moduleHeight + 2f, 5f, DiscordGUI.channelBarBackground
                     )
                     RenderUtil.drawRoundedRect(
-                        (x + catWidth + FontUtil.getStringWidth("# ")), (moduleY + ((FontUtil.getHeight() + 1F) * shownModules!!.indexOf(focusedModule))), (moduleWidth + FontUtil.getStringWidth("# ")), FontUtil.getHeight(), 3.5f, GuiDiscord.channelHoveredColor
+                        (x + catWidth + FontUtil.getStringWidth("# ")), (moduleY + ((FontUtil.getHeight() + 1F) * shownModules!!.indexOf(focusedModule))), (moduleWidth + FontUtil.getStringWidth("# ")), FontUtil.getHeight(), 3.5f, DiscordGUI.channelHoveredColor
                     )
                 }
             }
@@ -135,7 +135,7 @@ object TabGui : HUDModule("TabGui", "Gui with tabs or smth") {
             var catY = y + 1F
             for (cat in Category.values()) {
                 FontUtil.drawStringWithShadow(
-                    "# ${StringUtil.getFormattedText(cat)}", x + 2F, catY, GuiDiscord.channelTextColor
+                    "# ${StringUtil.getFormattedText(cat)}", x + 2F, catY, DiscordGUI.channelTextColor
                 )
                 catY += FontUtil.getHeight() + 1F
             }
@@ -144,7 +144,7 @@ object TabGui : HUDModule("TabGui", "Gui with tabs or smth") {
                 var modY = moduleY + 1F
                 for (mod in shownModules!!) {
                     FontUtil.drawStringWithShadow(
-                        "# ${mod.name}", x + catWidth + 2F + FontUtil.getStringWidth("# "), modY, GuiDiscord.channelTextColor
+                        "# ${mod.name}", x + catWidth + 2F + FontUtil.getStringWidth("# "), modY, DiscordGUI.channelTextColor
                     )
                     modY += FontUtil.getHeight() + 1F
                 }

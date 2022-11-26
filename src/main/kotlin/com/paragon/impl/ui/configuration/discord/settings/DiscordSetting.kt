@@ -3,7 +3,7 @@ package com.paragon.impl.ui.configuration.discord.settings
 import com.paragon.impl.setting.Setting
 import com.paragon.util.render.font.FontUtil
 import com.paragon.impl.module.client.Colours
-import com.paragon.impl.ui.configuration.discord.GuiDiscord
+import com.paragon.impl.ui.configuration.discord.DiscordGUI
 import com.paragon.impl.ui.configuration.discord.IRenderable
 import com.paragon.util.render.RenderUtil
 import com.paragon.util.render.RenderUtil.scaleTo
@@ -22,7 +22,7 @@ abstract class DiscordSetting(val dSetting: Setting<*>) : IRenderable {
     override fun render(mouseX: Int, mouseY: Int) {
         if (bounds.contains(mouseX, mouseY)) {
             RenderUtil.drawRect(
-                bounds.x.toFloat(), bounds.y.toFloat(), bounds.width.toFloat(), bounds.height.toFloat(), GuiDiscord.msgHovered
+                bounds.x.toFloat(), bounds.y.toFloat(), bounds.width.toFloat(), bounds.height.toFloat(), DiscordGUI.msgHovered
             )
         }
 

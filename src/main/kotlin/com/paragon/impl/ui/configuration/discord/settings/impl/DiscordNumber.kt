@@ -8,7 +8,7 @@ import com.paragon.impl.setting.Setting
 import com.paragon.util.render.font.FontUtil
 import com.paragon.util.render.font.FontUtil.drawStringWithShadow
 import com.paragon.util.render.font.FontUtil.getStringWidth
-import com.paragon.impl.ui.configuration.discord.GuiDiscord
+import com.paragon.impl.ui.configuration.discord.DiscordGUI
 import com.paragon.impl.ui.configuration.discord.settings.DiscordSetting
 import com.paragon.impl.ui.util.Click
 import com.paragon.util.calculations.MathsUtil.getPercent
@@ -62,24 +62,24 @@ class DiscordNumber(private val setting: Setting<Number>) : DiscordSetting(setti
         //Render basic media background
         run {
             RenderUtil.drawRoundedRect(
-                mediaRect.x.toFloat(), mediaRect.y.toFloat(), mediaRect.width.toFloat(), mediaRect.height.toFloat(), 2.5f, GuiDiscord.mediaBackground
+                mediaRect.x.toFloat(), mediaRect.y.toFloat(), mediaRect.width.toFloat(), mediaRect.height.toFloat(), 2.5f, DiscordGUI.mediaBackground
             )
             RenderUtil.drawRoundedOutline(
-                mediaRect.x.toFloat(), mediaRect.y.toFloat(), mediaRect.width.toFloat(), mediaRect.height.toFloat(), 2.5f, 2f, GuiDiscord.mediaBackgroundBorder
+                mediaRect.x.toFloat(), mediaRect.y.toFloat(), mediaRect.width.toFloat(), mediaRect.height.toFloat(), 2.5f, 2f, DiscordGUI.mediaBackgroundBorder
             )
 
             drawStringWithShadow(
-                "${setting.name}.mp3", mediaRect.x + 5F, mediaRect.y + FontUtil.getHeight(), GuiDiscord.mediaTitle
+                "${setting.name}.mp3", mediaRect.x + 5F, mediaRect.y + FontUtil.getHeight(), DiscordGUI.mediaTitle
             )
             drawStringWithShadow(
-                size, mediaRect.x + 5F, mediaRect.y + (FontUtil.getHeight() * 2F), GuiDiscord.mediaSize
+                size, mediaRect.x + 5F, mediaRect.y + (FontUtil.getHeight() * 2F), DiscordGUI.mediaSize
             )
         }
 
         //Render basic slider background
         run {
             RenderUtil.drawRoundedRect(
-                lowerMediaRect.x.toFloat(), lowerMediaRect.y.toFloat(), lowerMediaRect.width.toFloat(), lowerMediaRect.height.toFloat(), 2.5f, GuiDiscord.mediaProgressBackground
+                lowerMediaRect.x.toFloat(), lowerMediaRect.y.toFloat(), lowerMediaRect.width.toFloat(), lowerMediaRect.height.toFloat(), 2.5f, DiscordGUI.mediaProgressBackground
             )
 
             drawStringWithShadow(
@@ -91,7 +91,7 @@ class DiscordNumber(private val setting: Setting<Number>) : DiscordSetting(setti
             )
 
             RenderUtil.drawRoundedRect(
-                sliderBounds.x.toFloat(), sliderBounds.y.toFloat(), sliderBounds.width - 1f, sliderBounds.height.toFloat(), 2f, GuiDiscord.mediaProgressbarBackground
+                sliderBounds.x.toFloat(), sliderBounds.y.toFloat(), sliderBounds.width - 1f, sliderBounds.height.toFloat(), 2f, DiscordGUI.mediaProgressbarBackground
             )
         }
 
@@ -103,7 +103,7 @@ class DiscordNumber(private val setting: Setting<Number>) : DiscordSetting(setti
                 // prevent funky rounded rect
                 MathHelper.clamp(
                     getPercentOf(getPercent((setting.value - setting.min).toDouble(), (setting.max - setting.min).toDouble()), sliderBounds.width - 1.0), 2.0, sliderBounds.width.toDouble() - 1f
-                ).toFloat(), sliderBounds.height.toFloat(), 2f, GuiDiscord.mediaProgress
+                ).toFloat(), sliderBounds.height.toFloat(), 2f, DiscordGUI.mediaProgress
             )
         }
 

@@ -3,7 +3,7 @@ package com.paragon.impl.ui.configuration.discord.settings
 import com.paragon.impl.module.client.ClickGUI
 import com.paragon.impl.setting.Bind
 import com.paragon.impl.setting.Setting
-import com.paragon.impl.ui.configuration.discord.GuiDiscord
+import com.paragon.impl.ui.configuration.discord.DiscordGUI
 import com.paragon.impl.ui.configuration.discord.IRenderable
 import com.paragon.impl.ui.configuration.discord.category.CategoryBar
 import com.paragon.impl.ui.configuration.discord.module.ModuleBar
@@ -39,7 +39,7 @@ object SettingsBar : IRenderable {
             toggleRect.setBounds(
                 ModuleBar.rect.x + ModuleBar.rect.width,
                 ModuleBar.rect.y,
-                GuiDiscord.baseRect.width - (CategoryBar.rect.width + ModuleBar.rect.width),
+                DiscordGUI.baseRect.width - (CategoryBar.rect.width + ModuleBar.rect.width),
                 if (ModuleBar.focusedModule != null) (FontUtil.getHeight() * 4).toInt() else 0,
             )
             toggleButton.setBounds(
@@ -53,7 +53,7 @@ object SettingsBar : IRenderable {
                 toggleRect.x,
                 toggleRect.y + toggleRect.height,
                 toggleRect.width,
-                GuiDiscord.baseRect.height - toggleRect.height
+                DiscordGUI.baseRect.height - toggleRect.height
             )
 
             if (rect.contains(mouseX, mouseY) && shownSettings.isNotEmpty()) {
@@ -61,8 +61,8 @@ object SettingsBar : IRenderable {
                 maxScrollOffset = Optional.of(
                     ((((lastRect.y + lastRect.height) - shownSettings[0].bounds.y) - rect.height) * -1) - 25
                 ).map { if (it > 0) 0 else it }.get()
-                val newOffset = scrollOffset + (GuiDiscord.dWheel / 7)
-                if (GuiDiscord.dWheel < 0) {
+                val newOffset = scrollOffset + (DiscordGUI.dWheel / 7)
+                if (DiscordGUI.dWheel < 0) {
                     scrollOffset = if (newOffset < maxScrollOffset) maxScrollOffset else newOffset
                 } else if (scrollOffset < 0) {
                     scrollOffset = if (newOffset > 0) 0 else newOffset
@@ -76,7 +76,7 @@ object SettingsBar : IRenderable {
         }
 
         RenderUtil.drawRect(
-            rect.x.toFloat(), rect.y.toFloat(), rect.width.toFloat(), rect.height.toFloat(), GuiDiscord.chatBackground
+            rect.x.toFloat(), rect.y.toFloat(), rect.width.toFloat(), rect.height.toFloat(), DiscordGUI.chatBackground
         )
 
         //Render module toggle button
@@ -89,21 +89,21 @@ object SettingsBar : IRenderable {
                     toggleRect.y.toFloat(),
                     toggleRect.width.toFloat(),
                     toggleRect.height.toFloat(),
-                    GuiDiscord.chatBackground
+                    DiscordGUI.chatBackground
                 )
                 RenderUtil.drawRect(
                     toggleRect.x + 10F,
                     toggleRect.y + (FontUtil.getHeight() * 3.2F),
                     toggleRect.width - 20F,
                     2F,
-                    GuiDiscord.mediaSize
+                    DiscordGUI.mediaSize
                 )
 
                 FontUtil.drawStringWithShadow(
                     ModuleBar.focusedModule!!.name,
                     toggleRect.x + 10F,
                     toggleRect.y + FontUtil.getHeight(),
-                    GuiDiscord.channelTextColor
+                    DiscordGUI.channelTextColor
                 )
 
                 RenderUtil.drawRoundedRect(
@@ -112,7 +112,7 @@ object SettingsBar : IRenderable {
                     toggleButton.width.toFloat(),
                     toggleButton.height.toFloat(),
                     toggleButton.height / 2f,
-                    GuiDiscord.channelHoveredColor
+                    DiscordGUI.channelHoveredColor
                 )
 
                 //Indicator whether the module is toggled or not

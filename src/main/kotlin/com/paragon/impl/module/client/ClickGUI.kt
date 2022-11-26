@@ -2,13 +2,11 @@ package com.paragon.impl.module.client
 
 import com.paragon.Paragon
 import com.paragon.impl.module.Category
-import com.paragon.impl.module.annotation.IgnoredByNotifications
 import com.paragon.impl.module.Module
+import com.paragon.impl.module.annotation.IgnoredByNotifications
 import com.paragon.impl.setting.Bind
 import com.paragon.impl.setting.Setting
 import com.paragon.impl.ui.configuration.GuiImplementation
-import com.paragon.impl.ui.configuration.discord.GuiDiscord
-import com.paragon.impl.ui.configuration.panel.PanelGUI
 import me.surge.animation.Easing
 import org.lwjgl.input.Keyboard
 
@@ -50,9 +48,10 @@ object ClickGUI : Module("ClickGUI", Category.CLIENT, "The ClickGUI of the clien
     val intensity = Setting("Intensity", 10f, 1f, 20f, 1f) describedBy "The intensity of the blur" subOf blur
 
     fun getGUI(): GuiImplementation = when (style.value) {
-        Style.PANEL -> PanelGUI()
+        Style.PANEL -> Paragon.INSTANCE.panelGUI
         Style.WINDOWS_98 -> Paragon.INSTANCE.windows98GUI
-        Style.DISCORD -> GuiDiscord
+        Style.DISCORD -> Paragon.INSTANCE.discordGUI
+        Style.PHOBOS -> Paragon.INSTANCE.phobosGUI
         Style.PLUGIN -> Paragon.INSTANCE.pluginGui ?: Paragon.INSTANCE.panelGUI
     }
 
@@ -73,14 +72,19 @@ object ClickGUI : Module("ClickGUI", Category.CLIENT, "The ClickGUI of the clien
         WINDOWS_98,
 
         /**
-         * Discord like gui
+         * Discord styled GUI
          */
         DISCORD,
 
         /**
+         * Phobos styled GUI
+         */
+        PHOBOS,
+
+        /**
          * The current plugin gui
          */
-        PLUGIN,
+        PLUGIN
     }
 
     enum class Icon {

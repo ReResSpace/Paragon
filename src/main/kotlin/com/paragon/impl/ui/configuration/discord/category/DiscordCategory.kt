@@ -2,7 +2,7 @@ package com.paragon.impl.ui.configuration.discord.category
 
 import com.paragon.impl.module.Category
 import com.paragon.impl.module.client.ClickGUI
-import com.paragon.impl.ui.configuration.discord.GuiDiscord
+import com.paragon.impl.ui.configuration.discord.DiscordGUI
 import com.paragon.impl.ui.configuration.discord.IRenderable
 import com.paragon.util.render.RenderUtil
 import com.paragon.util.render.RenderUtil.scaleTo
@@ -34,7 +34,7 @@ class DiscordCategory(val category: Category) : IRenderable {
         //Render the basic icon with its background
         run {
             @Suppress("IncorrectFormatting") RenderUtil.drawRoundedRect(
-                rect.x.toFloat(), rect.y.toFloat(), rect.width.toFloat(), rect.height.toFloat(), 15f, if (isHovered) GuiDiscord.channelBarBackground.brighter() else GuiDiscord.channelBarBackground
+                rect.x.toFloat(), rect.y.toFloat(), rect.width.toFloat(), rect.height.toFloat(), 15f, if (isHovered) DiscordGUI.channelBarBackground.brighter() else DiscordGUI.channelBarBackground
             )
 
             val scaleFac = rect.width / 20.0
@@ -52,7 +52,7 @@ class DiscordCategory(val category: Category) : IRenderable {
             )
 
             RenderUtil.drawRoundedRect(
-                (rect.x + rect.width) - 2f, (rect.centerY - (FontUtil.getHeight() / 2f)).toFloat(), getStringWidth(StringUtil.getFormattedText(category)) + 6f, FontUtil.getHeight(), 1f, GuiDiscord.categoryTextBackground
+                (rect.x + rect.width) - 2f, (rect.centerY - (FontUtil.getHeight() / 2f)).toFloat(), getStringWidth(StringUtil.getFormattedText(category)) + 6f, FontUtil.getHeight(), 1f, DiscordGUI.categoryTextBackground
             )
 
             drawStringWithShadow(
