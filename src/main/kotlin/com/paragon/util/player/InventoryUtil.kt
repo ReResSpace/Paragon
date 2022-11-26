@@ -1,6 +1,5 @@
 package com.paragon.util.player
 
-import com.paragon.mixins.accessor.IPlayerControllerMP
 import com.paragon.util.Wrapper
 import net.minecraft.block.Block
 import net.minecraft.item.Item
@@ -22,10 +21,10 @@ object InventoryUtil : Wrapper {
     fun getHandHolding(item: Item): EnumHand? {
         if (minecraft.player.heldItemMainhand.item === item) {
             return EnumHand.MAIN_HAND
-        }
-        else if (minecraft.player.heldItemOffhand.item === item) {
+        } else if (minecraft.player.heldItemOffhand.item === item) {
             return EnumHand.OFF_HAND
         }
+
         return null
     }
 

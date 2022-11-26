@@ -16,6 +16,9 @@ Added:
   - Blur module
   - NewChunks module
   - UnfocusedCPU module
+  - Particle settings to NoRender
+  - Added TPS HUD module
+  - Added CPS HUD module
 
 Reworked:
   - Main Menu
@@ -24,6 +27,7 @@ Reworked:
   - HoleESP module
   - AutoCrystal module
   - The style of most HUD modules
+  - Offhand module
 
 Changed:
   - Updated the style of the ShulkerViewer module

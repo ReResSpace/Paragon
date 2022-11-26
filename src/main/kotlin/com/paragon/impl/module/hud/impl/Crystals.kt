@@ -2,16 +2,11 @@ package com.paragon.impl.module.hud.impl
 
 import com.paragon.impl.module.client.Colours
 import com.paragon.impl.module.hud.HUDModule
-import com.paragon.util.render.ColourUtil.toColour
 import com.paragon.util.render.RenderUtil
-import com.paragon.util.render.RenderUtil.drawBorder
-import com.paragon.util.render.RenderUtil.drawRect
 import com.paragon.util.render.RenderUtil.renderItemStack
 import com.paragon.util.render.font.FontUtil
-import net.minecraft.client.renderer.GlStateManager
 import net.minecraft.init.Items
 import net.minecraft.item.ItemStack
-import net.minecraft.util.math.MathHelper
 import java.awt.Color
 
 object Crystals : HUDModule("Crystals", "Displays the amount of crystals in your inventory") {

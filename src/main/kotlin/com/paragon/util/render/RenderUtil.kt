@@ -259,15 +259,10 @@ object RenderUtil : Wrapper {
      * @param colour The colour of the rectangle
      */
     fun drawRoundedRect(x: Float, y: Float, width: Float, height: Float, radius: Float, colour: Color) {
-        GlStateManager.pushMatrix()
-        GlStateManager.disableTexture2D()
-        GlStateManager.enableBlend()
-        GlStateManager.tryBlendFuncSeparate(
-            GlStateManager.SourceFactor.SRC_ALPHA,
-            GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA,
-            GlStateManager.SourceFactor.ONE,
-            GlStateManager.DestFactor.ZERO
-        )
+        glPushMatrix()
+        glDisable(GL_TEXTURE_2D)
+        glEnable(GL_BLEND)
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
 
         roundedRectangleShader.colour = colour
         roundedRectangleShader.radius = radius
@@ -291,10 +286,9 @@ object RenderUtil : Wrapper {
 
         glUseProgram(0)
 
-        GlStateManager.enableAlpha()
-        GlStateManager.disableBlend()
-        GlStateManager.enableTexture2D()
-        GlStateManager.popMatrix()
+        glDisable(GL_BLEND)
+        glEnable(GL_TEXTURE_2D)
+        glPopMatrix()
     }
 
     /**
@@ -308,15 +302,10 @@ object RenderUtil : Wrapper {
      * @param colour The colour of the rectangle
      */
     fun drawRoundedOutline(x: Float, y: Float, width: Float, height: Float, radius: Float, thickness: Float, colour: Color) {
-        GlStateManager.pushMatrix()
-        GlStateManager.disableTexture2D()
-        GlStateManager.enableBlend()
-        GlStateManager.tryBlendFuncSeparate(
-            GlStateManager.SourceFactor.SRC_ALPHA,
-            GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA,
-            GlStateManager.SourceFactor.ONE,
-            GlStateManager.DestFactor.ZERO
-        )
+        glPushMatrix()
+        glDisable(GL_TEXTURE_2D)
+        glEnable(GL_BLEND)
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
 
         roundedOutlineShader.colour = colour
         roundedOutlineShader.radius = radius
@@ -341,10 +330,9 @@ object RenderUtil : Wrapper {
 
         glUseProgram(0)
 
-        GlStateManager.enableAlpha()
-        GlStateManager.disableBlend()
-        GlStateManager.enableTexture2D()
-        GlStateManager.popMatrix()
+        glDisable(GL_BLEND)
+        glEnable(GL_TEXTURE_2D)
+        glPopMatrix()
     }
 
     /**
@@ -739,15 +727,10 @@ object RenderUtil : Wrapper {
             return
         }
 
-        GlStateManager.depthMask(true)
-        GlStateManager.clear(GL_DEPTH_BUFFER_BIT)
-        GlStateManager.enableDepth()
-        GlStateManager.disableAlpha()
-        GlStateManager.pushMatrix()
+        glEnable(GL_DEPTH_TEST)
+        glEnable(GL_BLEND)
 
         minecraft.renderItem.zLevel = -150f
-
-        RenderHelper.enableGUIStandardItemLighting()
 
         minecraft.renderItem.renderItemAndEffectIntoGUI(itemStack, x.toInt(), y.toInt())
 
@@ -755,13 +738,13 @@ object RenderUtil : Wrapper {
             minecraft.renderItem.renderItemOverlays(minecraft.fontRenderer, itemStack, x.toInt(), y.toInt())
         }
 
-        RenderHelper.disableStandardItemLighting()
-
         minecraft.renderItem.zLevel = 0f
 
-        GlStateManager.popMatrix()
-        GlStateManager.disableDepth()
-        GlStateManager.depthMask(true)
+        glDisable(GL_BLEND)
+        glDisable(GL_DEPTH_TEST)
+
+        // ????
+        glDisable(GL_LIGHTING)
     }
 
     /**

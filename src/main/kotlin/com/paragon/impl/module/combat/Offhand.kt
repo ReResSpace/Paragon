@@ -1,20 +1,19 @@
 package com.paragon.impl.module.combat
 
-import com.paragon.impl.module.annotation.Aliases
-import com.paragon.impl.module.Module
-import com.paragon.impl.setting.Setting
 import com.paragon.impl.module.Category
+import com.paragon.impl.module.Module
+import com.paragon.impl.module.annotation.Aliases
 import com.paragon.impl.setting.Bind
-import com.paragon.impl.setting.Bind.Device
+import com.paragon.impl.setting.Setting
+import com.paragon.mixins.accessor.IEntityPlayerSP
 import com.paragon.util.anyNull
 import com.paragon.util.calculations.Timer
 import com.paragon.util.combat.CrystalUtil.getDamageToEntity
 import com.paragon.util.entity.EntityUtil
 import com.paragon.util.player.InventoryUtil
 import com.paragon.util.world.BlockUtil
-import net.minecraft.client.gui.inventory.GuiContainer
+import net.minecraft.client.gui.inventory.GuiInventory
 import net.minecraft.entity.item.EntityEnderCrystal
-import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.init.Items
 import net.minecraft.inventory.ClickType
 import net.minecraft.item.Item
@@ -27,229 +26,305 @@ import kotlin.math.floor
 
 /**
  * @author Surge
+ * @since 24/11/2022
  */
 @Aliases(["AutoTotem"])
-object Offhand : Module("Offhand", Category.COMBAT, "Manages the item in your offhand") {
+object Offhand : Module("Offhand", Category.COMBAT, "Automatically manages your offhand") {
 
-    private val item = Setting(
-        "Item", EnumItem.CRYSTAL
-    ) describedBy "The item to prioritise in your offhand"
+    // General settings
+    private val delay = Setting("Delay", 0.0, 0.0, 100.0, 1.0) describedBy "The delay between switching items"
 
-    private val fallback = Setting(
-        "Fallback", EnumItem.GAPPLE
-    ) describedBy "The item to fallback to if the priority item isn't found"
+    // Item settings
+    private val priority = Setting("Priority", EnumItem.CRYSTAL) describedBy "The item to prioritise"
+    private val fallback = Setting("Fallback", EnumItem.GAPPLE) describedBy "The item to swap to when we don't have the priority item"
 
-    private val keySwap = Setting(
-        "KeySwap", EnumItem.TOTEM
-    ) describedBy "Swap the item in your offhand when you press a key"
+    // Key swap settings
+    private val keySwap = Setting("KeySwap", EnumItem.TOTEM) describedBy "The item to switch to when we hold down a key"
+    private val keySwapKey = Setting("Key", Bind(0, Bind.Device.KEYBOARD)) subOf keySwap
+    private val keySwapOverrideSafety = Setting("OverrideSafety", false) describedBy "Ignore safety when holding the key" subOf keySwap
 
-    private val key = Setting(
-        "Key", Bind(0, Device.KEYBOARD)
-    ) describedBy "The key to press to swap the item in your offhand" subOf keySwap
+    // Gapple settings
+    private val dynamicGapple = Setting("DynamicGapple", DynamicGapple.SWORD) describedBy "When to switch to a gapple"
+    private val allowCrapple = Setting("AllowCrapple", false) describedBy "Whether to allow non enchanted golden apples" visibleWhen { dynamicGapple.value != DynamicGapple.NEVER || priority.value == EnumItem.GAPPLE || fallback.value == EnumItem.GAPPLE || keySwap.value == EnumItem.GAPPLE }
 
-    private val overrideSafety = Setting(
-        "OverrideSafety", false
-    ) describedBy "Override the safety check to swap the item in your offhand" subOf keySwap
+    // Safety settings
+    private val safety = Setting("Safety", true) describedBy "Switch to totems in certain scenarios"
+    private val health = Setting("Health", true) describedBy "Switch to a totem when your health is low" subOf safety
+    private val healthThreshold = Setting("HealthThreshold", 10f, 1f, 20f, 1f) describedBy "The health threshold" subOf safety visibleWhen { health.value }
+    private val falling = Setting("Falling", false) describedBy "Switch to a totem when falling" subOf safety
+    private val elytra = Setting("Elytra", false) describedBy "Switch to a totem when flying with an elytra" subOf safety
+    private val lethalCrystal = Setting("LethalCrystal", true) describedBy "Switch to a totem when there is a lethal crystal nearby" subOf safety
 
-    private val dynamicGapple = Setting(
-        "DynamicGapple", DynamicGapple.SWORD
-    ) describedBy "When to dynamically switch to a gapple"
+    // Anticheat settings
+    private val freezeMotion = Setting("FreezeMotion", false) describedBy "Stop motion whilst swapping"
+    private val strictSprint = Setting("StrictSprint", false) describedBy "Force the player to stop sprinting whilst swapping"
+    private val inventory = Setting("StrictInventory", Inventory.OPEN) describedBy "Spoof opening your inventory"
 
-    private val safety = Setting(
-        "Safety", true
-    ) describedBy "Switch to a totem in dangerous situations"
+    // Pause after fail settings
+    private val pauseAfterFail = Setting("PauseAfterFail", false) describedBy "Pause for a specified amount of ticks after failing to swap"
+    private val pauseFailThreshold = Setting("FailThreshold", 3.0, 1.0, 5.0, 1.0) describedBy "The amount of times you have to fail before pausing"
+    private val pauseTicks = Setting("Ticks", 1.0, 1.0, 5.0, 1.0) describedBy "The amount of ticks to pause for" subOf pauseAfterFail
 
-    private val health = Setting(
-        "Health", true
-    ) describedBy "Switch to a totem when you are low on health" subOf safety
+    // Delay timer
+    private val timer = Timer()
 
-    private val healthValue = Setting(
-        "HealthValue", 10f, 0f, 20f, 1f
-    ) describedBy "The health value for when to switch to a totem" subOf safety visibleWhen { health.value }
-
-    private val falling = Setting(
-        "Falling", true
-    ) describedBy "Switch to a totem when you are falling" subOf safety
-
-    private val elytra = Setting(
-        "Elytra", true
-    ) describedBy "Switch to a totem when you are flying" subOf safety
-
-    private val lava = Setting(
-        "Lava", true
-    ) describedBy "Switch to a totem when you are in lava" subOf safety
-
-    private val fire = Setting(
-        "Fire", false
-    ) describedBy "Switch to a totem when you are on fire" subOf safety
-
-    private val crystal = Setting(
-        "Crystal", true
-    ) describedBy "Switch to a totem when in vicinity of a potentially deadly crystal" subOf safety
-
-    private val delay = Setting(
-        "Delay", 5f, 0f, 200f, 1f
-    ) describedBy "The delay before switching items"
-
-    private val stopMotion = Setting(
-        "StopMotion", true
-    ) describedBy "Stop the player when swapping"
-
-    private val inventorySpoof = Setting(
-        "InventorySpoof", true
-    ) describedBy "Spoof opening your inventory"
-
-    private val swapTimer = Timer()
+    // Pause After Fail fields
+    private var checkOnNextTick = false
+    private var failedAttempts = 0
+    private var paused = 0
 
     override fun onTick() {
-        if (minecraft.anyNull || isPlayerDead(minecraft.player) || minecraft.currentScreen is GuiContainer || !swapTimer.hasMSPassed(delay.value.toDouble())) {
+        if (minecraft.anyNull) {
             return
         }
 
-        val item = getSwitchSlot()
+        // Gets the item we want to switch to
+        val item = getItem()
 
-        if (item == -1) {
+        if (checkOnNextTick) {
+            // If we haven't successfully swapped
+            if (minecraft.player.heldItemOffhand.item != item.item) {
+                failedAttempts++
+            } else {
+                timer.reset()
+            }
+        }
+
+        // Rest swapping
+        if (pauseAfterFail.value && failedAttempts >= pauseFailThreshold.value) {
+            paused++
+
+            if (paused < pauseTicks.value) {
+                return
+            }
+        }
+
+        // Successfully swapped
+        if (minecraft.player.heldItemOffhand.item == item.item) {
+            checkOnNextTick = false
+            failedAttempts = 0
+            paused = 0
             return
         }
 
-        if (stopMotion.value) {
+        // The item's slot
+        var slot = -1
+
+        // Iterate through inventory slots
+        for (i in 9..36) {
+            // Current slot stack
+            val itemInInv = minecraft.player.inventory.getStackInSlot(i)
+
+            // It is our item
+            if (itemInInv.item == item.item) {
+                // Check crapple status
+                if (item.item == Items.GOLDEN_APPLE && !allowCrapple.value && !itemInInv.hasEffect()) {
+                    continue
+                }
+
+                slot = i
+                break
+            }
+        }
+
+        // Delay hasn't passed, or we don't have a correct slot
+        if (!timer.hasMSPassed(delay.value) || slot == -1) {
+            return
+        }
+
+        // Spoof inventory
+        when (inventory.value) {
+            Inventory.PACKET -> {
+                minecraft.player.connection.sendPacket(CPacketEntityAction(minecraft.player, CPacketEntityAction.Action.OPEN_INVENTORY))
+            }
+
+            Inventory.OPEN -> {
+                minecraft.displayGuiScreen(GuiInventory(minecraft.player))
+            }
+
+            else -> {}
+        }
+
+        // The sprint state
+        var sprinting = false
+
+        if (strictSprint.value) {
+            // Set sprint state
+            sprinting = minecraft.player.isSprinting || (minecraft.player as IEntityPlayerSP).hookGetServerSprintState()
+
+            if (sprinting) {
+                // Force stop sprinting
+                minecraft.player.connection.sendPacket(CPacketEntityAction(minecraft.player, CPacketEntityAction.Action.STOP_SPRINTING))
+            }
+        }
+
+        // Freeze the player's X and Z motion
+        if (freezeMotion.value) {
             minecraft.player.setVelocity(0.0, minecraft.player.motionY, 0.0)
         }
 
-        if (inventorySpoof.value) {
-            minecraft.player.connection.sendPacket(
-                CPacketEntityAction(
-                    minecraft.player, CPacketEntityAction.Action.OPEN_INVENTORY
-                )
-            )
-        }
+        // Click on item slot
+        minecraft.playerController.windowClick(0, slot, 0, ClickType.PICKUP, minecraft.player)
 
-        swapOffhand(item)
+        // Click on offhand slot
+        minecraft.playerController.windowClick(0, 45, 0, ClickType.PICKUP, minecraft.player)
 
-        swapTimer.reset()
-    }
+        // We don't need to find a return slot
+        if (!minecraft.player.inventory.itemStack.isEmpty) {
+            var returnSlot = -1
 
-    private fun isPlayerDead(entity: EntityPlayer): Boolean {
-        return entity.isDead || entity.health <= 0
-    }
-
-    private fun getSwitchSlot(): Int {
-        var swapItem: Item
-
-        swapItem = if (InventoryUtil.getItemSlot(item.value.item) != -1) {
-            item.value.item
-        }
-        else {
-            fallback.value.item
-        }
-
-        var keyPressed = false
-
-        // isPressed() doesn't work :(
-        if (key.value.buttonCode != 0) {
-            keyPressed = when (key.value.device) {
-                Device.KEYBOARD -> Keyboard.isKeyDown(key.value.buttonCode)
-                Device.MOUSE -> Mouse.isButtonDown(key.value.buttonCode)
-            }
-        }
-
-        if (shouldDynamicGapple()) {
-            swapItem = Items.GOLDEN_APPLE
-        }
-
-        if (keyPressed) {
-            swapItem = keySwap.value.item
-        }
-
-        if (safety.value && InventoryUtil.getItemSlot(Items.TOTEM_OF_UNDYING) > -1 && shouldApplySafety()) {
-            swapItem = Items.TOTEM_OF_UNDYING
-        }
-
-        if (keyPressed && overrideSafety.value) {
-            swapItem = keySwap.value.item
-        }
-
-        return if (minecraft.player.heldItemOffhand.item == swapItem) {
-            -1
-        }
-        else {
-            InventoryUtil.getItemSlot(swapItem)
-        }
-    }
-
-    private fun shouldApplySafety(): Boolean {
-        if (crystal.value) {
-            var deadlyCrystals = 0
-
-            minecraft.world.loadedEntityList.stream().filter { it.getDistance(minecraft.player) <= 6 }.forEach {
-                if (it is EntityEnderCrystal && it.getDamageToEntity(minecraft.player) > EntityUtil.getEntityHealth(minecraft.player)) {
-                    deadlyCrystals++
+            for (i in 9 until 36) {
+                // The slot is empty
+                // TODO: Allow stack merging
+                if (minecraft.player.inventoryContainer.inventory[i].isEmpty) {
+                    returnSlot = i
+                    break
                 }
             }
 
-            if (deadlyCrystals > 0) {
-                return true
+            if (returnSlot != -1) {
+                // Click on return slot
+                minecraft.playerController.windowClick(0, returnSlot, 0, ClickType.PICKUP, minecraft.player);
+                minecraft.playerController.updateController();
             }
         }
 
-        return health.value && EntityUtil.getEntityHealth(minecraft.player) <= healthValue.value || falling.value && minecraft.player.fallDistance >= 3 || elytra.value && minecraft.player.isElytraFlying || lava.value && minecraft.player.isInLava || fire.value && minecraft.player.isBurning
+        if (sprinting) {
+            // Start sprinting again
+            minecraft.player.connection.sendPacket(CPacketEntityAction(minecraft.player, CPacketEntityAction.Action.START_SPRINTING))
+        }
+
+        // Spoof closing inventory
+        when (inventory.value) {
+            Inventory.PACKET -> {
+                minecraft.player.connection.sendPacket(CPacketCloseWindow(minecraft.player.inventoryContainer.windowId))
+            }
+
+            Inventory.OPEN -> {
+                minecraft.displayGuiScreen(null)
+            }
+
+            else -> {}
+        }
+
+        // Make us check the offhand on the next tick
+        checkOnNextTick = true
     }
 
-    private fun shouldDynamicGapple(): Boolean {
-        if (dynamicGapple.value == DynamicGapple.NEVER) {
-            return false
+    private fun getItem(): EnumItem {
+        // Whether we are in a dangerous situation
+        val safety = shouldApplySafety()
+
+        // Whether we are holding down our key swap key
+        // This will return false if we need to apply safety and are not wanting to override safety...
+        val keySwap = shouldApplyKeySwap(safety)
+
+        // ...therefore, we don't have to check safety here
+        if (keySwap) {
+            return this.keySwap.value
         }
 
-        if ((dynamicGapple.value == DynamicGapple.SWORD || dynamicGapple.value == DynamicGapple.BOTH) && InventoryUtil.isHoldingSword) {
-            return true
+        // Return totem if we need to apply safety
+        if (safety) {
+            return EnumItem.TOTEM
         }
 
-        if ((dynamicGapple.value == DynamicGapple.HOLE || dynamicGapple.value == DynamicGapple.BOTH) && BlockUtil.isSafeHole(
-                BlockPos(
-                    floor(minecraft.player.posX), floor(minecraft.player.posY), floor(minecraft.player.posZ)
-                ), true
-            )
-        ) {
-            return true
+        // We want to swap to a gapple
+        if (dynamicGapple.value != DynamicGapple.NEVER && when (dynamicGapple.value) {
+                DynamicGapple.SWORD -> {
+                    // Self-explanatory
+                    InventoryUtil.isHoldingSword
+                }
+
+                DynamicGapple.HOLE -> {
+                    // The floored position is a safe hole
+                    BlockUtil.isSafeHole(BlockPos(floor(minecraft.player.posX), floor(minecraft.player.posY), floor(minecraft.player.posZ)), true)
+                }
+
+                else -> {
+                    // Holding sword or in safe hole
+                    InventoryUtil.isHoldingSword || BlockUtil.isSafeHole(BlockPos(floor(minecraft.player.posX), floor(minecraft.player.posY), floor(minecraft.player.posZ)), true)
+                }
+            }) {
+
+            // Whether we:
+            // A. Have a gapple
+            // B. Want to allow crapples and such
+            var hasValidGapple = false
+
+            for (i in 9..35) {
+                val itemInInv = minecraft.player.inventory.getStackInSlot(i)
+
+                if (itemInInv.item === EnumItem.GAPPLE.item) {
+                    // crapple checking
+                    if (!allowCrapple.value && !itemInInv.hasEffect()) {
+                        continue
+                    }
+
+                    hasValidGapple = true
+                    break
+                }
+            }
+
+            if (hasValidGapple) {
+                return EnumItem.GAPPLE
+            }
+        }
+
+        // If we do not have the priority item in our inventory, and the current item in our offhand isn't the priority item
+        if (InventoryUtil.getCountOfItem(priority.value.item, hotbarOnly = false, ignoreHotbar = true) == 0 && minecraft.player.heldItemOffhand.item != priority.value.item) {
+            return fallback.value
+        }
+
+        return priority.value
+    }
+
+    private fun shouldApplySafety(): Boolean {
+        if (safety.value) {
+            // Health is below threshold
+            if (health.value && EntityUtil.getEntityHealth(minecraft.player) <= healthThreshold.value) {
+                return true
+            }
+
+            // We are falling
+            if (falling.value && minecraft.player.fallDistance >= 3) {
+                return true
+            }
+
+            // We are flying
+            if (elytra.value && minecraft.player.isElytraFlying) {
+                return true
+            }
+
+            // We are in the vicinity of a lethal crystal
+            if (lethalCrystal.value && minecraft.world.loadedEntityList.filterIsInstance<EntityEnderCrystal>().any { it.getDamageToEntity(minecraft.player) >= EntityUtil.getEntityHealth(minecraft.player) }) {
+                return true
+            }
         }
 
         return false
     }
 
-    private fun swapOffhand(slot: Int) {
-        val window = minecraft.player.inventoryContainer.windowId
+    private fun shouldApplyKeySwap(safetyIn: Boolean): Boolean {
+        var keyPressed = false
 
-        minecraft.playerController.windowClick(window, slot, 0, ClickType.PICKUP, minecraft.player)
-        minecraft.playerController.windowClick(window, 45, 0, ClickType.PICKUP, minecraft.player)
-
-        var returnSlot = -1
-
-        for (i in 1 until minecraft.player.inventoryContainer.inventory.size) {
-            if (minecraft.player.inventoryContainer.inventory[i].isEmpty) {
-                returnSlot = i
-                break
+        // isPressed() doesn't work :(
+        if (keySwapKey.value.buttonCode != 0) {
+            keyPressed = when (keySwapKey.value.device) {
+                Bind.Device.KEYBOARD -> Keyboard.isKeyDown(keySwapKey.value.buttonCode)
+                Bind.Device.MOUSE -> Mouse.isButtonDown(keySwapKey.value.buttonCode)
             }
         }
 
-        // the slot should now be free since it is now in our offhand - Cubic
-        if(returnSlot == -1){
-            returnSlot = slot
+        if (keyPressed) {
+            if (safetyIn && !keySwapOverrideSafety.value) {
+                return false
+            }
+
+            return true
         }
 
-        // the slot got occupied in the meantime - Cubic
-        if(!minecraft.player.inventory.getStackInSlot(returnSlot).isEmpty){
-            returnSlot = -1
-        }
-
-        if (returnSlot != -1) {
-            minecraft.playerController.windowClick(window, slot, 0, ClickType.PICKUP, minecraft.player)
-        }
-
-        minecraft.playerController.updateController()
-
-        if (inventorySpoof.value && minecraft.connection != null) {
-            minecraft.connection?.sendPacket(CPacketCloseWindow(window))
-        }
+        return false
     }
 
     enum class EnumItem(val item: Item) {
@@ -289,6 +364,23 @@ object Offhand : Module("Offhand", Category.COMBAT, "Manages the item in your of
          * Never switch to gapples
          */
         NEVER
+    }
+
+    enum class Inventory {
+        /**
+         * Do not spoof opening the inventory
+         */
+        NONE,
+
+        /**
+         * Packet spoof
+         */
+        PACKET,
+
+        /**
+         * Actually open the GUI for less than a tick
+         */
+        OPEN
     }
 
 }

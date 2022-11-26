@@ -1,14 +1,11 @@
 package com.paragon.impl.event.network
 
 import com.paragon.bus.event.CancellableEvent
-import net.minecraft.client.multiplayer.ServerData
 
-open class ServerEvent(private val serverData: ServerData) : CancellableEvent() {
-    fun getServerData(): ServerData {
-        return serverData
-    }
+open class ServerEvent : CancellableEvent() {
 
-    class Connect(val state: State, serverData: ServerData) : ServerEvent(serverData)
+    class Connect(val state: State) : ServerEvent()
+
     enum class State {
         /**
          * Called before the connection attempt
@@ -27,15 +24,9 @@ open class ServerEvent(private val serverData: ServerData) : CancellableEvent() 
         FAILED
     }
 
-    class Disconnect(forced: Boolean, serverData: ServerData) :
-        ServerEvent(serverData) {
+    class Disconnect(forced: Boolean) : ServerEvent() {
         /**
-         * @return Whether or not the connection was forcefully closed
-         */
-        /**
-         * Whether or not the connection was forcefully closed. True if the
-         * server called for the client to be disconnected. False if the
-         * client manually disconnected through [GuiIngameMenu].
+         * @return Whether the connection was forcefully closed
          */
         val isForced: Boolean = forced
 

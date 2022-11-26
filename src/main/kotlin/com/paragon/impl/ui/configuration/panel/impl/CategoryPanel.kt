@@ -75,13 +75,9 @@ class CategoryPanel(val gui: PanelGUI?, val category: Category, x: Float, y: Flo
         scroll = MathHelper.clamp(scroll.toDouble(), -max(0.0, totalHeight - moduleHeight), 0.0).toFloat() * expanded.getAnimationFactor().toFloat()
         real = MathHelper.clamp(real.toDouble(), -max(0.0, totalHeight - moduleHeight), 0.0).toFloat() * expanded.getAnimationFactor().toFloat()
 
-        RenderUtil.pushScissor(x, y, width, height)
-
         RenderUtil.scaleTo(x + 5, y + 5.5f, 0f, 1.25, 1.25, 1.25) {
             FontUtil.drawStringWithShadow(StringUtil.getFormattedText(category), x + 5, y + 5.5f, Color.WHITE)
         }
-
-        RenderUtil.popScissor()
 
         moduleHeight = MathHelper.clamp(getFilteredModules().sumOf { it.getAbsoluteHeight().toDouble() }, 0.0, maxHeight) * expanded.getAnimationFactor()
 

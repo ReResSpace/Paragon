@@ -4,13 +4,11 @@ import com.paragon.Paragon
 import com.paragon.impl.module.Category
 import com.paragon.impl.ui.configuration.panel.impl.CategoryPanel
 import com.paragon.impl.ui.util.Click
-import com.paragon.util.render.BlurUtil
 import com.paragon.util.render.RenderUtil
 import net.minecraft.client.gui.GuiScreen
 import net.minecraft.client.gui.ScaledResolution
-import net.minecraft.client.renderer.GlStateManager
 import org.lwjgl.input.Mouse
-import java.awt.Color
+import org.lwjgl.opengl.GL11.glColor4f
 import java.io.IOException
 
 /**
@@ -22,12 +20,14 @@ class HUDEditorGUI : GuiScreen() {
     private val panel = CategoryPanel(null, Category.HUD, 200f, 20f, 80f, 22f, 200.0)
 
     override fun drawScreen(mouseX: Int, mouseY: Int, partialTicks: Float) {
+        super.drawScreen(mouseX, mouseY, partialTicks)
+
         val scaledResolution = ScaledResolution(mc)
 
-        RenderUtil.drawRect(0f, 0f, scaledResolution.scaledWidth.toFloat(), scaledResolution.scaledHeight.toFloat(), Color(0, 0, 0, 180))
+        //RenderUtil.drawRect(0f, 0f, scaledResolution.scaledWidth.toFloat(), scaledResolution.scaledHeight.toFloat(), Color(0, 0, 0, 180))
 
-        RenderUtil.drawRect(scaledResolution.scaledWidth / 2f - 0.5f, 0f, 1f, scaledResolution.scaledHeight.toFloat(), Color(255, 255, 255, 100))
-        RenderUtil.drawRect(0f, scaledResolution.scaledHeight / 2f - 0.5f, scaledResolution.scaledWidth.toFloat(), 1f, Color(255, 255, 255, 100))
+        //RenderUtil.drawRect(scaledResolution.scaledWidth / 2f - 0.5f, 0f, 1f, scaledResolution.scaledHeight.toFloat(), Color(255, 255, 255, 100))
+        //RenderUtil.drawRect(0f, scaledResolution.scaledHeight / 2f - 0.5f, scaledResolution.scaledWidth.toFloat(), 1f, Color(255, 255, 255, 100))
 
         Paragon.INSTANCE.moduleManager.getModulesThroughPredicate { it is HUDModule && it.animation.getAnimationFactor() > 0 }.forEach {
             (it as HUDModule).updateComponent(mouseX, mouseY)
@@ -37,9 +37,8 @@ class HUDEditorGUI : GuiScreen() {
             }
         }
 
+        glColor4f(1f, 1f, 1f, 1f)
         panel.draw(mouseX.toFloat(), mouseY.toFloat(), Mouse.getDWheel())
-
-        super.drawScreen(mouseX, mouseY, partialTicks)
     }
 
     @Throws(IOException::class)

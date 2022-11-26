@@ -13,6 +13,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class MixinGuiConnecting extends GuiScreen {
     @Inject(method = "connect", at = @At("HEAD"))
     private void onPreConnect(CallbackInfo info) {
-        Paragon.INSTANCE.getEventBus().post(new ServerEvent.Connect(ServerEvent.Connect.State.PRE, this.mc.getCurrentServerData()));
+        Paragon.INSTANCE.getEventBus().post(new ServerEvent.Connect(ServerEvent.Connect.State.PRE));
     }
 }

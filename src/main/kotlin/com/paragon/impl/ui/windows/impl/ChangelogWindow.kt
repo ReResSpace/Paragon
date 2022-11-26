@@ -40,7 +40,7 @@ class ChangelogWindow(x: Float, y: Float, width: Float, height: Float, grabbable
     override fun draw(mouseX: Int, mouseY: Int, mouseDelta: Int) {
         super.draw(mouseX, mouseY, mouseDelta)
 
-        val changelogHeight = changelog.size * FontUtil.getHeight() * 0.8
+        val changelogHeight = changelog.size * FontUtil.getHeight()
 
         scroll = MathHelper.clamp(
             scroll.toDouble(),
@@ -100,7 +100,7 @@ class ChangelogWindow(x: Float, y: Float, width: Float, height: Float, grabbable
                 FontUtil.drawStringWithShadow(it, x + 5, y + offset + scroll, Color.WHITE)
             }
 
-            offset += FontUtil.getHeight() * 0.8f
+            offset += FontUtil.getHeight()
         }
 
         RenderUtil.popScissor()

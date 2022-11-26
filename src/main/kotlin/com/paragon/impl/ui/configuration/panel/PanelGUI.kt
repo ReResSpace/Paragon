@@ -30,7 +30,7 @@ class PanelGUI : GuiImplementation() {
         var x = 30f
 
         Category.values().forEach {
-            panels.add(CategoryPanel(this, it, x, 25f, 90f, 22f))
+            panels.add(CategoryPanel(this, it, x, 25f, 90f, 22f, 360.0))
             x += 95f
         }
     }
