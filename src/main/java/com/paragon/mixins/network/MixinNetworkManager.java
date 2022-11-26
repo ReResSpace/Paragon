@@ -3,7 +3,6 @@ package com.paragon.mixins.network;
 import com.paragon.Paragon;
 import com.paragon.impl.event.network.PacketEvent;
 import com.paragon.impl.event.network.ServerEvent;
-import com.paragon.util.Wrapper;
 import io.netty.channel.ChannelHandlerContext;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.NetworkManager;
@@ -12,7 +11,6 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import scala.xml.PrettyPrinter;
 
 import java.util.Objects;
 
