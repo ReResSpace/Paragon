@@ -4,6 +4,8 @@ import com.paragon.impl.module.Category
 import com.paragon.impl.module.Module
 import com.paragon.impl.module.annotation.NotVisibleByDefault
 import com.paragon.impl.module.hud.impl.HUDEditor
+import com.paragon.impl.setting.Setting
+import com.paragon.util.render.font.FontUtil
 import com.paragon.util.roundToNearest
 import net.minecraft.client.gui.ScaledResolution
 import net.minecraftforge.fml.relauncher.Side
@@ -15,6 +17,8 @@ import net.minecraftforge.fml.relauncher.SideOnly
 @SideOnly(Side.CLIENT)
 @NotVisibleByDefault
 abstract class HUDModule(name: String, description: String) : Module(name, Category.HUD, description) {
+
+    val alignment = Setting("Alignment", FontUtil.Align.LEFT) describedBy "Align text HUDs"
 
     open var width = 50F
     open var height = 50F
@@ -55,7 +59,11 @@ abstract class HUDModule(name: String, description: String) : Module(name, Categ
     }
 
     fun mouseClicked(mouseX: Int, mouseY: Int, mouseButton: Int): Boolean {
-        if (isHovered(x, y, width, height, mouseX, mouseY)) {
+        if (isHovered(x - when (alignment.value) {
+                FontUtil.Align.CENTER -> width / 2f
+                FontUtil.Align.RIGHT -> width
+                else -> 0f
+            }, y, width, height, mouseX, mouseY)) {
             if (mouseButton == 0) {
                 lastX = mouseX - x
                 lastY = mouseY - y
@@ -66,6 +74,10 @@ abstract class HUDModule(name: String, description: String) : Module(name, Categ
                     toggle()
                     return true
                 }
+            }
+            else if (mouseButton == 2) {
+                alignment.setValue(alignment.nextMode)
+                return true
             }
         }
         return false

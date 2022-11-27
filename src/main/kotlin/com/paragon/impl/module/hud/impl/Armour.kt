@@ -1,8 +1,10 @@
 package com.paragon.impl.module.hud.impl
 
+import com.paragon.impl.module.client.Colours
 import com.paragon.impl.setting.Setting
 import com.paragon.impl.module.hud.HUDModule
 import com.paragon.util.render.RenderUtil.renderItemStack
+import com.paragon.util.render.font.FontUtil
 import com.paragon.util.world.BlockUtil.getBlockAtPos
 import net.minecraft.client.Minecraft
 import net.minecraft.init.Blocks
@@ -41,7 +43,7 @@ object Armour : HUDModule("Armour", "Displays your armour on screen") {
             val scaleFactor = 1 / 0.75f
 
             // Render the damage percentage
-            Minecraft.getMinecraft().fontRenderer.drawStringWithShadow(itemDamage.toString(), (x + xSpacing + 9 - minecraft.fontRenderer.getStringWidth(itemDamage.toString()) / 2) * scaleFactor, y * scaleFactor, -1)
+            FontUtil.drawStringWithShadow(itemDamage.toString(), (x + xSpacing + 9 - minecraft.fontRenderer.getStringWidth(itemDamage.toString()) / 2) * scaleFactor, y * scaleFactor, Colours.mainColour.value, alignment.value)
             glScalef(scaleFactor, scaleFactor, scaleFactor)
             xSpacing += 18f
         }

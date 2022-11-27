@@ -11,7 +11,7 @@ import kotlin.math.roundToInt
 object Coordinates : HUDModule("Coordinates", "Displays your coordinates") {
 
     override fun render() {
-        drawStringWithShadow(text, x, y, Colours.mainColour.value)
+        drawStringWithShadow(text, x, y, Colours.mainColour.value, alignment.value)
     }
 
     override var width: Float

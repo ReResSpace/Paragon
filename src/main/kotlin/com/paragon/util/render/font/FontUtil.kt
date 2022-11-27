@@ -43,21 +43,32 @@ object FontUtil : Wrapper {
         )
     }
 
-    fun drawString(text: String, x: Float, y: Float, color: Color) {
+    fun drawString(text: String, x: Float, y: Float, color: Color, alignment: Align = Align.LEFT) {
         if (ClientFont.isEnabled) {
-            font.drawString(text, x, y - 2.5f, color, false)
+            font.drawString(text, x, y - 2.5f, color, false, alignment)
         } else {
+            val x = x - when (alignment) {
+                Align.LEFT -> 0f
+                Align.CENTER -> getStringWidth(text) / 2f
+                Align.RIGHT -> getStringWidth(text)
+            }
             mc.fontRenderer.drawString(text, x, y, color.rgb, false)
         }
     }
 
     @JvmStatic
-    fun drawStringWithShadow(text: String, x: Float, y: Float, colour: Color) {
+    fun drawStringWithShadow(text: String, x: Float, y: Float, colour: Color, alignment: Align = Align.LEFT) {
         // font = FontRenderer(getFont("font"))
 
         if (ClientFont.isEnabled) {
-            font.drawStringWithShadow(text, x, y - 2.5f, colour)
+            font.drawStringWithShadow(text, x, y - 2.5f, colour, alignment)
             return
+        }
+
+        val x = x - when (alignment) {
+            Align.LEFT -> 0f
+            Align.CENTER -> getStringWidth(text) / 2f
+            Align.RIGHT -> getStringWidth(text)
         }
 
         if (text.contains(System.lineSeparator())) {
@@ -76,11 +87,11 @@ object FontUtil : Wrapper {
         minecraft.fontRenderer.drawStringWithShadow(text, x, y, colour.rgb)
     }
 
-    fun drawCenteredY(text: String, x: Float, y: Float, color: Color, dropShadow: Boolean) {
+    fun drawCenteredY(text: String, x: Float, y: Float, color: Color, dropShadow: Boolean, alignment: Align = Align.LEFT) {
         if (dropShadow) {
-            drawStringWithShadow(text, x, y - (getHeight() / 2), color)
+            drawStringWithShadow(text, x, y - (getHeight() / 2), color, alignment)
         } else {
-            drawString(text, x, y - (getHeight() / 2), color)
+            drawString(text, x, y - (getHeight() / 2), color, alignment)
         }
     }
 
@@ -254,6 +265,10 @@ object FontUtil : Wrapper {
                 e.printStackTrace()
             }
         }
+    }
+
+    enum class Align {
+        LEFT, CENTER, RIGHT
     }
 
     enum class Icon(val char: Char) {

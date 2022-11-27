@@ -21,7 +21,7 @@ object CustomText : HUDModule("CustomText", "Display custom text of your choice!
     ) describedBy "The colour of the text"
 
     override fun render() {
-        FontUtil.drawStringWithShadow(text.value, x, y, textColour.value)
+        FontUtil.drawStringWithShadow(text.value, x, y, textColour.value, alignment.value)
     }
 
     override var width = FontUtil.getStringWidth(text.value)
