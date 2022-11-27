@@ -2,11 +2,13 @@ package com.paragon.impl.ui.configuration.panel
 
 import com.paragon.impl.module.Category
 import com.paragon.impl.module.client.ClickGUI
+import com.paragon.impl.module.client.Colours
 import com.paragon.impl.ui.configuration.GuiImplementation
 import com.paragon.impl.ui.configuration.panel.impl.CategoryPanel
 import com.paragon.impl.ui.configuration.panel.impl.setting.BindElement
 import com.paragon.impl.ui.configuration.panel.impl.setting.StringElement
 import com.paragon.impl.ui.util.Click
+import com.paragon.util.mc
 import com.paragon.util.render.RenderUtil
 import com.paragon.util.render.font.FontUtil
 import me.surge.animation.Animation
@@ -26,6 +28,8 @@ class PanelGUI : GuiImplementation() {
     var doSearch = false
     var search = ""
 
+    companion object { var description = "" }
+
     init {
         var x = 30f
 
@@ -36,9 +40,17 @@ class PanelGUI : GuiImplementation() {
     }
 
     override fun drawScreen(mouseX: Int, mouseY: Int, mouseDelta: Int) {
+        description = ""
+        val sr = ScaledResolution(mc)
+
+        FontUtil.drawStringWithShadow("TAB to open Search", 3f, sr.scaledHeight - FontUtil.getHeight() - 4f, Color.WHITE)
+
         panels.reversed().forEach {
             it.draw(mouseX.toFloat(), mouseY.toFloat(), mouseDelta)
         }
+
+        if (description.isNotEmpty())
+            FontUtil.drawCenteredString(description, sr.scaledWidth/2f, 3f, Colours.mainColour.value, false)
 
         Keyboard.enableRepeatEvents(true)
 
