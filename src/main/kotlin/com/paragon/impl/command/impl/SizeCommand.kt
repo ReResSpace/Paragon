@@ -1,6 +1,8 @@
 package com.paragon.impl.command.impl
 
 import com.paragon.Paragon
+import com.paragon.impl.command.Command
+import com.paragon.impl.command.syntax.SyntaxBuilder
 import com.paragon.impl.managers.notifications.Notification
 import com.paragon.impl.managers.notifications.NotificationType
 import com.paragon.impl.module.hud.impl.Notifications
@@ -12,7 +14,7 @@ import net.minecraft.network.PacketBuffer
 /**
  * @author EBS
  */
-object SizeCommand : com.paragon.impl.command.Command("Size", "size") {
+object SizeCommand : Command("Size", SyntaxBuilder()) {
 
     override fun whenCalled(args: Array<String>, fromConsole: Boolean) {
         val stack = Minecraft.getMinecraft().player.heldItemMainhand

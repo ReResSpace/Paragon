@@ -1,6 +1,7 @@
 package com.paragon.mixins.render.gui;
 
 import com.paragon.Paragon;
+import com.paragon.impl.event.render.gui.RenderChatGuiEvent;
 import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
@@ -19,9 +20,15 @@ public abstract class MixinGuiChat extends GuiScreen {
 
     @Inject(method = "drawScreen", at = @At("HEAD"))
     public void hookDrawScreen(int mouseX, int mouseY, float partialTicks, CallbackInfo ci) {
-        if (Keyboard.isKeyDown(Keyboard.KEY_UP) && ! Paragon.INSTANCE.getCommandManager().getLastCommand().isEmpty()) {
+        if (Keyboard.isKeyDown(Keyboard.KEY_UP) && !Paragon.INSTANCE.getCommandManager().getLastCommand().isEmpty()) {
             this.inputField.setText(Paragon.INSTANCE.getCommandManager().getLastCommand());
         }
+    }
+
+    @Inject(method = "drawScreen", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiTextField;drawTextBox()V", shift = At.Shift.BEFORE))
+    public void hookDrawScreenTail(int mouseX, int mouseY, float partialTicks, CallbackInfo ci) {
+        RenderChatGuiEvent event = new RenderChatGuiEvent(inputField.getText());
+        Paragon.INSTANCE.getEventBus().post(event);
     }
 
 }

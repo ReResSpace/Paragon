@@ -2,7 +2,6 @@ package com.paragon.impl.managers
 
 import com.paragon.Paragon
 import com.paragon.impl.command.impl.*
-import com.paragon.impl.module.misc.ChatModifications
 import com.paragon.util.Wrapper
 import net.minecraft.util.text.TextComponentString
 import net.minecraft.util.text.TextFormatting.*
@@ -16,11 +15,11 @@ import java.util.*
  */
 class CommandManager : Wrapper {
 
-    private val prefix = "$"
+    val prefix = "$"
     var lastCommand = ""
 
     val commands = arrayListOf(
-        ConfigCommand, CopySkinCommand, HelpCommand, OpenFolderCommand, SaveMapCommand, SocialCommand, SyntaxCommand, SizeCommand, NearestStronghold
+        ConfigCommand, CopySkinCommand, HelpCommand, OpenFolderCommand, SaveMapCommand, FriendCommand, SyntaxCommand, SizeCommand, NearestStronghold
     )
 
     val commonPrefixes = listOf("/", ".", "*", ";", ",") as MutableList<String>

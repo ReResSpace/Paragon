@@ -1,6 +1,9 @@
 package com.paragon.impl.command.impl
 
 import com.paragon.Paragon
+import com.paragon.impl.command.Command
+import com.paragon.impl.command.syntax.Argument
+import com.paragon.impl.command.syntax.SyntaxBuilder
 import com.paragon.impl.managers.notifications.Notification
 import com.paragon.impl.managers.notifications.NotificationType
 import java.io.File
@@ -8,7 +11,10 @@ import java.io.File
 /**
  * @author Surge
  */
-object ConfigCommand : com.paragon.impl.command.Command("Config", "config [load/save] [name]") {
+object ConfigCommand : Command("Config", SyntaxBuilder()
+        .addArgument(Argument("action", arrayOf("save", "load")))
+        .addArgument(Argument("name", arrayOf("any_str")))
+) {
 
     override fun whenCalled(args: Array<String>, fromConsole: Boolean) {
         if (args.size == 2) {
