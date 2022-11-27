@@ -17,7 +17,6 @@ import net.minecraftforge.common.ForgeVersion
 import net.minecraftforge.fml.common.Mod
 import net.minecraftforge.fml.common.Mod.EventHandler
 import net.minecraftforge.fml.common.event.FMLInitializationEvent
-import net.minecraftforge.fml.common.event.FMLPostInitializationEvent
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
@@ -66,12 +65,6 @@ class Paragon {
 
         commandManager = CommandManager()
         logger.info("CommandManager initialised")
-
-        pluginManager = PluginManager()
-        logger.info("PluginManager initialised")
-
-        pluginManager.onLoad()
-        logger.info("Plugins loaded")
 
         // Misc client stuff
 
@@ -138,11 +131,6 @@ class Paragon {
         logger.info("Paragon $modVersion Initialised Successfully")
     }
 
-    @EventHandler
-    fun postInit(event: FMLPostInitializationEvent) {
-        pluginManager.onPostLoad()
-    }
-
     companion object {
         const val modName = "Paragon"
         const val modID = "paragon"
@@ -191,9 +179,6 @@ class Paragon {
         private set
 
     lateinit var capeManager: CapeManager
-        private set
-
-    lateinit var pluginManager: PluginManager
         private set
 
     lateinit var tpsManager: TPSManager
