@@ -1,13 +1,18 @@
 package com.paragon.impl.command.impl
 
 import com.paragon.Paragon
+import com.paragon.impl.command.Command
+import com.paragon.impl.command.syntax.Argument
+import com.paragon.impl.command.syntax.SyntaxBuilder
 import com.paragon.util.system.TextureUtil
 import net.minecraft.util.ResourceLocation
 
 /**
  * @author SooStrator1136
  */
-object CopySkinCommand : com.paragon.impl.command.Command("CopySkin", "copyskin <player>") {
+object CopySkinCommand : Command("CopySkin", SyntaxBuilder()
+        .addArgument(Argument("name", arrayOf("any_str")))
+) {
 
     var skin: ResourceLocation? = null
 

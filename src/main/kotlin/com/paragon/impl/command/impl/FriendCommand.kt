@@ -1,12 +1,18 @@
 package com.paragon.impl.command.impl
 
 import com.paragon.Paragon
+import com.paragon.impl.command.Command
+import com.paragon.impl.command.syntax.Argument
+import com.paragon.impl.command.syntax.SyntaxBuilder
 import net.minecraft.util.text.TextFormatting
 
 /**
  * @author Surge
  */
-object SocialCommand : com.paragon.impl.command.Command("Social", "social [add/remove/list] [name] [add - relationship]") {
+object FriendCommand : Command("Friend", SyntaxBuilder()
+        .addArgument(Argument("action", arrayOf("add", "remove", "list")))
+        .addArgument(Argument("name", arrayOf("any_str"), arrayOf(Pair("action", "list"))))
+) {
 
     override fun whenCalled(args: Array<String>, fromConsole: Boolean) {
         if (args.size == 1 && args[0].equals("list", ignoreCase = true)) {

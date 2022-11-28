@@ -1,23 +1,23 @@
 package com.paragon.impl.module.combat
 
 import com.paragon.Paragon
-import com.paragon.impl.event.network.PacketEvent
-import com.paragon.impl.module.Module
-import com.paragon.impl.setting.Setting
-import com.paragon.util.render.ColourUtil.integrateAlpha
 import com.paragon.bus.listener.Listener
+import com.paragon.impl.event.network.PacketEvent
 import com.paragon.impl.managers.notifications.Notification
 import com.paragon.impl.managers.notifications.NotificationType
 import com.paragon.impl.managers.rotation.Rotate
 import com.paragon.impl.managers.rotation.Rotation
 import com.paragon.impl.managers.rotation.RotationPriority
-import com.paragon.impl.module.annotation.Aliases
 import com.paragon.impl.module.Category
+import com.paragon.impl.module.Module
+import com.paragon.impl.module.annotation.Aliases
+import com.paragon.impl.setting.Setting
 import com.paragon.mixins.accessor.IPlayerControllerMP
 import com.paragon.util.anyNull
 import com.paragon.util.player.InventoryUtil
 import com.paragon.util.player.PlacementUtil
 import com.paragon.util.player.RotationUtil
+import com.paragon.util.render.ColourUtil.integrateAlpha
 import com.paragon.util.render.builder.RenderBuilder
 import com.paragon.util.world.BlockUtil
 import com.paragon.util.world.BlockUtil.getBlockAtPos
@@ -166,12 +166,14 @@ object Surround : Module("Surround", Category.COMBAT, "Automatically surrounds y
 
     override fun onRender3D() {
         surroundPositions.forEach {
-            RenderBuilder().boundingBox(BlockUtil.getBlockBox(it)).inner(renderColour.value).outer(renderColour.value.integrateAlpha(255f))
-
+            RenderBuilder()
+                .boundingBox(BlockUtil.getBlockBox(it))
+                .inner(renderColour.value)
+                .outer(renderColour.value.integrateAlpha(255f))
                 .start()
-
-                .blend(true).texture(true).depth(true)
-
+                .blend(true)
+                .texture(true)
+                .depth(true)
                 .build(false)
         }
     }

@@ -1,11 +1,13 @@
 package com.paragon.impl.command.impl
 
 import com.paragon.Paragon
+import com.paragon.impl.command.Command
+import com.paragon.impl.command.syntax.SyntaxBuilder
 
 /**
  * @author EBS
  */
-object NearestStronghold : com.paragon.impl.command.Command("Nearest", "nearest") {
+object NearestStronghold : Command("Nearest", SyntaxBuilder()) {
 
     private val endPortalCoords = arrayOf(
         intArrayOf(1888, -32), intArrayOf(-560, 1504), intArrayOf(2064, -4400), intArrayOf(-4992, -512), intArrayOf(2960, 4208), intArrayOf(-3200, 4480), intArrayOf(-5568, 608), intArrayOf(-2496, 5296)
