@@ -30,12 +30,12 @@ object LagNotifier : HUDModule("LagNotifier", "Tells you when the server is lagg
         slide.state = lastPacketTimer.hasMSPassed(threshold.value)
 
         if (minecraft.currentScreen is HUDEditorGUI) {
-            FontUtil.drawStringWithShadow("Server has been lagging for [sec]s", x, y, Colours.mainColour.value)
+            FontUtil.drawStringWithShadow("Server has been lagging for [sec]s", x, y, Colours.mainColour.value, alignment.value)
         } else {
             if (slide.getAnimationFactor() > 0) {
                 RenderUtil.pushScissor(x, y, width, height + 2)
 
-                FontUtil.drawStringWithShadow(getText() + "s", x, y - (height * (1 - slide.getAnimationFactor())).toFloat(), Colours.mainColour.value)
+                FontUtil.drawStringWithShadow(getText() + "s", x, y - (height * (1 - slide.getAnimationFactor())).toFloat(), Colours.mainColour.value, alignment.value)
 
                 RenderUtil.popScissor()
             }

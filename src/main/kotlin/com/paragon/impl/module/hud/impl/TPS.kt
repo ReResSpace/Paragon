@@ -15,7 +15,7 @@ object TPS : HUDModule("TPS", "Display server's TPS") {
         tpsBuffer.add(Paragon.INSTANCE.lagCompensator.tickRate)
         newTpsBuffer.add(Paragon.INSTANCE.tpsManager.tickRate)
 
-        FontUtil.drawStringWithShadow(getText(), x, y, Colours.mainColour.value)
+        FontUtil.drawStringWithShadow(getText(), x, y, Colours.mainColour.value, alignment.value)
     }
 
     override var width = FontUtil.getStringWidth(getText())

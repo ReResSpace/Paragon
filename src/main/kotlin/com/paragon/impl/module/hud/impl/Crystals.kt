@@ -18,7 +18,7 @@ object Crystals : HUDModule("Crystals", "Displays the amount of crystals in your
         renderItemStack(itemStack, x + width - 18, y + 2.5f, false)
 
         val crystals = crystals
-        FontUtil.drawStringWithShadow(crystals.toString(), x + width - FontUtil.getStringWidth(crystals.toString()) - 3, y + height - FontUtil.getHeight() - 1, Color.WHITE)
+        FontUtil.drawStringWithShadow(crystals.toString(), x + width - FontUtil.getStringWidth(crystals.toString()) - 3, y + height - FontUtil.getHeight() - 1, Color.WHITE, alignment.value)
 
         RenderUtil.drawRoundedOutline(x, y, width, height, 5f, 1f, Colours.mainColour.value)
     }

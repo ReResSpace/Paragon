@@ -10,6 +10,7 @@ import java.awt.Color
 import java.awt.Font
 import kotlin.math.min
 import kotlin.random.Random
+import com.paragon.util.render.font.FontUtil.Align
 
 /**
  * @author Cosmos, Surge
@@ -31,11 +32,11 @@ class FontRenderer(font: Font) : Wrapper {
     val size: Int
         get() = defaultFont.font.size
 
-    fun drawStringWithShadow(text: String, x: Float, y: Float, colour: Color): Int {
-        return drawString(text, x, y, colour, true)
+    fun drawStringWithShadow(text: String, x: Float, y: Float, colour: Color, alignment: Align = Align.LEFT): Int {
+        return drawString(text, x, y, colour, true, alignment)
     }
 
-    fun drawString(text: String, x: Float, y: Float, colour: Color, dropShadow: Boolean): Int {
+    fun drawString(text: String, x: Float, y: Float, colour: Color, dropShadow: Boolean, alignment: Align = Align.LEFT): Int {
         val alpha = colour.alpha.coerceAtLeast(5)
 
         if (text.contains("\n")) {
@@ -55,22 +56,28 @@ class FontRenderer(font: Font) : Wrapper {
         }
 
         if (dropShadow) {
-            drawText(text, x + 0.6f, y + 0.6f, Color(0, 0, 0, min(alpha, 150)), true)
+            drawText(text, x + 0.6f, y + 0.6f, Color(0, 0, 0, min(alpha, 150)), true, alignment)
         }
 
-        return drawText(text, x, y, colour, false)
+        return drawText(text, x, y, colour, false, alignment)
     }
 
-    private fun drawText(text: String?, x: Float, y: Float, colour: Color, ignoreColor: Boolean): Int {
+    private fun drawText(text: String?, x: Float, y: Float, colour: Color, ignoreColor: Boolean, alignment: Align = Align.LEFT): Int {
         if (text == null) {
             return 0
         }
 
-        if (text.isEmpty()) {
-            return x.toInt()
+        val _x = x - when(alignment) {
+            Align.LEFT -> 0.0
+            Align.CENTER -> getStringWidth(text) / 2.0
+            Align.RIGHT -> getStringWidth(text).toDouble()
         }
 
-        GlStateManager.translate(x.toDouble(), y.toDouble(), 0.0)
+        if (text.isEmpty()) {
+            return _x.toInt()
+        }
+
+        GlStateManager.translate(_x, y.toDouble(), 0.0)
         GlStateManager.enableAlpha()
         GlStateManager.enableBlend()
         GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0)
@@ -141,9 +148,9 @@ class FontRenderer(font: Font) : Wrapper {
 
         glDisable(GL_LINE_SMOOTH)
         GlStateManager.disableBlend()
-        GlStateManager.translate(-x.toDouble(), -y.toDouble(), 0.0)
+        GlStateManager.translate(-_x, -y.toDouble(), 0.0)
 
-        return x.toInt()
+        return _x.toInt()
     }
 
     fun getStringWidth(text: String): Int {

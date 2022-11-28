@@ -25,7 +25,7 @@ object Totems : HUDModule("Totems", "Displays the amount of totems in your inven
         renderItemStack(ItemStack(Items.TOTEM_OF_UNDYING, getTotemAmount()), x + 2.5f, y + 2.5f, false)
 
         val totems = getTotemAmount()
-        FontUtil.drawStringWithShadow(totems.toString(), x + width - FontUtil.getStringWidth(totems.toString()) - 3, y + height - FontUtil.getHeight() - 1, Color.WHITE)
+        FontUtil.drawStringWithShadow(totems.toString(), x + width - FontUtil.getStringWidth(totems.toString()) - 3, y + height - FontUtil.getHeight() - 1, Color.WHITE, alignment.value)
 
         drawRoundedOutline(x, y, width, height, 5f, 1f, Colours.mainColour.value)
     }
