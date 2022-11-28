@@ -5,10 +5,12 @@ import com.paragon.impl.module.Category
 import com.paragon.impl.ui.configuration.panel.impl.CategoryPanel
 import com.paragon.impl.ui.util.Click
 import com.paragon.util.render.RenderUtil
+import com.paragon.util.render.font.FontUtil
 import net.minecraft.client.gui.GuiScreen
 import net.minecraft.client.gui.ScaledResolution
 import org.lwjgl.input.Mouse
 import org.lwjgl.opengl.GL11.glColor4f
+import java.awt.Color
 import java.io.IOException
 
 /**
@@ -28,6 +30,11 @@ class HUDEditorGUI : GuiScreen() {
 
         //RenderUtil.drawRect(scaledResolution.scaledWidth / 2f - 0.5f, 0f, 1f, scaledResolution.scaledHeight.toFloat(), Color(255, 255, 255, 100))
         //RenderUtil.drawRect(0f, scaledResolution.scaledHeight / 2f - 0.5f, scaledResolution.scaledWidth.toFloat(), 1f, Color(255, 255, 255, 100))
+
+        // mc font renderer does not work with \n
+        FontUtil.drawStringWithShadow("Hold Left Click to drag", 3f, scaledResolution.scaledHeight - FontUtil.getHeight() * 3f - 4, Color.WHITE)
+        FontUtil.drawStringWithShadow("Middle Click to align (left/center/right)", 3f, scaledResolution.scaledHeight - FontUtil.getHeight() * 2f - 4, Color.WHITE)
+        FontUtil.drawStringWithShadow("Right Click to hide", 3f, scaledResolution.scaledHeight - FontUtil.getHeight() - 4, Color.WHITE)
 
         Paragon.INSTANCE.moduleManager.getModulesThroughPredicate { it is HUDModule && it.animation.getAnimationFactor() > 0 }.forEach {
             (it as HUDModule).updateComponent(mouseX, mouseY)

@@ -31,7 +31,7 @@ object Speed : HUDModule("Speed", "Displays your current speed") {
                 )
             ) + unit.value.name.lowercase(
                 Locale.getDefault()
-            ), x, y, Colours.mainColour.value
+            ), x, y, Colours.mainColour.value, alignment.value
         )
     }
 

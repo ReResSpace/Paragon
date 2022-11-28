@@ -81,7 +81,7 @@ object PotionHUD : HUDModule("Potions", "Shows active potion effects") {
 
                         GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f)
                         minecraft.textureManager.bindTexture(GuiContainer.INVENTORY_BACKGROUND) // Idfk but this is needed to the icon renders properly
-                        FontUtil.drawStringWithShadow("", x, y, Color.WHITE) //Why? Idfk it makes no sense
+                        FontUtil.drawStringWithShadow("", x, y, Color.WHITE, alignment.value) //Why? Idfk it makes no sense
 
                         if (potion.hasStatusIcon()) {
                             val iconIndex = potion.statusIconIndex
@@ -96,10 +96,10 @@ object PotionHUD : HUDModule("Potions", "Shows active potion effects") {
                         }
 
                         val effectName = I18n.format(potion.name) + " " + I18n.format("enchantment.level.${effect.amplifier + 1}")
-                        FontUtil.drawStringWithShadow(effectName, (x + 22), (effectY + 6).toFloat(), 16777215.toColour())
+                        FontUtil.drawStringWithShadow(effectName, (x + 22), (effectY + 6).toFloat(), 16777215.toColour(), alignment.value)
 
                         FontUtil.drawStringWithShadow(
-                            Potion.getPotionDurationString(effect, 1F), (x + 22), (effectY + 6 + 10).toFloat(), 8355711.toColour()
+                            Potion.getPotionDurationString(effect, 1F), (x + 22), (effectY + 6 + 10).toFloat(), 8355711.toColour(), alignment.value
                         )
 
                         effectY += entryHeight
@@ -142,7 +142,7 @@ object PotionHUD : HUDModule("Potions", "Shows active potion effects") {
                             GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f)
                             GlStateManager.disableLighting()
                             minecraft.textureManager.bindTexture(GuiContainer.INVENTORY_BACKGROUND) //Idfk but this is needed to the icon renders properly
-                            FontUtil.drawStringWithShadow("", x, y, Color.WHITE) //How? Idfk it makes no sense
+                            FontUtil.drawStringWithShadow("", x, y, Color.WHITE, alignment.value) //How? Idfk it makes no sense
 
                             if (effect.potion.hasStatusIcon()) {
                                 val iconIndex = effect.potion.statusIconIndex
@@ -156,7 +156,7 @@ object PotionHUD : HUDModule("Potions", "Shows active potion effects") {
                         FontUtil.drawStringWithShadow(
                             I18n.format(effect.potion.name) + " " + I18n.format(
                                 "enchantment.level.${effect.amplifier + 1}"
-                            ) + " ${Potion.getPotionDurationString(effect, 1F)}", x + FontUtil.getHeight() + 1F, effectY + 2F, if (syncTextColor.value) color else Color.WHITE
+                            ) + " ${Potion.getPotionDurationString(effect, 1F)}", x + FontUtil.getHeight() + 1F, effectY + 2F, if (syncTextColor.value) color else Color.WHITE, alignment.value
                         )
 
                         effectY += FontUtil.getHeight() + offset.value + 3.5F

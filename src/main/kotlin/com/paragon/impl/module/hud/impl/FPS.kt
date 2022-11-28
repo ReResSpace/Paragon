@@ -5,6 +5,7 @@ package com.paragon.impl.module.hud.impl
 import com.paragon.util.render.font.FontUtil
 import com.paragon.impl.module.hud.HUDModule
 import com.paragon.impl.module.client.Colours
+import com.paragon.util.mc
 import net.minecraft.client.Minecraft
 import net.minecraft.util.text.TextFormatting
 
@@ -14,7 +15,7 @@ import net.minecraft.util.text.TextFormatting
 object FPS : HUDModule("FPS", "Renders your FPS on screen") {
 
     override fun render() {
-        FontUtil.drawStringWithShadow(getText(), x, y, Colours.mainColour.value)
+        FontUtil.drawStringWithShadow(getText(), x, y, Colours.mainColour.value, alignment.value)
     }
 
     override var width = FontUtil.getStringWidth(getText())

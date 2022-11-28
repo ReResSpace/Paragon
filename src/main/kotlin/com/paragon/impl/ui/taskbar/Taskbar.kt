@@ -25,7 +25,7 @@ object Taskbar : Wrapper {
 
     fun draw(mouseX: Int, mouseY: Int) {
         val scaledResolution = ScaledResolution(minecraft)
-        val hovered = mouseY.toFloat() in scaledResolution.scaledHeight - 80f..scaledResolution.scaledHeight.toFloat()
+        val hovered = mouseY.toFloat() in scaledResolution.scaledHeight - 40f..scaledResolution.scaledHeight.toFloat()
 
         var state = false
 

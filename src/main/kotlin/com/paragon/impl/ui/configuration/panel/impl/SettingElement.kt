@@ -4,6 +4,7 @@ import com.paragon.impl.module.client.ClickGUI
 import com.paragon.impl.module.client.Colours
 import com.paragon.impl.setting.Bind
 import com.paragon.impl.setting.Setting
+import com.paragon.impl.ui.configuration.panel.PanelGUI
 import com.paragon.impl.ui.configuration.panel.impl.setting.*
 import com.paragon.impl.ui.configuration.shared.RawElement
 import com.paragon.impl.ui.util.Click
@@ -51,6 +52,9 @@ open class SettingElement<T>(val parent: ModuleElement, val setting: Setting<T>,
     }
 
     override fun draw(mouseX: Float, mouseY: Float, mouseDelta: Int) {
+        if (isHovered(mouseX, mouseY)) {
+            PanelGUI.description = setting.description
+        }
         hover.state = isHovered(mouseX, mouseY)
     }
 

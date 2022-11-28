@@ -21,7 +21,7 @@ object CPS : HUDModule("CPS", "Display Crystals per Second in text") {
             actualACrystals = 0.0
             timer.reset()
         }
-        FontUtil.drawStringWithShadow(getText(), x, y, Colours.mainColour.value)
+        FontUtil.drawStringWithShadow(getText(), x, y, Colours.mainColour.value, alignment.value)
     }
 
     override var width = FontUtil.getStringWidth(getText())
