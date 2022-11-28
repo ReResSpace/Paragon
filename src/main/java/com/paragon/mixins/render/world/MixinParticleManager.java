@@ -9,12 +9,14 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin({ ParticleManager.class })
+@Mixin(ParticleManager.class)
 public class MixinParticleManager {
+
     @Inject(method = "addEffect", at = @At(value = "HEAD"), cancellable = true)
     public void addEffect(Particle particle, CallbackInfo info) {
         ParticleSpawnEvent event = new ParticleSpawnEvent(particle);
         Paragon.INSTANCE.getEventBus().post(event);
         if (event.isCancelled()) info.cancel();
     }
+
 }

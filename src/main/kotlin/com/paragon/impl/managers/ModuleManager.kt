@@ -50,6 +50,7 @@ class ModuleManager {
 
             // Render
             AspectRatio,
+            BetterScreenshot,
             BlockHighlight,
             Blur,
             Breadcrumbs,
