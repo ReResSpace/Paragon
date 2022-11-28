@@ -28,7 +28,9 @@ class PanelGUI : GuiImplementation() {
     var doSearch = false
     var search = ""
 
-    companion object { var description = "" }
+    companion object { 
+		var description = "" 
+	}
 
     init {
         var x = 30f
@@ -49,8 +51,9 @@ class PanelGUI : GuiImplementation() {
             it.draw(mouseX.toFloat(), mouseY.toFloat(), mouseDelta)
         }
 
-        if (description.isNotEmpty())
+        if (description.isNotEmpty()) {
             FontUtil.drawCenteredString(description, sr.scaledWidth/2f, 3f, Colours.mainColour.value, false)
+		}
 
         Keyboard.enableRepeatEvents(true)
 

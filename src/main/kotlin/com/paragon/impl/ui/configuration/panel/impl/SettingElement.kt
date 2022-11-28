@@ -52,7 +52,9 @@ open class SettingElement<T>(val parent: ModuleElement, val setting: Setting<T>,
     }
 
     override fun draw(mouseX: Float, mouseY: Float, mouseDelta: Int) {
-        if (isHovered(mouseX, mouseY)) PanelGUI.description = setting.description
+        if (isHovered(mouseX, mouseY)) {
+            PanelGUI.description = setting.description
+        }
         hover.state = isHovered(mouseX, mouseY)
     }
 

@@ -56,7 +56,9 @@ class ModuleElement(val parent: CategoryPanel, val module: Module, x: Float, y: 
     }
 
     override fun draw(mouseX: Float, mouseY: Float, mouseDelta: Int) {
-        if (isHovered(mouseX, mouseY)) PanelGUI.description = module.description
+        if (isHovered(mouseX, mouseY)) {
+        	PanelGUI.description = module.description
+        }
 
         hover.state = isHovered(mouseX, mouseY)
         enabled.state = module.isEnabled
