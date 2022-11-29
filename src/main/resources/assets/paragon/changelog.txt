@@ -20,6 +20,9 @@ Added:
   - Added CPS HUD module
   - Packet, UpdatedNCP, and Minis modes to Criticals
   - AutoSable module
+  - Packet graphs HUD modules
+  - BetterScreenshot module
+  - NoHandshake module
 
 Reworked:
   - Main Menu

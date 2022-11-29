@@ -101,6 +101,7 @@ class ModuleManager {
             Lawnmower,
             MiddleClick,
             NoGlobalSounds,
+            NoHandshake,
             NoRotate,
             OnDeath,
             RotationLock,
