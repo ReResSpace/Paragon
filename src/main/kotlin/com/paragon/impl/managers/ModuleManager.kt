@@ -4,10 +4,7 @@ import com.paragon.impl.module.Module
 import com.paragon.impl.module.client.*
 import com.paragon.impl.module.combat.*
 import com.paragon.impl.module.hud.impl.*
-import com.paragon.impl.module.hud.impl.graphs.GraphCPS
-import com.paragon.impl.module.hud.impl.graphs.GraphFPS
-import com.paragon.impl.module.hud.impl.graphs.GraphPing
-import com.paragon.impl.module.hud.impl.graphs.GraphSpeed
+import com.paragon.impl.module.hud.impl.graphs.*
 import com.paragon.impl.module.misc.*
 import com.paragon.impl.module.movement.*
 import com.paragon.impl.module.render.*
@@ -129,8 +126,10 @@ class ModuleManager {
             FPS,
             TPS,
             CPS,
-            GraphCPS,
+            GraphCrystals,
             GraphFPS,
+            GraphReceivedPackets,
+            GraphSentPackets,
             GraphPing,
             GraphSpeed,
             HUD,

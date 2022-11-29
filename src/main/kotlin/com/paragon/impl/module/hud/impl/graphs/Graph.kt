@@ -16,7 +16,7 @@ import java.math.RoundingMode
  * @author SooStrator1136
  */
 class Graph(
-    private val name: String, private val backgroundColor: () -> Color, private val borderColor: () -> Color, private val graphColor: () -> Color, private val backgroundMode: () -> Background
+    private val name: String, private val backgroundMode: () -> Background
 ) {
 
     private val graphRect = Rectangle2D.Float()
@@ -49,7 +49,11 @@ class Graph(
                 name, bounds.x + 2.5f, bounds.y + bounds.height - FontUtil.getHeight() - 1.5f, Color.WHITE
             )
 
-            val value = BigDecimal(currentVal).setScale(2, RoundingMode.HALF_EVEN).toString()
+            var value = BigDecimal(currentVal).setScale(2, RoundingMode.HALF_EVEN).toString()
+
+            if (value.split(".")[1] == "00") {
+                value = value.split(".")[0]
+            }
 
             FontUtil.drawStringWithShadow(
                 value, bounds.x + bounds.width - FontUtil.getStringWidth(value) - 3, bounds.y + bounds.height - FontUtil.getHeight() - 1.5f, Color.WHITE

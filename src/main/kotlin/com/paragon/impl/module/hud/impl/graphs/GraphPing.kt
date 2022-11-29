@@ -1,19 +1,16 @@
 package com.paragon.impl.module.hud.impl.graphs
 
-import com.paragon.impl.setting.Setting
-import com.paragon.util.render.ColourUtil.integrateAlpha
 import com.paragon.impl.module.hud.HUDModule
 import com.paragon.impl.module.hud.impl.Ping
-import com.paragon.impl.module.client.Colours
+import com.paragon.impl.setting.Setting
 import com.paragon.util.anyNull
 import com.paragon.util.render.RenderUtil
-import java.awt.Color
 import kotlin.math.abs
 
 /**
  * @author SooStrator1136
  */
-object GraphPing : HUDModule("PingGraph", "Graph showing your Ping") {
+object GraphPing : HUDModule("PingGraph", "Graph showing your ping") {
 
     private val scale = Setting(
         "Size", 1.0, 0.1, 2.0, 0.1
@@ -21,20 +18,10 @@ object GraphPing : HUDModule("PingGraph", "Graph showing your Ping") {
 
     private val background = Setting("Background", Graph.Background.ALL)
 
-    private val backgroundColor = Setting(
-        "BackgroundColor", Color.BLACK.integrateAlpha(100F)
-    ) describedBy "Color of the background"
-    private val borderColor = Setting(
-        "Border", Colours.mainColour.value
-    ) describedBy "Color of the surrounding"
-    private val graphColor = Setting(
-        "Graph color", Colours.mainColour.value.darker()
-    ) describedBy "Color of the graph"
-
-    private var graph = Graph("Ping", backgroundColor::value, borderColor::value, graphColor::value, background::value)
+    private var graph = Graph("Ping") { background.value }
 
     override fun onEnable() {
-        graph = Graph("Ping", backgroundColor::value, borderColor::value, graphColor::value, background::value)
+        graph = Graph("Ping") { background.value }
     }
 
     override fun onTick() {

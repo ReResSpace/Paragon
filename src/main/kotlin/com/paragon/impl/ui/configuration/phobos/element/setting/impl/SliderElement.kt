@@ -13,6 +13,7 @@ import com.paragon.util.render.font.FontUtil
 import org.lwjgl.input.Mouse
 import org.lwjgl.opengl.GL11.glScalef
 import java.awt.Color
+import java.math.BigDecimal
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.round
@@ -30,7 +31,7 @@ class SliderElement(setting: Setting<Number>, x: Float, y: Float, width: Float, 
 
         var renderWidth = 0f
 
-        if (setting.value is Float) {
+        /* if (setting.value is Float) {
             // Set values
             val diff = min(width, max(0f, mouseX - x))
 
@@ -79,6 +80,68 @@ class SliderElement(setting: Setting<Number>, x: Float, y: Float, width: Float, 
                     newValue = round(max(min, min(max, newValue)) * precision) / precision
 
                     setting.setValue(newValue)
+                    Paragon.INSTANCE.eventBus.post(SettingUpdateEvent(setting))
+                }
+            }
+        } */
+
+        if (setting.value is Float) {
+            // Set values
+            val diff = min(width, max(0f, mouseX - (x + 4)))
+
+            val min = setting.min.toFloat()
+            val max = setting.max.toFloat()
+
+            renderWidth = (width * (setting.value.toDouble() - min) / (max - min)).toFloat()
+
+            if (!Mouse.isButtonDown(0)) {
+                dragging = false
+            }
+
+            if (dragging) {
+                if (diff == 0f) {
+                    setting.setValue(setting.min)
+                    Paragon.INSTANCE.eventBus.post(SettingUpdateEvent(setting))
+                } else {
+                    var newValue = MathsUtil.roundDouble((diff / width * (max - min) + min).toDouble(), 2).toFloat()
+                    val precision = 1 / setting.incrementation.toFloat()
+
+                    newValue = (round(max(min, min(max, newValue)) * precision) / precision)
+
+                    setting.setValue(
+                        MathsUtil.roundDouble(
+                            newValue.toDouble(), BigDecimal.valueOf(setting.incrementation.toDouble()).scale()
+                        ).toFloat()
+                    )
+                    Paragon.INSTANCE.eventBus.post(SettingUpdateEvent(setting))
+                }
+            }
+        } else if (setting.value is Double) {
+            // Set values
+            val diff = min(width, max(0f, mouseX - (x + 4))).toDouble()
+
+            val min = setting.min.toDouble()
+            val max = setting.max.toDouble()
+
+            renderWidth = (width * (setting.value.toDouble() - min) / (max - min)).toFloat()
+
+            if (!Mouse.isButtonDown(0)) {
+                dragging = false
+            }
+
+            if (dragging) {
+                if (diff == 0.0) {
+                    setting.setValue(setting.min)
+                    Paragon.INSTANCE.eventBus.post(SettingUpdateEvent(setting))
+                } else {
+                    var newValue = MathsUtil.roundDouble(diff / width * (max - min) + min, 2)
+                    val precision = (1 / setting.incrementation.toFloat()).toDouble()
+
+                    newValue = round(max(min, min(max, newValue)) * precision) / precision
+
+                    setting.setValue(
+                        MathsUtil.roundDouble(newValue, BigDecimal.valueOf(setting.incrementation.toDouble()).scale())
+                    )
                     Paragon.INSTANCE.eventBus.post(SettingUpdateEvent(setting))
                 }
             }
