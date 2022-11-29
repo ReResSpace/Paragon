@@ -15,27 +15,21 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 import net.minecraft.client.gui.GuiScreen
 import net.minecraft.client.gui.ScaledResolution
-import net.minecraft.client.renderer.GlStateManager
-import net.minecraft.client.renderer.texture.TextureUtil
 import net.minecraft.util.ScreenShotHelper
 import net.minecraft.util.text.TextComponentString
 import net.minecraft.util.text.TextComponentTranslation
 import net.minecraft.util.text.event.ClickEvent
 import net.minecraftforge.client.ForgeHooksClient
-import org.lwjgl.BufferUtils
 import org.lwjgl.input.Mouse
-import org.lwjgl.opengl.GL11
-import org.lwjgl.opengl.GL12
 import java.awt.Color
 import java.awt.image.BufferedImage
 import java.io.File
-import java.nio.IntBuffer
 import javax.imageio.ImageIO
 
 /**
  * @author SooStrator1136
  */
-object BetterScreenshot : Module("BetterScreenshot", Category.RENDER, "") {
+object BetterScreenshot : Module("BetterScreenshot", Category.RENDER, "Allows you to select the area you want to screenshot") {
 
     @Listener
     fun preScreenshot(event: PreScreenshotEvent) {

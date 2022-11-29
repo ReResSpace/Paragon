@@ -29,6 +29,16 @@ public abstract class MixinGuiChat extends GuiScreen {
     public void hookDrawScreenTail(int mouseX, int mouseY, float partialTicks, CallbackInfo ci) {
         RenderChatGuiEvent event = new RenderChatGuiEvent(inputField.getText());
         Paragon.INSTANCE.getEventBus().post(event);
+
+        inputField.setText(event.getText());
+    }
+
+    @Inject(method = "keyTyped", at = @At("HEAD"), cancellable = true)
+    public void hookKeyTyped(char typedChar, int keyCode, CallbackInfo ci) {
+        // prevent weird tab thing??
+        if (inputField.getText().startsWith(Paragon.INSTANCE.getCommandManager().getPrefix()) && keyCode == Keyboard.KEY_TAB) {
+            ci.cancel();
+        }
     }
 
 }

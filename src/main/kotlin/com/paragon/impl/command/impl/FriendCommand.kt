@@ -2,17 +2,20 @@ package com.paragon.impl.command.impl
 
 import com.paragon.Paragon
 import com.paragon.impl.command.Command
-import com.paragon.impl.command.syntax.Argument
+import com.paragon.impl.command.syntax.ArgumentData
 import com.paragon.impl.command.syntax.SyntaxBuilder
 import net.minecraft.util.text.TextFormatting
 
 /**
  * @author Surge
  */
-object FriendCommand : Command("Friend", SyntaxBuilder()
-        .addArgument(Argument("action", arrayOf("add", "remove", "list")))
-        .addArgument(Argument("name", arrayOf("any_str"), arrayOf(Pair("action", "list"))))
-) {
+object FriendCommand : Command("Friend", SyntaxBuilder.createBuilder(arrayListOf(
+    ArgumentData("action", arrayOf("add", "remove", "list")),
+    ArgumentData("name", arrayOf("any_str"), visibleWhen = arrayOf(
+        Pair("action", "add"),
+        Pair("action", "remove")
+    ))
+))) {
 
     override fun whenCalled(args: Array<String>, fromConsole: Boolean) {
         if (args.size == 1 && args[0].equals("list", ignoreCase = true)) {

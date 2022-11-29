@@ -2,7 +2,7 @@ package com.paragon.impl.command.impl
 
 import com.paragon.Paragon
 import com.paragon.impl.command.Command
-import com.paragon.impl.command.syntax.Argument
+import com.paragon.impl.command.syntax.ArgumentData
 import com.paragon.impl.command.syntax.SyntaxBuilder
 import com.paragon.mixins.accessor.IEntityRenderer
 import com.paragon.mixins.accessor.IMapItemRenderer
@@ -24,9 +24,9 @@ import kotlin.math.roundToInt
 /**
  * @author SooStrator1136
  */
-object SaveMapCommand : Command("SaveMap", SyntaxBuilder()
-        .addArgument(Argument("mode", arrayOf("holding", "frames", "smart")))
-) {
+object SaveMapCommand : Command("SaveMap", SyntaxBuilder.createBuilder(arrayListOf(
+    ArgumentData("mode", arrayOf("holding", "frames", "smart"))
+))) {
 
     private lateinit var itemRenderInstances: Map<String, Any>
 

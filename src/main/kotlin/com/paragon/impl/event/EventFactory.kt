@@ -17,6 +17,7 @@ import net.minecraftforge.client.event.RenderWorldLastEvent
 import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent
+import org.lwjgl.input.Keyboard
 import java.awt.Color
 
 class EventFactory : Wrapper {
@@ -90,6 +91,10 @@ class EventFactory : Wrapper {
     @Listener
     fun onRenderChatGui(event: RenderChatGuiEvent) {
         if (event.text.startsWith(Paragon.INSTANCE.commandManager.prefix)) {
+            val resolution = ScaledResolution(minecraft)
+
+            minecraft.fontRenderer.drawStringWithShadow("[TAB] to automatically fill in the next argument", 5f, resolution.scaledHeight - 25f, Color.GRAY.rgb)
+
             val full = event.text.substring(1, event.text.length).split(" ").toMutableList()
 
             // no command
@@ -99,6 +104,11 @@ class EventFactory : Wrapper {
 
             // get command
             val command = Paragon.INSTANCE.commandManager.commands.firstOrNull { it.name.startsWith(full[0], true) } ?: return
+
+            if (event.text.substring(1, event.text.length).contains(" ") && !Paragon.INSTANCE.commandManager.commands.any { it.name.equals(full[0], ignoreCase = true) }) {
+                return
+            }
+
             val givenArguments = arrayListOf<String>()
 
             // oh my
@@ -108,7 +118,7 @@ class EventFactory : Wrapper {
                 }
             }
 
-            // COMPLETE SYNTAX
+            // get correct syntax
 
             var nonTypedSyntax = ""
             var markInvalid = false
@@ -122,6 +132,10 @@ class EventFactory : Wrapper {
                 // LMAOOOOOO WHAT THE FUCK
                 // Throwback to https://github.com/momentumdevelopment/cosmos/pull/171/commits/816b5636b68378226f3570ce8fc6ae7946bdaa0f
                 runCatching {
+                    if (!argument.isVisible(givenArguments)) {
+                        return@forEachIndexed
+                    }
+
                     val given = givenArguments[index]
 
                     if (given.isEmpty()) {
@@ -143,9 +157,29 @@ class EventFactory : Wrapper {
             minecraft.fontRenderer.drawStringWithShadow(
                 (if (markInvalid) "${TextFormatting.RED}" else "") + nonTypedSyntax,
                 4f + minecraft.fontRenderer.getStringWidth(event.text),
-                ScaledResolution(minecraft).scaledHeight - 12f,
+                resolution.scaledHeight - 12f,
                 Color.GRAY.rgb
             )
+
+            val nextArgument = nonTypedSyntax.split(" ")
+
+            if (nextArgument.isNotEmpty()) {
+                val next = nextArgument[0]
+
+                // is preview
+                if (next.contains("<")) {
+                    return
+                }
+
+                val repeat = Keyboard.areRepeatEventsEnabled()
+                Keyboard.enableRepeatEvents(false)
+
+                if (Keyboard.isKeyDown(Keyboard.KEY_TAB)) {
+                    event.text += next
+                }
+
+                Keyboard.enableRepeatEvents(repeat)
+            }
         }
     }
 

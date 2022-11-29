@@ -2,16 +2,16 @@ package com.paragon.impl.command.impl
 
 import com.paragon.Paragon
 import com.paragon.impl.command.Command
-import com.paragon.impl.command.syntax.Argument
+import com.paragon.impl.command.syntax.ArgumentData
 import com.paragon.impl.command.syntax.SyntaxBuilder
 import net.minecraft.util.text.TextFormatting
 
 /**
  * @author Surge
  */
-object SyntaxCommand : Command("Syntax", SyntaxBuilder()
-        .addArgument(Argument("command", arrayOf("any_str")))
-) {
+object SyntaxCommand : Command("Syntax", SyntaxBuilder.createBuilder(arrayListOf(
+    ArgumentData("command", arrayOf("any_str"))
+))) {
 
     override fun whenCalled(args: Array<String>, fromConsole: Boolean) {
         if (args.size == 1) {
