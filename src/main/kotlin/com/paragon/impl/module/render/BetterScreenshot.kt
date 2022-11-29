@@ -14,8 +14,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 import net.minecraft.client.gui.GuiScreen
+import net.minecraft.client.gui.ScaledResolution
 import net.minecraft.client.renderer.GlStateManager
 import net.minecraft.client.renderer.texture.TextureUtil
+import net.minecraft.util.ScreenShotHelper
 import net.minecraft.util.text.TextComponentString
 import net.minecraft.util.text.TextComponentTranslation
 import net.minecraft.util.text.event.ClickEvent
@@ -29,17 +31,11 @@ import java.awt.image.BufferedImage
 import java.io.File
 import java.nio.IntBuffer
 import javax.imageio.ImageIO
-import kotlin.Float
-import kotlin.Int
-import kotlin.IntArray
-import kotlin.also
 
 /**
  * @author SooStrator1136
  */
 object BetterScreenshot : Module("BetterScreenshot", Category.RENDER, "") {
-
-    private var buffer: IntBuffer? = null
 
     @Listener
     fun preScreenshot(event: PreScreenshotEvent) {
@@ -50,24 +46,12 @@ object BetterScreenshot : Module("BetterScreenshot", Category.RENDER, "") {
     }
 
     private fun screenshot(x: Int, y: Int, width: Int, height: Int): BufferedImage {
-        val size = width * height
-        if (buffer == null || buffer!!.capacity() < size) {
-            buffer = BufferUtils.createIntBuffer(size)
-        }
-
-        GlStateManager.glPixelStorei(GL11.GL_PACK_ALIGNMENT, 1)
-        GlStateManager.glPixelStorei(GL11.GL_UNPACK_ALIGNMENT, 1)
-
-        buffer?.clear()
-
-        GlStateManager.glReadPixels(x, y, width, height, GL12.GL_BGRA, GL12.GL_UNSIGNED_INT_8_8_8_8_REV, buffer!!)
-
-        val pixels = IntArray(size) //Poor gc :crying_cat_face:
-        buffer?.get(pixels)
-        TextureUtil.processPixelValues(pixels, width, height)
-        val img = BufferedImage(width, height, 1)
-        img.setRGB(0, 0, width, height, pixels, 0, width)
-        return img
+        val scaleFac = ScaledResolution(mc).scaleFactor
+        return ScreenShotHelper.createScreenshot(
+            mc.displayWidth,
+            mc.displayHeight,
+            mc.framebuffer
+        ).getSubimage(x * scaleFac, y * scaleFac, width * scaleFac, height * scaleFac)
     }
 
     internal object GuiScreenshot : GuiScreen() {
