@@ -58,8 +58,6 @@ object FontUtil : Wrapper {
 
     @JvmStatic
     fun drawStringWithShadow(text: String, x: Float, y: Float, colour: Color, alignment: Align = Align.LEFT) {
-        // font = FontRenderer(getFont("font"))
-
         if (ClientFont.isEnabled) {
             font.drawStringWithShadow(text, x, y - 2.5f, colour, alignment)
             return

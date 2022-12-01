@@ -39,7 +39,7 @@ object GraphFPS : HUDModule("FPSGraph", "Graph showing your Ping") {
         }
     }
 
-    override var width = 77F
-    override var height = 32F
+    override var width = 75F
+    override var height = 30F
 
 }

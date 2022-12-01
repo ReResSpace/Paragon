@@ -23,7 +23,7 @@ object Blur : Module("Blur", Category.RENDER, "Blurs the background of GUIS") {
     private val fade = Animation({ animationSpeed.value }, false, { easing.value })
 
     override fun onTick() {
-        fade.state = minecraft.currentScreen != null
+        fade.state = minecraft.currentScreen != null && minecraft.currentScreen != BetterScreenshot.GuiScreenshot
     }
 
     @SubscribeEvent

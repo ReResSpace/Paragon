@@ -23,6 +23,7 @@ Added:
   - Packet graphs HUD modules
   - BetterScreenshot module
   - NoHandshake module
+  - ServerBrand HUD module
 
 Reworked:
   - Main Menu

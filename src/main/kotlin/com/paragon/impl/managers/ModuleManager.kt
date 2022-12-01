@@ -141,6 +141,7 @@ class ModuleManager {
             Notifications,
             Ping,
             PotionHUD,
+            ServerBrand,
             Speed,
             TabGui,
             TargetHUD,

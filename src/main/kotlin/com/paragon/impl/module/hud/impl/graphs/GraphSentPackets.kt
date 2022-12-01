@@ -72,7 +72,7 @@ object GraphSentPackets : HUDModule("SentPacketsGraph", "Graph showing the amoun
         }
     }
 
-    override var width = 77F
-    override var height = 32F
+    override var width = 75F
+    override var height = 30F
 
 }
