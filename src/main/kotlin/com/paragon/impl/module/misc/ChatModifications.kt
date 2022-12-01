@@ -1,9 +1,11 @@
 package com.paragon.impl.module.misc
 
 import com.paragon.Paragon
-import com.paragon.impl.module.annotation.Aliases
+import com.paragon.bus.listener.Listener
+import com.paragon.impl.event.render.gui.GetChatLineCountEvent
 import com.paragon.impl.module.Category
 import com.paragon.impl.module.Module
+import com.paragon.impl.module.annotation.Aliases
 import com.paragon.impl.setting.Setting
 import com.paragon.util.anyNull
 import net.minecraft.util.text.TextComponentString
@@ -21,6 +23,7 @@ import kotlin.random.Random
 @Aliases(["Spammer", "Cryptic", "Encrypt"])
 object ChatModifications : Module("ChatModifications", Category.MISC, "Changes the way you send messages") {
 
+    private val infinite = Setting("Infinite", true) describedBy "Doesn't limit the amount of chat messages shown"
     private val coloured = Setting("Coloured", false) describedBy "Adds a '>' before the message"
     private val suffix = Setting("Suffix", true) describedBy "Adds a Paragon suffix to the end of the message"
 
@@ -155,6 +158,13 @@ object ChatModifications : Module("ChatModifications", Category.MISC, "Changes t
             }
 
             minecraft.player.sendChatMessage(lines[(Math.random() * lines.size).toInt()])
+        }
+    }
+
+    @Listener
+    fun onGetChatLineCount(event: GetChatLineCountEvent) {
+        if (infinite.value) {
+            event.size = -Int.MAX_VALUE
         }
     }
 

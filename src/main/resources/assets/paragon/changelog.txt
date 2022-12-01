@@ -24,6 +24,7 @@ Added:
   - BetterScreenshot module
   - NoHandshake module
   - ServerBrand HUD module
+  - Added Infinite setting to ChatModifications
 
 Reworked:
   - Main Menu
