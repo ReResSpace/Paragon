@@ -1,8 +1,8 @@
 package com.paragon.impl.module.render
 
+import com.paragon.impl.module.Category
 import com.paragon.impl.module.Module
 import com.paragon.impl.setting.Setting
-import com.paragon.impl.module.Category
 import com.paragon.mixins.accessor.IRenderGlobal
 import com.paragon.util.render.RenderUtil.drawNametagText
 import com.paragon.util.render.builder.BoxRenderMode
@@ -22,22 +22,14 @@ import java.awt.Color
 object BreakESP : Module("BreakESP", Category.RENDER, "Highlights blocks that are currently being broken") {
 
     // Render settings
-    private val renderMode = Setting(
-        "RenderMode", BoxRenderMode.BOTH
-    ) describedBy "How to render the highlight"
+    private val renderMode = Setting("RenderMode", BoxRenderMode.BOTH) describedBy "How to render the highlight"
 
-    private val lineWidth = Setting(
-        "LineWidth", 1.0f, 0.1f, 3f, 0.1f
-    ) describedBy "The width of the outline" visibleWhen { renderMode.value != BoxRenderMode.FILL }
+    private val lineWidth = Setting("LineWidth", 1.0f, 0.1f, 3f, 0.1f) describedBy "The width of the outline" visibleWhen { renderMode.value != BoxRenderMode.FILL }
 
     // Other settings
-    private val range = Setting(
-        "Range", 20f, 1f, 50f, 1f
-    ) describedBy "The maximum distance a highlighted block can be"
+    private val range = Setting("Range", 20f, 1f, 50f, 1f) describedBy "The maximum distance a highlighted block can be"
 
-    private val percent = Setting(
-        "Percent", true
-    ) describedBy "Show the percentage of how much the block has been broken"
+    private val percent = Setting("Percent", true) describedBy "Show the percentage of how much the block has been broken"
 
     override fun onRender3D() {
         // Iterate through all blocks being broken
@@ -82,12 +74,30 @@ object BreakESP : Module("BreakESP", Category.RENDER, "Highlights blocks that ar
             // The colour factor (for a transition between red and green (looks cool))
             val colour = damage * 255 / 8
 
-            RenderBuilder().boundingBox(highlightBB).inner(Color(255 - colour, colour, 0, 150)).outer(Color(255 - colour, colour, 0, 255)).type(renderMode.value)
-
+            RenderBuilder()
+                .boundingBox(highlightBB)
+                .inner(
+                    Color(
+                        255 - colour,
+                        colour,
+                        0,
+                        150
+                    )
+                )
+                .outer(
+                    Color(
+                        255 - colour,
+                        colour,
+                        0,
+                        255
+                    )
+                )
+                .type(renderMode.value)
                 .start()
-
-                .blend(true).depth(true).texture(true).lineWidth(lineWidth.value)
-
+                .blend(true)
+                .depth(true)
+                .texture(true)
+                .lineWidth(lineWidth.value)
                 .build(false)
 
             // Draw the percentage

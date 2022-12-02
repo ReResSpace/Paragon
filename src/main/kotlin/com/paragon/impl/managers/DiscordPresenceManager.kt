@@ -25,6 +25,7 @@ class DiscordPresenceManager : Wrapper {
         presence.startTimestamp = System.currentTimeMillis() / 1000L
         presence.details = getDetails()
         presence.state = "Username: " + mc.session.username
+
         rpc.Discord_UpdatePresence(presence)
     }
 
