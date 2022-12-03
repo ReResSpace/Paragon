@@ -26,6 +26,7 @@ Added:
   - ServerBrand HUD module
   - Added Infinite setting to ChatModifications
   - Added TickShift module
+  - Added Movement setting to Timer
 
 Reworked:
   - Main Menu
