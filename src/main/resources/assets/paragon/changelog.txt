@@ -27,6 +27,7 @@ Added:
   - Added Infinite setting to ChatModifications
   - Added TickShift module
   - Added Movement setting to Timer
+  - Added SafeWalk module
 
 Reworked:
   - Main Menu
@@ -42,3 +43,7 @@ Changed:
   - Merged the Notifier module and DonkeyAlert module into the Alert module
   - Changed the AutoWalk module's category to Movement
   - Updated Nametags
+
+Bug Fixes:
+  - Fixed unicode character error in ShulkerViewer
+  - Font changing Y position depending on ClientFont's enabled state

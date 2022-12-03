@@ -40,6 +40,7 @@ class ModuleManager {
             NoFall,
             NoSlow,
             ReverseStep,
+            SafeWalk,
             Sprint,
             Step,
             Strafe,
