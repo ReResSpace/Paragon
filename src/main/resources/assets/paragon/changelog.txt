@@ -28,6 +28,7 @@ Added:
   - Added TickShift module
   - Added Movement setting to Timer
   - Added SafeWalk module
+  - Added AutoXP module
 
 Reworked:
   - Main Menu

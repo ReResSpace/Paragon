@@ -306,6 +306,10 @@ object Offhand : Module("Offhand", Category.COMBAT, "Automatically manages your 
     }
 
     private fun shouldApplyKeySwap(safetyIn: Boolean): Boolean {
+        if (minecraft.currentScreen != null) {
+            return false
+        }
+
         var keyPressed = false
 
         // isPressed() doesn't work :(

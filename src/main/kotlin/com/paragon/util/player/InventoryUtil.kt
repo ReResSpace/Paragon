@@ -78,12 +78,9 @@ object InventoryUtil : Wrapper {
             return
         }
 
-        if (packet) {
-            minecraft.player.connection.sendPacket(CPacketHeldItemChange(slot))
-        }
+        minecraft.player.connection.sendPacket(CPacketHeldItemChange(slot))
 
-        else {
-            minecraft.player.connection.sendPacket(CPacketHeldItemChange(slot))
+        if (!packet) {
             minecraft.player.inventory.currentItem = slot
         }
     }

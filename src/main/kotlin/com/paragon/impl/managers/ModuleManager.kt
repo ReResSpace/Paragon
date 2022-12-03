@@ -22,6 +22,7 @@ class ModuleManager {
             // Combat
             Aura,
             AutoCrystal,
+            AutoXP,
             BowBomb,
             BowRelease,
             Criticals,
