@@ -21,6 +21,7 @@ object TimerModule : Module("Timer", Category.MISC, "Modifies how long each tick
             return
         }
 
+        // Reset timer speed
         ((minecraft as IMinecraft).hookGetTimer() as ITimer).hookSetTickLength(50f)
     }
 
@@ -29,13 +30,20 @@ object TimerModule : Module("Timer", Category.MISC, "Modifies how long each tick
             return
         }
 
+        // We only want to change the timer speed when we're moving
         if (movement.value) {
             if (PlayerUtil.isMoving) {
+
+                // Set timer speed
                 ((minecraft as IMinecraft).hookGetTimer() as ITimer).hookSetTickLength(50f / timer.value)
             } else {
+
+                // Reset timer speed as we aren't moving
                 ((minecraft as IMinecraft).hookGetTimer() as ITimer).hookSetTickLength(50f)
             }
         } else {
+
+            // Set timer speed
             ((minecraft as IMinecraft).hookGetTimer() as ITimer).hookSetTickLength(50f / timer.value)
         }
     }
