@@ -43,6 +43,7 @@ class ModuleManager {
             Sprint,
             Step,
             Strafe,
+            TickShift,
             Velocity,
 
             // Render

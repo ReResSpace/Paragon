@@ -25,6 +25,7 @@ Added:
   - NoHandshake module
   - ServerBrand HUD module
   - Added Infinite setting to ChatModifications
+  - Added TickShift module
 
 Reworked:
   - Main Menu
