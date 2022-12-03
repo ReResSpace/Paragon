@@ -1,9 +1,9 @@
 package com.paragon.impl.module.combat
 
-import com.paragon.impl.module.annotation.Aliases
-import com.paragon.impl.module.Module
-import com.paragon.impl.setting.Setting
 import com.paragon.impl.module.Category
+import com.paragon.impl.module.Module
+import com.paragon.impl.module.annotation.Aliases
+import com.paragon.impl.setting.Setting
 import com.paragon.util.anyNull
 import net.minecraft.inventory.ClickType
 import net.minecraft.item.ItemBlock
@@ -100,10 +100,9 @@ object Replenish : Module("Replenish", Category.COMBAT, "Automatically refills i
 
             // Merge stacks
             minecraft.playerController.windowClick(0, replaceSlot, 0, ClickType.PICKUP, minecraft.player)
-            minecraft.playerController.windowClick(
-                0, if (current < 9) current + 36 else current, 0, ClickType.PICKUP, minecraft.player
-            )
+            minecraft.playerController.windowClick(0, if (current < 9) current + 36 else current, 0, ClickType.PICKUP, minecraft.player)
             minecraft.playerController.windowClick(0, replaceSlot, 0, ClickType.PICKUP, minecraft.player)
+
             if (inventorySpoof.value) {
                 minecraft.player.connection.sendPacket(CPacketCloseWindow(minecraft.player.inventoryContainer.windowId))
             }

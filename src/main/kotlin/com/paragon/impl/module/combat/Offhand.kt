@@ -33,6 +33,7 @@ object Offhand : Module("Offhand", Category.COMBAT, "Automatically manages your 
 
     // General settings
     private val delay = Setting("Delay", 0.0, 0.0, 100.0, 1.0) describedBy "The delay between switching items"
+    private val allowMerging = Setting("AllowMerging", true) describedBy "Allow returning items to be merged"
 
     // Item settings
     private val priority = Setting("Priority", EnumItem.CRYSTAL) describedBy "The item to prioritise"
@@ -74,7 +75,7 @@ object Offhand : Module("Offhand", Category.COMBAT, "Automatically manages your 
     private var paused = 0
 
     override fun onTick() {
-        if (minecraft.anyNull) {
+        if (minecraft.anyNull || minecraft.currentScreen != null) {
             return
         }
 
@@ -82,6 +83,7 @@ object Offhand : Module("Offhand", Category.COMBAT, "Automatically manages your 
         val item = getItem()
 
         if (checkOnNextTick) {
+
             // If we haven't successfully swapped
             if (minecraft.player.heldItemOffhand.item != item.item) {
                 failedAttempts++
@@ -112,11 +114,13 @@ object Offhand : Module("Offhand", Category.COMBAT, "Automatically manages your 
 
         // Iterate through inventory slots
         for (i in 9..36) {
+
             // Current slot stack
             val itemInInv = minecraft.player.inventory.getStackInSlot(i)
 
             // It is our item
             if (itemInInv.item == item.item) {
+
                 // Check crapple status
                 if (item.item == Items.GOLDEN_APPLE && !allowCrapple.value && !itemInInv.hasEffect()) {
                     continue
@@ -149,10 +153,12 @@ object Offhand : Module("Offhand", Category.COMBAT, "Automatically manages your 
         var sprinting = false
 
         if (strictSprint.value) {
+
             // Set sprint state
             sprinting = minecraft.player.isSprinting || (minecraft.player as IEntityPlayerSP).hookGetServerSprintState()
 
             if (sprinting) {
+
                 // Force stop sprinting
                 minecraft.player.connection.sendPacket(CPacketEntityAction(minecraft.player, CPacketEntityAction.Action.STOP_SPRINTING))
             }
@@ -174,22 +180,26 @@ object Offhand : Module("Offhand", Category.COMBAT, "Automatically manages your 
             var returnSlot = -1
 
             for (i in 9 until 36) {
+                val currentSlot = minecraft.player.inventoryContainer.inventory[i]
+                val canMerge = allowMerging.value && currentSlot.displayName == minecraft.player.inventory.itemStack.displayName && currentSlot.item == minecraft.player.inventory.itemStack.item && (64 - currentSlot.count) >= minecraft.player.inventory.itemStack.count
+
                 // The slot is empty
-                // TODO: Allow stack merging
-                if (minecraft.player.inventoryContainer.inventory[i].isEmpty) {
+                if (currentSlot.isEmpty || canMerge) {
                     returnSlot = i
                     break
                 }
             }
 
             if (returnSlot != -1) {
+
                 // Click on return slot
-                minecraft.playerController.windowClick(0, returnSlot, 0, ClickType.PICKUP, minecraft.player);
-                minecraft.playerController.updateController();
+                minecraft.playerController.windowClick(0, returnSlot, 0, ClickType.PICKUP, minecraft.player)
+                minecraft.playerController.updateController()
             }
         }
 
         if (sprinting) {
+
             // Start sprinting again
             minecraft.player.connection.sendPacket(CPacketEntityAction(minecraft.player, CPacketEntityAction.Action.START_SPRINTING))
         }
