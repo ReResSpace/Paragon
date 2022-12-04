@@ -5,6 +5,7 @@ import com.paragon.impl.event.EventFactory
 import com.paragon.impl.managers.*
 import com.paragon.impl.ui.configuration.ConfigurationGUI
 import com.paragon.impl.ui.configuration.GuiImplementation
+import com.paragon.impl.ui.configuration.camper.CamperCheatGUI
 import com.paragon.impl.ui.configuration.discord.DiscordGUI
 import com.paragon.impl.ui.configuration.panel.PanelGUI
 import com.paragon.impl.ui.configuration.phobos.PhobosGUI
@@ -122,6 +123,9 @@ class Paragon {
         discordGUI = DiscordGUI()
         logger.info("Discord GUI Initialised")
 
+        camperCheatGUI = CamperCheatGUI()
+        logger.info("CamperCheat GUI Initialised")
+
         console = Console("Paragon Console", 400f, 300f)
         logger.info("Console Initialised")
 
@@ -201,6 +205,9 @@ class Paragon {
         private set
 
     lateinit var discordGUI: DiscordGUI
+        private set
+
+    lateinit var camperCheatGUI: CamperCheatGUI
         private set
 
     lateinit var configurationGUI: ConfigurationGUI

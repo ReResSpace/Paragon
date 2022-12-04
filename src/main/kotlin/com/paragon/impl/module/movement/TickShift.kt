@@ -47,12 +47,17 @@ object TickShift : Module("TickShift", Category.MOVEMENT, "Increases your speed 
             ((minecraft as IMinecraft).hookGetTimer() as ITimer).hookSetTickLength(50f)
         }
 
-        if (PlayerUtil.isMoving && tickCount > 0) {
-            // Decrease tick count
-            this.tickCount--
+        if (PlayerUtil.isMoving) {
+            if (tickCount > 0) {
+                // Decrease tick count
+                this.tickCount--
 
-            // Set timer speed
-            ((minecraft as IMinecraft).hookGetTimer() as ITimer).hookSetTickLength(50f / timer.value)
+                // Set timer speed
+                ((minecraft as IMinecraft).hookGetTimer() as ITimer).hookSetTickLength(50f / timer.value)
+            } else {
+                // Reset timer speed
+                ((minecraft as IMinecraft).hookGetTimer() as ITimer).hookSetTickLength(50f)
+            }
         } else {
             // Increase ticks as long as it isn't above our limit
             if (tickCount < ticks.value) {

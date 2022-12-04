@@ -1,11 +1,11 @@
-package com.paragon.impl.ui.configuration.panel
+package com.paragon.impl.ui.configuration.camper
 
 import com.paragon.impl.module.Category
 import com.paragon.impl.module.client.Colours
 import com.paragon.impl.ui.configuration.GuiImplementation
-import com.paragon.impl.ui.configuration.panel.impl.CategoryPanel
-import com.paragon.impl.ui.configuration.panel.impl.setting.BindElement
-import com.paragon.impl.ui.configuration.panel.impl.setting.StringElement
+import com.paragon.impl.ui.configuration.camper.impl.CategoryPanel
+import com.paragon.impl.ui.configuration.camper.impl.setting.BindElement
+import com.paragon.impl.ui.configuration.camper.impl.setting.StringElement
 import com.paragon.impl.ui.util.Click
 import com.paragon.util.mc
 import com.paragon.util.render.RenderUtil
@@ -19,7 +19,7 @@ import org.lwjgl.input.Keyboard
 import java.awt.Color
 import kotlin.math.max
 
-class PanelGUI : GuiImplementation() {
+class CamperCheatGUI : GuiImplementation() {
 
     val panels = arrayListOf<CategoryPanel>()
 
@@ -35,7 +35,7 @@ class PanelGUI : GuiImplementation() {
         var x = 30f
 
         Category.values().forEach {
-            panels.add(CategoryPanel(this, it, x, 25f, 90f, 22f, 360.0))
+            panels.add(CategoryPanel(this, it, x, 25f, 90f, 12f, 360.0))
             x += 95f
         }
     }
@@ -51,7 +51,7 @@ class PanelGUI : GuiImplementation() {
         }
 
         if (description.isNotEmpty()) {
-            FontUtil.drawCenteredString(description, sr.scaledWidth/2f, 3f, Colours.mainColour.value, false)
+            FontUtil.drawCenteredString(description, sr.scaledWidth / 2f, 3f, Colours.mainColour.value, false)
 		}
 
         Keyboard.enableRepeatEvents(true)

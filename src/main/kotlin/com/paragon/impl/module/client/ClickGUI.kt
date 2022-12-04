@@ -7,6 +7,7 @@ import com.paragon.impl.module.annotation.IgnoredByNotifications
 import com.paragon.impl.setting.Bind
 import com.paragon.impl.setting.Setting
 import com.paragon.impl.ui.configuration.GuiImplementation
+import com.paragon.impl.ui.configuration.camper.CamperCheatGUI
 import me.surge.animation.Easing
 import org.lwjgl.input.Keyboard
 
@@ -52,6 +53,7 @@ object ClickGUI : Module("ClickGUI", Category.CLIENT, "The ClickGUI of the clien
         Style.WINDOWS_98 -> Paragon.INSTANCE.windows98GUI
         Style.DISCORD -> Paragon.INSTANCE.discordGUI
         Style.PHOBOS -> Paragon.INSTANCE.phobosGUI
+        Style.CAMPER_CHEAT -> CamperCheatGUI()
         Style.PLUGIN -> Paragon.INSTANCE.pluginGui ?: Paragon.INSTANCE.panelGUI
     }
 
@@ -80,6 +82,11 @@ object ClickGUI : Module("ClickGUI", Category.CLIENT, "The ClickGUI of the clien
          * Phobos styled GUI
          */
         PHOBOS,
+
+        /**
+         * RusherHack styled GUI
+         */
+        CAMPER_CHEAT,
 
         /**
          * The current plugin gui

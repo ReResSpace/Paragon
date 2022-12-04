@@ -423,9 +423,11 @@ object RenderUtil : Wrapper {
         glBegin(GL_LINE_LOOP)
 
         glVertex2f(x, y)
-        glVertex2f(x, y + height)
-        glVertex2f(x + width, y + height)
-        glVertex2f(x + width, y)
+        glVertex2f(x + width + border, y)
+        glVertex2f(x + width + border, y + height)
+
+        // amusing
+        glVertex2f(x - border, y + height)
 
         glEnd()
 

@@ -1,13 +1,14 @@
-package com.paragon.impl.ui.configuration.panel.impl.setting
+package com.paragon.impl.ui.configuration.camper.impl.setting
 
 import com.paragon.Paragon
 import com.paragon.impl.event.client.SettingUpdateEvent
 import com.paragon.impl.module.client.Colours
 import com.paragon.impl.setting.Setting
-import com.paragon.impl.ui.configuration.panel.impl.ModuleElement
-import com.paragon.impl.ui.configuration.panel.impl.SettingElement
+import com.paragon.impl.ui.configuration.camper.impl.ModuleElement
+import com.paragon.impl.ui.configuration.camper.impl.SettingElement
 import com.paragon.impl.ui.util.Click
 import com.paragon.util.calculations.MathsUtil
+import com.paragon.util.render.ColourUtil.fade
 import com.paragon.util.render.RenderUtil
 import com.paragon.util.render.font.FontUtil
 import me.surge.animation.Animation
@@ -29,13 +30,13 @@ class SliderElement(parent: ModuleElement, setting: Setting<Number>, x: Float, y
     override fun draw(mouseX: Float, mouseY: Float, mouseDelta: Int) {
         super.draw(mouseX, mouseY, mouseDelta)
 
-        val maxWidth = width - 8
+        val maxWidth = width
 
         var localWidth = 0f
 
         if (setting.value is Float) {
             // Set values
-            val diff = min(maxWidth, max(0f, mouseX - (x + 4)))
+            val diff = min(maxWidth, max(0f, mouseX - x))
 
             val min = setting.min.toFloat()
             val max = setting.max.toFloat()
@@ -66,7 +67,7 @@ class SliderElement(parent: ModuleElement, setting: Setting<Number>, x: Float, y
             }
         } else if (setting.value is Double) {
             // Set values
-            val diff = min(maxWidth, max(0f, mouseX - (x + 4))).toDouble()
+            val diff = min(maxWidth, max(0f, mouseX - x)).toDouble()
 
             val min = setting.min.toDouble()
             val max = setting.max.toDouble()
@@ -109,15 +110,12 @@ class SliderElement(parent: ModuleElement, setting: Setting<Number>, x: Float, y
 
         sliderWidth = sliderWidth.coerceIn(0f, maxWidth)
 
-        RenderUtil.drawRect(x, y, width, height, hover.getColour())
+        RenderUtil.drawRect(x, y, width, height, Color(0, 0, 0, 100))
+        RenderUtil.drawRect(x, y, sliderWidth, height, Colours.mainColour.value.fade(Colours.mainColour.value.darker(), hover.getAnimationFactor()))
 
         RenderUtil.scaleTo(x + 3, y + 5.5f, 0f, 0.7, 0.7, 0.7) {
-            FontUtil.drawStringWithShadow(setting.name, x + 3, y + 5.5f, Color.WHITE)
+            FontUtil.drawStringWithShadow(setting.name, x + 3, y + 3f, Color.WHITE)
         }
-
-        RenderUtil.drawRect(x + 4, y + height - 8, maxWidth, 4f, Color(56, 56, 56))
-        RenderUtil.drawRect(x + 4, y + height - 8, sliderWidth, 4f, Colours.mainColour.value)
-        RenderUtil.drawRect(x + 3 + sliderWidth, y + height - 10, 2f, 8f, Colours.mainColour.value.darker())
 
         run {
             glScalef(0.7f, 0.7f, 0.7f)
@@ -126,7 +124,7 @@ class SliderElement(parent: ModuleElement, setting: Setting<Number>, x: Float, y
 
             val valueX = (x + getRenderableWidth() - FontUtil.getStringWidth(setting.value.toString()) * 0.7f - 5) * factor
 
-            FontUtil.drawStringWithShadow(setting.value.toString(), valueX, (y + 5.5f) * factor, Color.GRAY)
+            FontUtil.drawStringWithShadow(setting.value.toString(), valueX, (y + 3.5f) * factor, Color.GRAY)
 
             glScalef(factor, factor, factor)
         }
