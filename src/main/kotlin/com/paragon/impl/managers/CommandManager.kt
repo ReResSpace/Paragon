@@ -41,6 +41,7 @@ class CommandManager : Wrapper {
                     break
                 }
             }
+
             if (!commandFound) {
                 sendClientMessage(RED.toString() + "Command not found!", fromConsole)
             }

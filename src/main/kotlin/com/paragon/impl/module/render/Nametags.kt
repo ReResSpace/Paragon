@@ -66,16 +66,16 @@ object Nametags : Module("Nametags", Category.RENDER, "Draws nametags above play
                 }
 
                 if (ping.value && minecraft.connection != null) {
-                    if (player is EntityFakePlayer) {
-                        builder.append(" ")
-                            .append(TextFormatting.GRAY)
-                            .append(-1)
-                    } else {
-                        minecraft.connection!!.getPlayerInfo(player.uniqueID)
-
-                        builder.append(" ")
-                            .append(getPingColour(minecraft.connection!!.getPlayerInfo(player.uniqueID).responseTime))
-                            .append(minecraft.connection!!.getPlayerInfo(player.uniqueID).responseTime)
+                    runCatching {
+                        if (player is EntityFakePlayer) {
+                            builder.append(" ")
+                                .append(TextFormatting.GRAY)
+                                .append(-1)
+                        } else {
+                            builder.append(" ")
+                                .append(getPingColour(minecraft.connection!!.getPlayerInfo(player.uniqueID).responseTime))
+                                .append(minecraft.connection!!.getPlayerInfo(player.uniqueID).responseTime)
+                        }
                     }
                 }
 

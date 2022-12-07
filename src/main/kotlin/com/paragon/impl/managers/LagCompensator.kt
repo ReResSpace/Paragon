@@ -34,7 +34,9 @@ class LagCompensator : Wrapper {
 
     @Listener
     fun onPacketReceive(event: PacketEvent.PreReceive) {
-        if (event.packet !is SPacketTimeUpdate) return
+        if (event.packet !is SPacketTimeUpdate) {
+            return
+        }
 
         if (timeLastTimeUpdate != -1L) {
             val timeElapsed = (System.currentTimeMillis() - timeLastTimeUpdate).toFloat() / 1000.0F

@@ -103,6 +103,7 @@ class ModuleManager {
             Interact,
             Lawnmower,
             MiddleClick,
+            MultiTask,
             NoGlobalSounds,
             NoHandshake,
             NoRotate,

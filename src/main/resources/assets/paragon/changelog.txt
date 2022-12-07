@@ -30,6 +30,7 @@ Added:
   - Added SafeWalk module
   - Added AutoXP module
   - Added 'CamperCheat' GUI (RusherHack styled)
+  - Added MultiTask module
 
 Reworked:
   - Main Menu

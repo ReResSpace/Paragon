@@ -54,7 +54,6 @@ object ClickGUI : Module("ClickGUI", Category.CLIENT, "The ClickGUI of the clien
         Style.DISCORD -> Paragon.INSTANCE.discordGUI
         Style.PHOBOS -> Paragon.INSTANCE.phobosGUI
         Style.CAMPER_CHEAT -> CamperCheatGUI()
-        Style.PLUGIN -> Paragon.INSTANCE.pluginGui ?: Paragon.INSTANCE.panelGUI
     }
 
     override fun onEnable() {
@@ -86,12 +85,7 @@ object ClickGUI : Module("ClickGUI", Category.CLIENT, "The ClickGUI of the clien
         /**
          * RusherHack styled GUI
          */
-        CAMPER_CHEAT,
-
-        /**
-         * The current plugin gui
-         */
-        PLUGIN
+        CAMPER_CHEAT
     }
 
     enum class Icon {

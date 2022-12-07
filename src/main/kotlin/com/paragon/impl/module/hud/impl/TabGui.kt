@@ -1,16 +1,16 @@
 package com.paragon.impl.module.hud.impl
 
 import com.paragon.Paragon
+import com.paragon.impl.module.Category
 import com.paragon.impl.module.Module
-import com.paragon.impl.setting.Setting
-import com.paragon.util.render.font.FontUtil
-import com.paragon.impl.module.hud.HUDModule
 import com.paragon.impl.module.client.ClickGUI
 import com.paragon.impl.module.client.Colours
+import com.paragon.impl.module.hud.HUDModule
+import com.paragon.impl.setting.Setting
 import com.paragon.impl.ui.configuration.discord.DiscordGUI
-import com.paragon.impl.module.Category
 import com.paragon.util.calculations.Timer
 import com.paragon.util.render.RenderUtil
+import com.paragon.util.render.font.FontUtil
 import com.paragon.util.string.StringUtil
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.minecraftforge.fml.common.gameevent.InputEvent.KeyInputEvent
@@ -99,10 +99,6 @@ object TabGui : HUDModule("TabGui", "Gui with tabs or smth") {
                         (x + catWidth + FontUtil.getStringWidth("# ")), (moduleY + ((FontUtil.getHeight() + 1F) * shownModules!!.indexOf(focusedModule))), (moduleWidth + FontUtil.getStringWidth("# ")), FontUtil.getHeight(), 3.5f, DiscordGUI.channelHoveredColor
                     )
                 }
-            }
-
-            ClickGUI.Style.PLUGIN -> {
-                FontUtil.drawStringWithShadow("Feature not implemented!", x, y, Color.WHITE)
             }
 
             ClickGUI.Style.PANEL -> {

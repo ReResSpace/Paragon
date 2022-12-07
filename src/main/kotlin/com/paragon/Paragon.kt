@@ -151,8 +151,6 @@ class Paragon {
     var logger: Logger = LogManager.getLogger("paragon")
         private set
 
-    var pluginGui: GuiImplementation? = null
-
     val presenceManager = DiscordPresenceManager()
 
     // Managers
