@@ -4,8 +4,7 @@ import com.paragon.Paragon
 import com.paragon.impl.command.Command
 import com.paragon.impl.command.syntax.ArgumentData
 import com.paragon.impl.command.syntax.SyntaxBuilder
-import com.paragon.impl.managers.notifications.Notification
-import com.paragon.impl.managers.notifications.NotificationType
+import net.minecraft.util.text.TextFormatting
 import java.io.File
 
 /**
@@ -18,42 +17,29 @@ object ConfigCommand : Command("Config", SyntaxBuilder.createBuilder(arrayListOf
 
     override fun whenCalled(args: Array<String>, fromConsole: Boolean) {
         if (args.size == 2) {
-            if (args[0].equals("save", ignoreCase = true)) {
-                Paragon.INSTANCE.storageManager.saveModules(args[1])
-                Paragon.INSTANCE.notificationManager.addNotification(
-                    Notification(
-                        "Saved config " + args[1], NotificationType.INFO
-                    )
-                )
-            }
-            else if (args[0].equals("load", ignoreCase = true)) {
-                Paragon.INSTANCE.storageManager.loadModules(args[1])
-                Paragon.INSTANCE.notificationManager.addNotification(
-                    Notification(
-                        "Loading config " + args[1], NotificationType.INFO
-                    )
-                )
-            }
-            else if (args[0].equals("delete", ignoreCase = true)) {
-                val file = File("paragon" + File.separator + "configs" + File.separator + args[1])
-                if (file.exists()) {
-                    file.delete()
+            when (args[0].lowercase()) {
+                "save" -> {
+                    Paragon.INSTANCE.storageManager.saveModules(args[1])
+                    sendMessage("${TextFormatting.GREEN}Config saved successfully!")
                 }
-                else {
-                    Paragon.INSTANCE.notificationManager.addNotification(
-                        Notification(
-                            "Config " + args[1] + " does not exist", NotificationType.ERROR
-                        )
-                    )
+
+                "load" -> {
+                    Paragon.INSTANCE.storageManager.loadModules(args[1])
+                    sendMessage("${TextFormatting.GREEN}Config loaded successfully!")
+                }
+
+                "delete" -> {
+                    val file = File("paragon${File.separator}configs${File.separator}${args[1]}")
+
+                    if (file.exists()) {
+                        file.delete()
+                    } else {
+                        sendMessage("${TextFormatting.RED}Could not delete ${args[1]}, because it doesn't exist.")
+                    }
                 }
             }
-        }
-        else {
-            Paragon.INSTANCE.notificationManager.addNotification(
-                Notification(
-                    "Syntax: $syntax", NotificationType.ERROR
-                )
-            )
+        } else {
+            sendMessage("${TextFormatting.RED}Incorrect syntax! Run '\$syntax config' to get the correct syntax.")
         }
     }
 

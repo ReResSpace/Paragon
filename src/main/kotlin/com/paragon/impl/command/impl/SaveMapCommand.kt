@@ -1,6 +1,5 @@
 package com.paragon.impl.command.impl
 
-import com.paragon.Paragon
 import com.paragon.impl.command.Command
 import com.paragon.impl.command.syntax.ArgumentData
 import com.paragon.impl.command.syntax.SyntaxBuilder
@@ -13,6 +12,7 @@ import net.minecraft.client.renderer.Vector3d
 import net.minecraft.entity.item.EntityItemFrame
 import net.minecraft.item.ItemMap
 import net.minecraft.util.EnumFacing
+import net.minecraft.util.text.TextFormatting
 import java.awt.image.BufferedImage
 import java.io.File
 import java.util.concurrent.CopyOnWriteArrayList
@@ -36,17 +36,17 @@ object SaveMapCommand : Command("SaveMap", SyntaxBuilder.createBuilder(arrayList
 
     override fun whenCalled(args: Array<String>, fromConsole: Boolean) {
         if (args.isEmpty()) {
-            Paragon.INSTANCE.commandManager.sendClientMessage("Wrong syntax! Use $syntax.", fromConsole)
+            sendMessage("${TextFormatting.RED}Wrong syntax! Run '\$syntax saveMap' to get the correct syntax.")
             return
         }
 
         if (currentJob != null && (currentJob ?: return).isActive) {
-            Paragon.INSTANCE.commandManager.sendClientMessage("Already in the process of saving maps!", fromConsole)
+            sendMessage("${TextFormatting.RED}Already in the process of saving maps!")
             return
         }
 
-
-        @Suppress("IncorrectFormatting") itemRenderInstances = ((minecraft.entityRenderer as IEntityRenderer).mapItemRenderer as IMapItemRenderer).hookGetLoadedMaps()
+        @Suppress("IncorrectFormatting")
+        itemRenderInstances = ((minecraft.entityRenderer as IEntityRenderer).mapItemRenderer as IMapItemRenderer).hookGetLoadedMaps()
 
         when (args[0]) {
             "holding" -> {
@@ -83,9 +83,7 @@ object SaveMapCommand : Command("SaveMap", SyntaxBuilder.createBuilder(arrayList
                         )
                     }
 
-                    Paragon.INSTANCE.commandManager.sendClientMessage(
-                        "Finished saving all loaded maps!", fromConsole
-                    )
+                    sendMessage("${TextFormatting.GREEN}Finished saving all loaded maps!")
                 }
             }
 
@@ -99,16 +97,12 @@ object SaveMapCommand : Command("SaveMap", SyntaxBuilder.createBuilder(arrayList
 
                     frameList.clear()
 
-                    Paragon.INSTANCE.commandManager.sendClientMessage(
-                        "Finished merging and saving all loaded maps!", fromConsole
-                    )
+                    sendMessage("${TextFormatting.GREEN}Finished merging and saving all loaded maps!")
                 }
             }
 
             else -> {
-                Paragon.INSTANCE.commandManager.sendClientMessage(
-                    "Wrong syntax! Use $syntax.", fromConsole
-                )
+                sendMessage("${TextFormatting.RED}Wrong syntax! Run '\$syntax saveMap' to get the correct syntax.")
             }
         }
     }

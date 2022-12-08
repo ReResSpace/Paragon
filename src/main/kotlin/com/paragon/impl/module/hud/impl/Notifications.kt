@@ -50,7 +50,7 @@ object Notifications : HUDModule("Notifications", "Where the notifications will 
             }
             else if (renderType.value == RenderType.CHAT) {
                 for (notification in Paragon.INSTANCE.notificationManager.notifications) {
-                    Paragon.INSTANCE.commandManager.sendClientMessage(notification.message, false)
+                    Paragon.INSTANCE.commandManager.sendClientMessage(notification.message)
                 }
 
                 Paragon.INSTANCE.notificationManager.notifications.clear()

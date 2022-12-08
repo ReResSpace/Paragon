@@ -1,9 +1,9 @@
 package com.paragon.impl.module.misc
 
 import com.paragon.Paragon
+import com.paragon.impl.module.Category
 import com.paragon.impl.module.Module
 import com.paragon.impl.setting.Setting
-import com.paragon.impl.module.Category
 import com.paragon.util.anyNull
 import net.minecraft.util.text.TextFormatting
 import net.minecraftforge.event.entity.living.LivingDeathEvent
@@ -34,9 +34,7 @@ object OnDeath : Module("OnDeath", Category.MISC, "Do certain actions when you d
             val pos = entity.position
 
             // Display the client message
-            Paragon.INSTANCE.commandManager.sendClientMessage(
-                TextFormatting.RED.toString() + "You died at" + TextFormatting.WHITE + " X " + TextFormatting.GRAY + pos.x + TextFormatting.WHITE + " Y " + TextFormatting.GRAY + pos.y + TextFormatting.WHITE + " Z " + TextFormatting.GRAY + pos.z, false
-            )
+            Paragon.INSTANCE.commandManager.sendClientMessage("${TextFormatting.RED}You died at ${TextFormatting.WHITE}X${TextFormatting.GRAY} ${pos.x} ${TextFormatting.WHITE}Y${TextFormatting.GRAY} ${pos.y} ${TextFormatting.WHITE}Z${TextFormatting.GRAY} ${pos.z}")
         }
 
         if (respawn.value) {

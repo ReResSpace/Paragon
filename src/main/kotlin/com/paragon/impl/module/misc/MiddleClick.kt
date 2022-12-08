@@ -1,10 +1,10 @@
 package com.paragon.impl.module.misc
 
 import com.paragon.Paragon
-import com.paragon.impl.module.annotation.Aliases
-import com.paragon.impl.module.Module
-import com.paragon.impl.setting.Setting
 import com.paragon.impl.module.Category
+import com.paragon.impl.module.Module
+import com.paragon.impl.module.annotation.Aliases
+import com.paragon.impl.setting.Setting
 import com.paragon.util.anyNull
 import com.paragon.util.player.InventoryUtil
 import net.minecraft.entity.player.EntityPlayer
@@ -51,29 +51,21 @@ object MiddleClick : Module("MiddleClick", Category.MISC, "Allows you to perform
                         // Remove player from social list
                         Paragon.INSTANCE.friendManager.removePlayer(player)
 
-                        Paragon.INSTANCE.commandManager.sendClientMessage(
-                            TextFormatting.RED.toString() + "Removed player " + TextFormatting.GRAY + player + TextFormatting.RED + " from your socials list!", false
-                        )
-                    }
-                    else {
+                        Paragon.INSTANCE.commandManager.sendClientMessage("${TextFormatting.RED}Removed player ${TextFormatting.GRAY}$player ${TextFormatting.RED}from your socials list!")
+                    } else {
                         // Add player to social list
                         Paragon.INSTANCE.friendManager.addName(player)
 
-                        Paragon.INSTANCE.commandManager.sendClientMessage(
-                            TextFormatting.GREEN.toString() + "Added player " + TextFormatting.GRAY + player + TextFormatting.GREEN + " to your friends list!", false
-                        )
+                        Paragon.INSTANCE.commandManager.sendClientMessage("${TextFormatting.GREEN}Added player ${TextFormatting.GRAY}$player${TextFormatting.GREEN} to your friends list!")
                     }
-                }
-                else if (pearl.value) {
+                } else if (pearl.value) {
                     // The last slot we were on
                     val prevSlot = minecraft.player.inventory.currentItem
 
                     // Switch to pearl, if we can
                     if (InventoryUtil.switchToItem(Items.ENDER_PEARL, false)) {
                         // Throw pearl
-                        minecraft.playerController.processRightClick(
-                            minecraft.player, minecraft.world, EnumHand.MAIN_HAND
-                        )
+                        minecraft.playerController.processRightClick(minecraft.player, minecraft.world, EnumHand.MAIN_HAND)
 
                         // Switch back to old slot
                         InventoryUtil.switchToSlot(prevSlot, false)
@@ -83,8 +75,7 @@ object MiddleClick : Module("MiddleClick", Category.MISC, "Allows you to perform
 
             // We have clicked
             hasClicked = true
-        }
-        else {
+        } else {
             // Reset hasClicked
             hasClicked = false
         }

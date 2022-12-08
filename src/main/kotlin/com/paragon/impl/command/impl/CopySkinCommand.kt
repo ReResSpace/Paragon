@@ -20,7 +20,7 @@ object CopySkinCommand : Command("CopySkin", SyntaxBuilder.createBuilder(arrayLi
     override fun whenCalled(args: Array<String>, fromConsole: Boolean) {
         var shouldSet = true
         val newSkin = TextureUtil.getFromURL("https://minotar.net/skin/${args[0]}.png") {
-            Paragon.INSTANCE.commandManager.sendClientMessage("Couldn't load skin!", fromConsole)
+            Paragon.INSTANCE.commandManager.sendClientMessage("Couldn't load skin!")
             shouldSet = false //Crossinlined lambda, can't return
         }
 

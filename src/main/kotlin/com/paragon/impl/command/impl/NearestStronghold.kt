@@ -1,6 +1,5 @@
 package com.paragon.impl.command.impl
 
-import com.paragon.Paragon
 import com.paragon.impl.command.Command
 import com.paragon.impl.command.syntax.SyntaxBuilder
 
@@ -14,35 +13,37 @@ object NearestStronghold : Command("Nearest", SyntaxBuilder()) {
     )
 
     override fun whenCalled(args: Array<String>, fromConsole: Boolean) {
-        //check if server is 2b2t.org using Minecraft.getCurrentServerData()
+        // check if server is 2b2t.org using Minecraft.getCurrentServerData()
         if ((minecraft.currentServerData ?: return).serverIP == "connect.2b2t.org") {
 
-            //get stronghold location nearest to player on 2b2t.org
+            // Check if player is in the nether
             if (minecraft.player.dimension == 1) {
-                Paragon.INSTANCE.commandManager.sendClientMessage(
-                    "don't you feel stupid... don't you feel a little ashamed...", false
-                )
+                sendMessage("don't you feel stupid... don't you feel a little ashamed...")
             }
 
+            // get stronghold location nearest to player on 2b2t.org
             var closestX = endPortalCoords[0][0]
             var closestZ = endPortalCoords[0][1]
+
             var shortestDistance = minecraft.player.getDistanceSq(
                 endPortalCoords[0][0].toDouble(), 0.0, endPortalCoords[0][1].toDouble()
             )
+
             for (i in 1 until endPortalCoords.size) {
-                val d = minecraft.player.getDistanceSq(
+                val distance = minecraft.player.getDistanceSq(
                     endPortalCoords[i][0].toDouble(), 0.0, endPortalCoords[i][1].toDouble()
                 )
-                if (d < shortestDistance) {
+
+                if (distance < shortestDistance) {
                     closestX = endPortalCoords[i][0]
                     closestZ = endPortalCoords[i][1]
-                    shortestDistance = d
+                    shortestDistance = distance
                 }
             }
-            Paragon.INSTANCE.commandManager.sendClientMessage("Nearest stronghold around ($closestX, $closestZ)", false)
-        }
-        else {
-            Paragon.INSTANCE.commandManager.sendClientMessage("you are not in 2b2t, please join to use this", false)
+
+            sendMessage("Nearest stronghold around ($closestX, $closestZ)")
+        } else {
+            sendMessage("you are not in 2b2t, please join to use this")
         }
     }
 }

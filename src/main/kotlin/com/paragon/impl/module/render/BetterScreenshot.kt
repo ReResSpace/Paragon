@@ -156,8 +156,9 @@ object BetterScreenshot : Module("BetterScreenshot", Category.RENDER, "Allows yo
 
         override fun onGuiClosed() {
             if (!selecting) {
-                Paragon.INSTANCE.commandManager.sendClientMessage("No screenshot taken!", false)
+                Paragon.INSTANCE.commandManager.sendClientMessage("No screenshot taken!")
             }
+
             selecting = false
         }
 

@@ -31,6 +31,8 @@ Added:
   - Added AutoXP module
   - Added 'CamperCheat' GUI (RusherHack styled)
   - Added MultiTask module
+  - Removed Taskbar and added Hub Panel in the bottom left of the screen
+  - Removed Console
 
 Reworked:
   - Main Menu

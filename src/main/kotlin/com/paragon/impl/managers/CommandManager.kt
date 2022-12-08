@@ -43,18 +43,13 @@ class CommandManager : Wrapper {
             }
 
             if (!commandFound) {
-                sendClientMessage(RED.toString() + "Command not found!", fromConsole)
+                sendClientMessage(RED.toString() + "Command not found!")
             }
         }
     }
 
-    fun sendClientMessage(message: String, fromConsole: Boolean) {
-        // Only send chat message if the message wasn't sent from the console
-        if (!fromConsole) {
-            minecraft.player.sendMessage(TextComponentString(LIGHT_PURPLE.toString() + "Paragon " + WHITE + "> " + message))
-        }
-
-        Paragon.INSTANCE.console.addLine(LIGHT_PURPLE.toString() + "Paragon " + WHITE + "> " + message)
+    fun sendClientMessage(message: String) {
+        minecraft.player.sendMessage(TextComponentString(LIGHT_PURPLE.toString() + "Paragon " + WHITE + "> " + message))
     }
 
     @SubscribeEvent

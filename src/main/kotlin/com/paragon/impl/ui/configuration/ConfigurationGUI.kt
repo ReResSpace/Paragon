@@ -1,12 +1,14 @@
 package com.paragon.impl.ui.configuration
 
-import com.paragon.Paragon
 import com.paragon.impl.module.client.ClickGUI
 import com.paragon.impl.module.client.ClickGUI.darkenBackground
+import com.paragon.impl.ui.hub.HubWindow
 import com.paragon.impl.ui.util.Click
 import com.paragon.impl.ui.windows.Window
 import com.paragon.util.render.RenderUtil
+import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiScreen
+import net.minecraft.client.gui.ScaledResolution
 import org.lwjgl.input.Mouse
 import java.awt.Color
 
@@ -18,18 +20,13 @@ class ConfigurationGUI : GuiScreen() {
 
     var closeOnEscape = true
 
-    private var currentGUI: GuiImplementation? = null
+    private var currentGUI: GuiImplementation? = ClickGUI.getGUI()
+    private val hub = HubWindow(5f, 5f, 90f, 16f)
     val windowsList: MutableList<Window> = mutableListOf()
     val removeBuffer: MutableList<Window> = mutableListOf()
 
-    init {
-        currentGUI = ClickGUI.getGUI()
-    }
-
     override fun drawScreen(mouseX: Int, mouseY: Int, partialTicks: Float) {
         super.drawScreen(mouseX, mouseY, partialTicks)
-
-        Paragon.INSTANCE.taskbar.tooltip = ""
 
         if ((currentGUI?.javaClass ?: return) != ClickGUI.getGUI().javaClass) {
             currentGUI = ClickGUI.getGUI()
@@ -58,7 +55,9 @@ class ConfigurationGUI : GuiScreen() {
 
         windowsList.forEach { it.draw(mouseX, mouseY, mouseDelta) }
 
-        Paragon.INSTANCE.taskbar.draw(mouseX, mouseY)
+        hub.x = 5f
+        hub.y = ScaledResolution(Minecraft.getMinecraft()).scaledHeight - hub.getTotalHeight() - 5f
+        hub.draw(mouseX.toFloat(), mouseY.toFloat(), mouseDelta)
     }
 
     override fun mouseClicked(mouseX: Int, mouseY: Int, mouseButton: Int) {
@@ -76,7 +75,7 @@ class ConfigurationGUI : GuiScreen() {
 
         currentGUI?.mouseClicked(mouseX, mouseY, mouseButton)
 
-        Paragon.INSTANCE.taskbar.mouseClicked(mouseX, mouseY, Click.getClick(mouseButton))
+        hub.mouseClicked(mouseX.toFloat(), mouseY.toFloat(), Click.getClick(mouseButton))
     }
 
     override fun mouseReleased(mouseX: Int, mouseY: Int, state: Int) {
@@ -85,6 +84,8 @@ class ConfigurationGUI : GuiScreen() {
         windowsList.forEach { it.mouseReleased(mouseX, mouseY, Click.getClick(state)) }
 
         currentGUI?.mouseReleased(mouseX, mouseY, state)
+
+        hub.mouseReleased(mouseX.toFloat(), mouseY.toFloat(), Click.getClick(state))
     }
 
     override fun keyTyped(typedChar: Char, keyCode: Int) {

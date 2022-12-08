@@ -48,6 +48,9 @@ object ClickGUI : Module("ClickGUI", Category.CLIENT, "The ClickGUI of the clien
 
     val intensity = Setting("Intensity", 10f, 1f, 20f, 1f) describedBy "The intensity of the blur" subOf blur
 
+    val taskbarAlignment = Setting("TaskbarAlignment", TaskbarAlignment.LEFT) describedBy "Where the taskbar is positioned"
+    val forceTaskbarVisibility = Setting("ForceTaskbarVisibility", true) describedBy "Whether to constantly show the taskbar"
+
     fun getGUI(): GuiImplementation = when (style.value) {
         Style.PANEL -> Paragon.INSTANCE.panelGUI
         Style.WINDOWS_98 -> Paragon.INSTANCE.windows98GUI
@@ -103,6 +106,13 @@ object ClickGUI : Module("ClickGUI", Category.CLIENT, "The ClickGUI of the clien
          * Icon with a background
          */
         BACKGROUND
+    }
+
+    enum class TaskbarAlignment {
+        BOTTOM,
+        LEFT,
+        TOP,
+        RIGHT
     }
 
 }
