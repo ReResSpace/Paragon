@@ -6,9 +6,7 @@ import com.paragon.impl.ui.hub.HubWindow
 import com.paragon.impl.ui.util.Click
 import com.paragon.impl.ui.windows.Window
 import com.paragon.util.render.RenderUtil
-import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiScreen
-import net.minecraft.client.gui.ScaledResolution
 import org.lwjgl.input.Mouse
 import java.awt.Color
 
@@ -21,7 +19,7 @@ class ConfigurationGUI : GuiScreen() {
     var closeOnEscape = true
 
     private var currentGUI: GuiImplementation? = ClickGUI.getGUI()
-    private val hub = HubWindow(5f, 5f, 90f, 16f)
+    private val hub = HubWindow(651f, 5f, 90f, 16f)
     val windowsList: MutableList<Window> = mutableListOf()
     val removeBuffer: MutableList<Window> = mutableListOf()
 
@@ -55,8 +53,6 @@ class ConfigurationGUI : GuiScreen() {
 
         windowsList.forEach { it.draw(mouseX, mouseY, mouseDelta) }
 
-        hub.x = 5f
-        hub.y = ScaledResolution(Minecraft.getMinecraft()).scaledHeight - hub.getTotalHeight() - 5f
         hub.draw(mouseX.toFloat(), mouseY.toFloat(), mouseDelta)
     }
 

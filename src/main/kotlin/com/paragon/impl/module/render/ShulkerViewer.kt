@@ -6,12 +6,14 @@ import com.paragon.impl.module.Category
 import com.paragon.impl.module.Module
 import com.paragon.impl.module.client.Colours
 import com.paragon.util.render.RenderUtil
+import com.paragon.util.render.font.FontUtil
 import net.minecraft.client.renderer.GlStateManager
 import net.minecraft.inventory.ItemStackHelper
 import net.minecraft.item.ItemShulkerBox
 import net.minecraft.item.ItemStack
 import net.minecraft.util.NonNullList
 import java.awt.Color
+import kotlin.math.max
 
 /**
  * @author Surge
@@ -41,11 +43,13 @@ object ShulkerViewer : Module("ShulkerViewer", Category.RENDER, "Preview shulker
             // Y offset
             val y = event.y - 31
 
+            val width = max(166f, FontUtil.getStringWidth(event.stack.displayName) + 12)
+
             // Background
-            RenderUtil.drawRect(event.x + 2, y, 166f, 71f, Color(23, 23, 25))
+            RenderUtil.drawRect(event.x + 2, y, width, 71f, Color(23, 23, 25))
 
             // Border
-            RenderUtil.drawBorder(event.x + 2, y, 166f, 71f, 2f, Colours.mainColour.value)
+            RenderUtil.drawBorder(event.x + 2, y, width, 71f, 1f, Colours.mainColour.value)
 
             // Shulker box name
             minecraft.fontRenderer.drawStringWithShadow(event.stack.displayName, event.x + 6, y + 3.5f, -1)
