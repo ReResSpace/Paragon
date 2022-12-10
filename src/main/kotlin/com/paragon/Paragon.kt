@@ -4,13 +4,11 @@ import com.paragon.bus.EventBus
 import com.paragon.impl.event.EventFactory
 import com.paragon.impl.managers.*
 import com.paragon.impl.ui.configuration.ConfigurationGUI
-import com.paragon.impl.ui.configuration.GuiImplementation
+import com.paragon.impl.ui.configuration.camper.CamperCheatGUI
 import com.paragon.impl.ui.configuration.discord.DiscordGUI
 import com.paragon.impl.ui.configuration.panel.PanelGUI
 import com.paragon.impl.ui.configuration.phobos.PhobosGUI
 import com.paragon.impl.ui.configuration.retrowindows.Windows98
-import com.paragon.impl.ui.console.Console
-import com.paragon.impl.ui.taskbar.Taskbar
 import com.paragon.util.render.font.FontUtil
 import net.minecraft.client.Minecraft
 import net.minecraftforge.common.ForgeVersion
@@ -107,9 +105,6 @@ class Paragon {
 
         // GUIs
 
-        taskbar = Taskbar
-        logger.info("Taskbar Initialised")
-
         panelGUI = PanelGUI()
         logger.info("PanelGUI Initialised")
 
@@ -122,8 +117,8 @@ class Paragon {
         discordGUI = DiscordGUI()
         logger.info("Discord GUI Initialised")
 
-        console = Console("Paragon Console", 400f, 300f)
-        logger.info("Console Initialised")
+        camperCheatGUI = CamperCheatGUI()
+        logger.info("CamperCheat GUI Initialised")
 
         configurationGUI = ConfigurationGUI()
         logger.info("Configuration GUI Initialised")
@@ -146,8 +141,6 @@ class Paragon {
     // Client stuff
     var logger: Logger = LogManager.getLogger("paragon")
         private set
-
-    var pluginGui: GuiImplementation? = null
 
     val presenceManager = DiscordPresenceManager()
 
@@ -188,9 +181,6 @@ class Paragon {
         private set
 
     // GUIs
-    lateinit var taskbar: Taskbar
-        private set
-
     lateinit var panelGUI: PanelGUI
         private set
 
@@ -203,10 +193,10 @@ class Paragon {
     lateinit var discordGUI: DiscordGUI
         private set
 
-    lateinit var configurationGUI: ConfigurationGUI
+    lateinit var camperCheatGUI: CamperCheatGUI
         private set
 
-    lateinit var console: Console
+    lateinit var configurationGUI: ConfigurationGUI
         private set
 
 }

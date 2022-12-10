@@ -5,7 +5,6 @@ import com.paragon.bus.listener.Listener
 import com.paragon.impl.event.render.entity.RenderNametagEvent
 import com.paragon.impl.module.Category
 import com.paragon.impl.module.Module
-import com.paragon.impl.module.client.ClientFont
 import com.paragon.impl.setting.Setting
 import com.paragon.util.anyNull
 import com.paragon.util.entity.EntityUtil
@@ -67,16 +66,16 @@ object Nametags : Module("Nametags", Category.RENDER, "Draws nametags above play
                 }
 
                 if (ping.value && minecraft.connection != null) {
-                    if (player is EntityFakePlayer) {
-                        builder.append(" ")
-                            .append(TextFormatting.GRAY)
-                            .append(-1)
-                    } else {
-                        minecraft.connection!!.getPlayerInfo(player.uniqueID)
-
-                        builder.append(" ")
-                            .append(getPingColour(minecraft.connection!!.getPlayerInfo(player.uniqueID).responseTime))
-                            .append(minecraft.connection!!.getPlayerInfo(player.uniqueID).responseTime)
+                    runCatching {
+                        if (player is EntityFakePlayer) {
+                            builder.append(" ")
+                                .append(TextFormatting.GRAY)
+                                .append(-1)
+                        } else {
+                            builder.append(" ")
+                                .append(getPingColour(minecraft.connection!!.getPlayerInfo(player.uniqueID).responseTime))
+                                .append(minecraft.connection!!.getPlayerInfo(player.uniqueID).responseTime)
+                        }
                     }
                 }
 
@@ -195,6 +194,8 @@ object Nametags : Module("Nametags", Category.RENDER, "Draws nametags above play
                     itemX += 18f
                 }
             }
+
+            glColor4f(1f, 1f, 1f, 1f)
         }
     }
 

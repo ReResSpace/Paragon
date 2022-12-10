@@ -7,6 +7,8 @@ import com.paragon.impl.setting.Setting
 import com.paragon.impl.ui.configuration.panel.PanelGUI
 import com.paragon.impl.ui.configuration.panel.impl.setting.*
 import com.paragon.impl.ui.configuration.shared.RawElement
+import com.paragon.impl.ui.configuration.panel.impl.SettingElement
+import com.paragon.impl.ui.configuration.panel.impl.setting.StringElement
 import com.paragon.impl.ui.util.Click
 import com.paragon.util.render.RenderUtil
 import me.surge.animation.Animation

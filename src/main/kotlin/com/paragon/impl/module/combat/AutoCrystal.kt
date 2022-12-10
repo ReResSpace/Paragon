@@ -7,10 +7,10 @@ import com.paragon.impl.event.world.entity.EntityRemoveFromWorldEvent
 import com.paragon.impl.managers.rotation.Rotate
 import com.paragon.impl.managers.rotation.Rotation
 import com.paragon.impl.managers.rotation.RotationPriority
-import com.paragon.impl.module.annotation.Aliases
 import com.paragon.impl.module.Category
-import com.paragon.impl.module.annotation.Constant
 import com.paragon.impl.module.Module
+import com.paragon.impl.module.annotation.Aliases
+import com.paragon.impl.module.annotation.Constant
 import com.paragon.impl.setting.Setting
 import com.paragon.mixins.accessor.ICPacketUseEntity
 import com.paragon.mixins.accessor.IEntityPlayerSP
@@ -643,6 +643,10 @@ object AutoCrystal : Module("AutoCrystal", Category.COMBAT, "Automatically place
     }
 
     private fun isValid(crystal: EntityEnderCrystal): Pair<Boolean, Pair<Float, Float>?> {
+        if (crystal.isDead) {
+            return Pair(false, null)
+        }
+
         // The distance to the crystal
         val range = crystal.getDistance(minecraft.player)
 

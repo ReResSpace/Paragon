@@ -2,7 +2,6 @@ package com.paragon.impl.ui.configuration.panel.impl.setting
 
 import com.paragon.Paragon
 import com.paragon.impl.event.client.SettingUpdateEvent
-import com.paragon.impl.module.client.ClickGUI
 import com.paragon.impl.module.client.Colours
 import com.paragon.impl.setting.Setting
 import com.paragon.impl.ui.configuration.panel.impl.ModuleElement
@@ -11,11 +10,9 @@ import com.paragon.impl.ui.util.Click
 import com.paragon.util.calculations.MathsUtil
 import com.paragon.util.render.RenderUtil
 import com.paragon.util.render.font.FontUtil
-import com.paragon.util.string.StringUtil
 import me.surge.animation.Animation
 import me.surge.animation.Easing
 import org.lwjgl.input.Mouse
-import org.lwjgl.opengl.GL11
 import org.lwjgl.opengl.GL11.glScalef
 import java.awt.Color
 import java.math.BigDecimal

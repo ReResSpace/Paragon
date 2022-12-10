@@ -1,12 +1,11 @@
 package com.paragon.mixins.entity;
 
 import com.paragon.Paragon;
-import com.paragon.impl.event.combat.EntityAttackedEvent;
 import com.paragon.impl.event.player.StepEvent;
+import com.paragon.impl.event.player.WalkOffOfBlockEvent;
 import com.paragon.impl.event.world.entity.EntityPushEvent;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.MoverType;
-import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.AxisAlignedBB;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -14,7 +13,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Entity.class)
 public abstract class MixinEntity {
@@ -44,6 +42,14 @@ public abstract class MixinEntity {
         if (stepEvent.isCancelled()) {
             stepHeight = stepEvent.getHeight();
         }
+    }
+
+    @Redirect(method = "move", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/Entity;isSneaking()Z"))
+    public boolean hookMoveIsSneaking(Entity entity) {
+        WalkOffOfBlockEvent event = new WalkOffOfBlockEvent(entity);
+        Paragon.INSTANCE.getEventBus().post(event);
+
+        return event.isCancelled() || entity.isSneaking();
     }
 
 }

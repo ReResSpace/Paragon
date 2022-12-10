@@ -2,8 +2,10 @@ package com.paragon.impl.module.hud
 
 import com.paragon.Paragon
 import com.paragon.impl.module.Category
+import com.paragon.impl.module.client.Colours
 import com.paragon.impl.ui.configuration.panel.impl.CategoryPanel
 import com.paragon.impl.ui.util.Click
+import com.paragon.util.render.ColourUtil.integrateAlpha
 import com.paragon.util.render.RenderUtil
 import com.paragon.util.render.font.FontUtil
 import net.minecraft.client.gui.GuiScreen
@@ -26,10 +28,10 @@ class HUDEditorGUI : GuiScreen() {
 
         val scaledResolution = ScaledResolution(mc)
 
-        //RenderUtil.drawRect(0f, 0f, scaledResolution.scaledWidth.toFloat(), scaledResolution.scaledHeight.toFloat(), Color(0, 0, 0, 180))
+        RenderUtil.drawRect(0f, 0f, scaledResolution.scaledWidth.toFloat(), scaledResolution.scaledHeight.toFloat(), Color(0, 0, 0, 180))
 
-        //RenderUtil.drawRect(scaledResolution.scaledWidth / 2f - 0.5f, 0f, 1f, scaledResolution.scaledHeight.toFloat(), Color(255, 255, 255, 100))
-        //RenderUtil.drawRect(0f, scaledResolution.scaledHeight / 2f - 0.5f, scaledResolution.scaledWidth.toFloat(), 1f, Color(255, 255, 255, 100))
+        RenderUtil.drawRect(scaledResolution.scaledWidth / 2f - 0.5f, 0f, 1f, scaledResolution.scaledHeight.toFloat(), Color(255, 255, 255, 100))
+        RenderUtil.drawRect(0f, scaledResolution.scaledHeight / 2f - 0.5f, scaledResolution.scaledWidth.toFloat(), 1f, Color(255, 255, 255, 100))
 
         // mc font renderer does not work with \n
         FontUtil.drawStringWithShadow("Hold Left Click to drag", 3f, scaledResolution.scaledHeight - FontUtil.getHeight() * 3f - 4, Color.WHITE)
@@ -40,6 +42,10 @@ class HUDEditorGUI : GuiScreen() {
             (it as HUDModule).updateComponent(mouseX, mouseY)
 
             RenderUtil.scaleTo(it.x + (it.width / 2), it.y + (it.height / 2), 0f, it.animation.getAnimationFactor(), it.animation.getAnimationFactor(), 0.0) {
+                if (it.isDragging || it.isHovered(it.x, it.y, it.width, it.height, mouseX, mouseY)) {
+                    RenderUtil.drawRoundedRect(it.x - 2, it.y - 2, it.width + 4, it.height + 4, 5f, Colours.mainColour.value.integrateAlpha(150f))
+                }
+
                 it.render()
             }
         }

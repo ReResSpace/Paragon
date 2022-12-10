@@ -1,22 +1,19 @@
 package com.paragon.impl.module.hud.impl.graphs
 
-import com.paragon.impl.event.network.PacketEvent
-import com.paragon.impl.setting.Setting
-import com.paragon.util.render.ColourUtil.integrateAlpha
 import com.paragon.bus.listener.Listener
+import com.paragon.impl.event.network.PacketEvent
 import com.paragon.impl.module.hud.HUDModule
-import com.paragon.impl.module.client.Colours
+import com.paragon.impl.setting.Setting
 import com.paragon.util.anyNull
 import com.paragon.util.calculations.Timer
 import com.paragon.util.render.RenderUtil
 import net.minecraft.entity.item.EntityEnderCrystal
 import net.minecraft.network.play.client.CPacketUseEntity
-import java.awt.Color
 
 /**
  * @author SooStrator1136
  */
-object GraphCPS : HUDModule("CPSGraph", "Graph showing your Crystals per second") {
+object GraphCrystals : HUDModule("CrystalsGraph", "Graph showing the amount of crystals you attack") {
 
     private val scale = Setting(
         "Size", 1.0, 0.1, 2.0, 0.1
@@ -28,22 +25,10 @@ object GraphCPS : HUDModule("CPSGraph", "Graph showing your Crystals per second"
 
     private val background = Setting("Background", Graph.Background.ALL)
 
-    private val backgroundColor = Setting(
-        "BackgroundColor", Color.BLACK.integrateAlpha(100F)
-    ) describedBy "Color of the background"
-
-    private val borderColor = Setting(
-        "Border", Colours.mainColour.value
-    ) describedBy "Color of the surrounding"
-
-    private val graphColor = Setting(
-        "Graph color", Colours.mainColour.value.darker()
-    ) describedBy "Color of the graph"
-
-    private var graph = Graph("CPS", backgroundColor::value, borderColor::value, graphColor::value, background::value)
+    private var graph = Graph("Crystals") { background.value }
 
     override fun onEnable() {
-        graph = Graph("CPS", backgroundColor::value, borderColor::value, graphColor::value, background::value)
+        graph = Graph("Crystals") { background.value }
     }
 
     override fun onDisable() {
@@ -91,7 +76,7 @@ object GraphCPS : HUDModule("CPSGraph", "Graph showing your Crystals per second"
         }
     }
 
-    override var width = 77F
-    override var height = 32F
+    override var width = 75F
+    override var height = 30F
 
 }

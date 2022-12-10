@@ -64,10 +64,10 @@ object Alert : Module("Alert", Category.MISC, "Alerts you about certain events")
 
     // health
     private val health = Setting("Health", false) describedBy "Notifies when health is low"
-    private val healthThreshold = Setting("Threshold", 20f, 1f, 36f, 1f) describedBy "The armour's durability percentage" subOf health
-    private val healthSelf = Setting("Self", true) describedBy "Notifies you when your armour pieces are about to break" subOf health
-    private val healthFriends = Setting("Friends", false) describedBy "Notifies you when your friends' armour pieces are about to break" subOf health
-    private val healthEnemies = Setting("Enemies", true) describedBy "Notifies you when your enemies' armour pieces are about to break" subOf health
+    private val healthThreshold = Setting("Threshold", 20f, 1f, 36f, 1f) describedBy "The health threshold" subOf health
+    private val healthSelf = Setting("Self", true) describedBy "Notifies you when your health is low" subOf health
+    private val healthFriends = Setting("Friends", false) describedBy "Notifies you when your friends' health is low" subOf health
+    private val healthEnemies = Setting("Enemies", true) describedBy "Notifies you when your enemies' health is low" subOf health
 
     // animals
     private val animals = Setting("Animals", false) describedBy "Notifies you when there are select animals within view distance"

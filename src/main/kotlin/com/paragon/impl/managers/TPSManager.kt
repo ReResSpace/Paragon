@@ -7,9 +7,12 @@ import com.paragon.impl.event.network.ServerEvent
 import com.paragon.util.Wrapper
 import com.paragon.util.system.CircularArray
 import net.minecraft.network.play.server.SPacketTimeUpdate
-import net.minecraftforge.common.MinecraftForge
 
 class TPSManager : Wrapper {
+
+    init {
+        Paragon.INSTANCE.eventBus.register(this)
+    }
 
     // Circular Buffer lasting ~60 seconds for tick storage
     private val tickRates = CircularArray.create(120, 20f)
@@ -26,12 +29,16 @@ class TPSManager : Wrapper {
 
     @Listener
     fun onPacketReceive(event: PacketEvent.PreReceive) {
-        if (event.packet !is SPacketTimeUpdate) return
+        if (event.packet !is SPacketTimeUpdate) {
+            return
+        }
 
         if (timeLastTimeUpdate != -1L) {
             val timeElapsed = (System.nanoTime() - timeLastTimeUpdate) / 1E9
+
             tickRates.add((20.0 / timeElapsed).coerceIn(0.0, 20.0).toFloat())
         }
+
         timeLastTimeUpdate = System.nanoTime()
     }
 
@@ -45,7 +52,4 @@ class TPSManager : Wrapper {
         timeLastTimeUpdate = -1L
     }
 
-    init {
-        Paragon.INSTANCE.eventBus.register(this)
-    }
 }

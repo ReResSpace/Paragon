@@ -1,14 +1,14 @@
 package com.paragon.impl.ui.configuration.retrowindows.element
 
 import com.paragon.Paragon
-import com.paragon.util.render.font.FontUtil
+import com.paragon.impl.module.Category
 import com.paragon.impl.module.client.ClickGUI
 import com.paragon.impl.module.client.Colours
 import com.paragon.impl.ui.configuration.retrowindows.element.module.ModuleElement
 import com.paragon.impl.ui.configuration.shared.Panel
 import com.paragon.impl.ui.util.Click
-import com.paragon.impl.module.Category
 import com.paragon.util.render.RenderUtil
+import com.paragon.util.render.font.FontUtil
 import com.paragon.util.string.StringUtil
 import me.surge.animation.Animation
 import net.minecraft.util.math.MathHelper
@@ -70,12 +70,12 @@ class CategoryWindow(category: Category, x: Float, y: Float, width: Float, heigh
 
         if (animation.getAnimationFactor() > 0) {
             if (mouseX in x..x + width && mouseY in y + height..y + height + scissorHeight) {
-                if (mouseDelta > 0 && moduleElements[moduleElements.size - 1].y + moduleElements[moduleElements.size - 1].getTotalHeight() > y + height + scissorHeight) {
+                if (mouseDelta < 0 && moduleElements[moduleElements.size - 1].y + moduleElements[moduleElements.size - 1].getTotalHeight() > y + height + scissorHeight) {
                     moduleElements.forEach {
                         it.y -= height
                     }
                 }
-                else if (mouseDelta < 0 && moduleElements[0].y < y + height) {
+                else if (mouseDelta > 0 && moduleElements[0].y < y + height) {
                     moduleElements.forEach {
                         it.y += height
                     }

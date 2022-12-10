@@ -1,8 +1,8 @@
 package com.paragon.impl.module.render
 
-import com.paragon.impl.module.annotation.Aliases
 import com.paragon.impl.module.Category
 import com.paragon.impl.module.Module
+import com.paragon.impl.module.annotation.Aliases
 import com.paragon.impl.setting.Setting
 import com.paragon.util.anyNull
 import com.paragon.util.player.PlayerUtil
@@ -18,25 +18,11 @@ import java.util.*
 @Aliases(["Trails"])
 object Breadcrumbs : Module("Breadcrumbs", Category.RENDER, "Draws a trail behind you") {
 
-    private val infinite = Setting(
-        "Infinite", false
-    ) describedBy "Breadcrumbs last forever"
-
-    private val lifespanValue = Setting(
-        "Lifespan", 100f, 1f, 1000f, 1f
-    ) describedBy "The lifespan of the positions in ticks" visibleWhen { !infinite.value }
-
-    private val lineWidth = Setting(
-        "LineWidth", 1f, 0.1f, 5f, 0.1f
-    ) describedBy "The width of the lines"
-
-    private val colour = Setting(
-        "Colour", Color(185, 17, 255)
-    ) describedBy "The colour of the breadcrumbs"
-
-    private val rainbow = Setting(
-        "Rainbow", true
-    ) describedBy "Makes the trail a rainbow"
+    private val infinite = Setting("Infinite", false) describedBy "Breadcrumbs last forever"
+    private val lifespanValue = Setting("Lifespan", 100f, 1f, 1000f, 1f) describedBy "The lifespan of the positions in ticks" visibleWhen { !infinite.value }
+    private val lineWidth = Setting("LineWidth", 1f, 0.1f, 5f, 0.1f) describedBy "The width of the lines"
+    private val colour = Setting("Colour", Color(185, 17, 255)) describedBy "The colour of the breadcrumbs"
+    private val rainbow = Setting("Rainbow", true) describedBy "Makes the trail a rainbow"
 
     private val positions = LinkedList<Position>()
     private var colourHue = 0
@@ -55,7 +41,17 @@ object Breadcrumbs : Module("Breadcrumbs", Category.RENDER, "Draws a trail behin
 
         // Create position
         val pos = Position(
-            Vec3d(minecraft.player.lastTickPosX, minecraft.player.lastTickPosY, minecraft.player.lastTickPosZ), Color(Color.HSBtoRGB(colourHue / 360f, 1f, 1f))
+            Vec3d(
+                minecraft.player.lastTickPosX,
+                minecraft.player.lastTickPosY,
+                minecraft.player.lastTickPosZ
+            ),
+            Color(
+                Color.HSBtoRGB(
+                    colourHue / 360f,
+                    1f, 1f
+                )
+            )
         )
 
         if (PlayerUtil.isMoving || minecraft.player.posY != minecraft.player.lastTickPosY) {

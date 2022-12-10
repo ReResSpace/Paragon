@@ -123,8 +123,6 @@ class ConfigWindow(x: Float, y: Float, width: Float, height: Float, grabbableHei
 
         configNameElement.draw(mouseX, mouseY)
 
-        RenderUtil.popScissor()
-
         val configDirectory = File("paragon${File.separator}configs")
 
         for (file in configDirectory.list()!!) {

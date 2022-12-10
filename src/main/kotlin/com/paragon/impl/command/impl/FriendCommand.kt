@@ -2,31 +2,32 @@ package com.paragon.impl.command.impl
 
 import com.paragon.Paragon
 import com.paragon.impl.command.Command
-import com.paragon.impl.command.syntax.Argument
+import com.paragon.impl.command.syntax.ArgumentData
 import com.paragon.impl.command.syntax.SyntaxBuilder
 import net.minecraft.util.text.TextFormatting
 
 /**
  * @author Surge
  */
-object FriendCommand : Command("Friend", SyntaxBuilder()
-        .addArgument(Argument("action", arrayOf("add", "remove", "list")))
-        .addArgument(Argument("name", arrayOf("any_str"), arrayOf(Pair("action", "list"))))
-) {
+object FriendCommand : Command("Friend", SyntaxBuilder.createBuilder(arrayListOf(
+    ArgumentData("action", arrayOf("add", "remove", "list")),
+    ArgumentData("name", arrayOf("any_str"), visibleWhen = arrayOf(
+        Pair("action", "add"),
+        Pair("action", "remove")
+    ))
+))) {
 
     override fun whenCalled(args: Array<String>, fromConsole: Boolean) {
         if (args.size == 1 && args[0].equals("list", ignoreCase = true)) {
             // List all players
             if (Paragon.INSTANCE.friendManager.names.isEmpty()) {
-                Paragon.INSTANCE.commandManager.sendClientMessage(TextFormatting.RED.toString() + "You haven't added anyone to your social list!", fromConsole)
+                sendMessage("${TextFormatting.RED}You haven't added anyone to your social list!")
 
                 return
             }
 
             for (player in Paragon.INSTANCE.friendManager.names) {
-                Paragon.INSTANCE.commandManager.sendClientMessage(
-                    player, fromConsole
-                )
+                Paragon.INSTANCE.commandManager.sendClientMessage(player)
             }
         }
         else if (args.size == 2 && args[0].equals("add", ignoreCase = true)) {
@@ -36,34 +37,26 @@ object FriendCommand : Command("Friend", SyntaxBuilder()
 
                 Paragon.INSTANCE.friendManager.addName(name)
 
-                Paragon.INSTANCE.commandManager.sendClientMessage(
-                    TextFormatting.GREEN.toString() + "Added player " + name + " to your socials list!", fromConsole
-                )
+                sendMessage("${TextFormatting.GREEN}Added player " + name + " to your socials list!")
 
                 // Save social
                 Paragon.INSTANCE.storageManager.saveSocial()
             }.onFailure {
-                Paragon.INSTANCE.commandManager.sendClientMessage(
-                    TextFormatting.RED.toString() + "Invalid argument! Should be 'friend', 'neutral', or 'enemy'", fromConsole
-                )
+                sendMessage("${TextFormatting.RED}Invalid argument! Should be 'friend', 'neutral', or 'enemy'")
             }
         }
         else if (args.size == 2 && args[0].equals("remove", ignoreCase = true)) {
             // Remove a player
             val name = args[1]
             Paragon.INSTANCE.friendManager.removePlayer(name)
-            Paragon.INSTANCE.commandManager.sendClientMessage(
-                TextFormatting.GREEN.toString() + "Removed player " + name + " from your socials list!", fromConsole
-            )
+            sendMessage("${TextFormatting.GREEN}Removed player $name from your socials list!")
 
             // Save socials
             Paragon.INSTANCE.storageManager.saveSocial()
         }
         else {
             // Say that we have given an invalid syntax
-            Paragon.INSTANCE.commandManager.sendClientMessage(
-                TextFormatting.RED.toString() + "Invalid Syntax!", fromConsole
-            )
+            sendMessage("${TextFormatting.RED}Invalid Syntax!")
         }
     }
 

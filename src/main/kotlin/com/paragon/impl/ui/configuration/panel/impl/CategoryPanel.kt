@@ -118,17 +118,7 @@ class CategoryPanel(val gui: PanelGUI?, val category: Category, x: Float, y: Flo
         RenderUtil.drawVerticalGradientRect(x, y + height, width, 5f, topGradient.getColour(), Color(0, 0, 0, 0))
 
         if (ClickGUI.outline.value) {
-            RenderUtil.drawRect(x, y, 0.5f, height + moduleHeight.toFloat(), leftGradient)
-            RenderUtil.drawRect(x + width - 0.5f, y + height, 0.5f, moduleHeight.toFloat(), rightGradient)
-
-            RenderUtil.drawHorizontalGradientRect(
-                x,
-                y + height + moduleHeight.toFloat() - 0.5f,
-                width,
-                0.5f,
-                leftGradient,
-                rightGradient
-            )
+            RenderUtil.drawBorder(x, y, width, height + moduleHeight.toFloat(), 0.5f, leftGradient)
         }
     }
 

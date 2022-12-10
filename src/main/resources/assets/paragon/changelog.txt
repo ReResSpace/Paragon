@@ -20,6 +20,19 @@ Added:
   - Added CPS HUD module
   - Packet, UpdatedNCP, and Minis modes to Criticals
   - AutoSable module
+  - Packet graphs HUD modules
+  - BetterScreenshot module
+  - NoHandshake module
+  - ServerBrand HUD module
+  - Added Infinite setting to ChatModifications
+  - Added TickShift module
+  - Added Movement setting to Timer
+  - Added SafeWalk module
+  - Added AutoXP module
+  - Added 'CamperCheat' GUI (RusherHack styled)
+  - Added MultiTask module
+  - Removed Taskbar and added Hub Panel in the bottom left of the screen
+  - Removed Console
 
 Reworked:
   - Main Menu
@@ -35,3 +48,7 @@ Changed:
   - Merged the Notifier module and DonkeyAlert module into the Alert module
   - Changed the AutoWalk module's category to Movement
   - Updated Nametags
+
+Bug Fixes:
+  - Fixed unicode character error in ShulkerViewer
+  - Font changing Y position depending on ClientFont's enabled state

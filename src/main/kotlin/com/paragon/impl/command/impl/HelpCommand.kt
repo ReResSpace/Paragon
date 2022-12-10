@@ -11,7 +11,7 @@ object HelpCommand : Command("Help", SyntaxBuilder()) {
 
     override fun whenCalled(args: Array<String>, fromConsole: Boolean) {
         Paragon.INSTANCE.commandManager.commands.forEach {
-            Paragon.INSTANCE.commandManager.sendClientMessage(it.name, fromConsole)
+            sendMessage(it.name)
         }
     }
 

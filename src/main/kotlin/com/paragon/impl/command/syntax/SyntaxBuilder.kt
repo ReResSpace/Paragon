@@ -4,7 +4,7 @@ package com.paragon.impl.command.syntax
  * @author Surge
  * @since 27/11/2022
  */
-class SyntaxBuilder {
+open class SyntaxBuilder {
 
     val arguments = arrayListOf<Argument>()
 
@@ -17,5 +17,21 @@ class SyntaxBuilder {
     fun join(): String {
         return arguments.joinToString { "[${it.name}: <${it.valid.joinToString("|", transform = { valid -> valid } )}>]" }
     }
+
+    companion object {
+
+        @JvmStatic
+        fun createBuilder(arguments: ArrayList<ArgumentData>): SyntaxBuilder {
+            val builder = SyntaxBuilder()
+
+            arguments.forEach {
+                builder.addArgument(Argument(builder, it.name, it.valid, it.visibleWhen))
+            }
+
+            return builder
+        }
+
+    }
+
 
 }

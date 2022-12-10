@@ -4,10 +4,7 @@ import com.paragon.impl.module.Module
 import com.paragon.impl.module.client.*
 import com.paragon.impl.module.combat.*
 import com.paragon.impl.module.hud.impl.*
-import com.paragon.impl.module.hud.impl.graphs.GraphCPS
-import com.paragon.impl.module.hud.impl.graphs.GraphFPS
-import com.paragon.impl.module.hud.impl.graphs.GraphPing
-import com.paragon.impl.module.hud.impl.graphs.GraphSpeed
+import com.paragon.impl.module.hud.impl.graphs.*
 import com.paragon.impl.module.misc.*
 import com.paragon.impl.module.movement.*
 import com.paragon.impl.module.render.*
@@ -25,6 +22,7 @@ class ModuleManager {
             // Combat
             Aura,
             AutoCrystal,
+            AutoXP,
             BowBomb,
             BowRelease,
             Criticals,
@@ -43,13 +41,16 @@ class ModuleManager {
             NoFall,
             NoSlow,
             ReverseStep,
+            SafeWalk,
             Sprint,
             Step,
             Strafe,
+            TickShift,
             Velocity,
 
             // Render
             AspectRatio,
+            BetterScreenshot,
             BlockHighlight,
             Blur,
             Breadcrumbs,
@@ -102,7 +103,9 @@ class ModuleManager {
             Interact,
             Lawnmower,
             MiddleClick,
+            MultiTask,
             NoGlobalSounds,
+            NoHandshake,
             NoRotate,
             OnDeath,
             RotationLock,
@@ -128,8 +131,10 @@ class ModuleManager {
             FPS,
             TPS,
             CPS,
-            GraphCPS,
+            GraphCrystals,
             GraphFPS,
+            GraphReceivedPackets,
+            GraphSentPackets,
             GraphPing,
             GraphSpeed,
             HUD,
@@ -140,6 +145,7 @@ class ModuleManager {
             Notifications,
             Ping,
             PotionHUD,
+            ServerBrand,
             Speed,
             TabGui,
             TargetHUD,

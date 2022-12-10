@@ -1,11 +1,11 @@
 package com.paragon.impl.module.render
 
+import com.paragon.bus.listener.Listener
 import com.paragon.impl.event.render.world.BlockHighlightEvent
+import com.paragon.impl.module.Category
 import com.paragon.impl.module.Module
 import com.paragon.impl.setting.Setting
 import com.paragon.util.render.ColourUtil.integrateAlpha
-import com.paragon.bus.listener.Listener
-import com.paragon.impl.module.Category
 import com.paragon.util.render.builder.BoxRenderMode
 import com.paragon.util.render.builder.RenderBuilder
 import net.minecraft.util.math.RayTraceResult
@@ -38,16 +38,26 @@ object BlockHighlight : Module("BlockHighlight", Category.RENDER, "Highlights th
             val bp = minecraft.objectMouseOver.blockPos
 
             // Get bounding box (yoinked from RenderGlobal)
-            val bb = minecraft.world.getBlockState(bp).getSelectedBoundingBox(minecraft.world, bp).grow(0.0020000000949949026).offset(
-                    -minecraft.renderManager.viewerPosX, -minecraft.renderManager.viewerPosY, -minecraft.renderManager.viewerPosZ
+            val bb = minecraft.world.getBlockState(bp)
+                .getSelectedBoundingBox(minecraft.world, bp)
+                .grow(0.0020000000949949026)
+                .offset(
+                    -minecraft.renderManager.viewerPosX,
+                    -minecraft.renderManager.viewerPosY,
+                    -minecraft.renderManager.viewerPosZ
                 )
 
-            RenderBuilder().boundingBox(bb).inner(colour.value).outer(colour.value.integrateAlpha(255f)).type(renderMode.value)
+            RenderBuilder()
+                .boundingBox(bb)
+                .inner(colour.value)
+                .outer(colour.value.integrateAlpha(255f))
+                .type(renderMode.value)
 
                 .start()
-
-                .blend(true).depth(true).texture(true).lineWidth(lineWidth.value)
-
+                .blend(true)
+                .depth(true)
+                .texture(true)
+                .lineWidth(lineWidth.value)
                 .build(false)
         }
     }

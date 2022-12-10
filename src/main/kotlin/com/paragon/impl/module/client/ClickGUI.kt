@@ -7,6 +7,7 @@ import com.paragon.impl.module.annotation.IgnoredByNotifications
 import com.paragon.impl.setting.Bind
 import com.paragon.impl.setting.Setting
 import com.paragon.impl.ui.configuration.GuiImplementation
+import com.paragon.impl.ui.configuration.camper.CamperCheatGUI
 import me.surge.animation.Easing
 import org.lwjgl.input.Keyboard
 
@@ -47,12 +48,15 @@ object ClickGUI : Module("ClickGUI", Category.CLIENT, "The ClickGUI of the clien
 
     val intensity = Setting("Intensity", 10f, 1f, 20f, 1f) describedBy "The intensity of the blur" subOf blur
 
+    val taskbarAlignment = Setting("TaskbarAlignment", TaskbarAlignment.LEFT) describedBy "Where the taskbar is positioned"
+    val forceTaskbarVisibility = Setting("ForceTaskbarVisibility", true) describedBy "Whether to constantly show the taskbar"
+
     fun getGUI(): GuiImplementation = when (style.value) {
         Style.PANEL -> Paragon.INSTANCE.panelGUI
         Style.WINDOWS_98 -> Paragon.INSTANCE.windows98GUI
         Style.DISCORD -> Paragon.INSTANCE.discordGUI
         Style.PHOBOS -> Paragon.INSTANCE.phobosGUI
-        Style.PLUGIN -> Paragon.INSTANCE.pluginGui ?: Paragon.INSTANCE.panelGUI
+        Style.CAMPER_CHEAT -> CamperCheatGUI()
     }
 
     override fun onEnable() {
@@ -82,9 +86,9 @@ object ClickGUI : Module("ClickGUI", Category.CLIENT, "The ClickGUI of the clien
         PHOBOS,
 
         /**
-         * The current plugin gui
+         * RusherHack styled GUI
          */
-        PLUGIN
+        CAMPER_CHEAT
     }
 
     enum class Icon {
@@ -102,6 +106,13 @@ object ClickGUI : Module("ClickGUI", Category.CLIENT, "The ClickGUI of the clien
          * Icon with a background
          */
         BACKGROUND
+    }
+
+    enum class TaskbarAlignment {
+        BOTTOM,
+        LEFT,
+        TOP,
+        RIGHT
     }
 
 }

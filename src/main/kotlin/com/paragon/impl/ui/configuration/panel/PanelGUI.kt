@@ -1,7 +1,6 @@
 package com.paragon.impl.ui.configuration.panel
 
 import com.paragon.impl.module.Category
-import com.paragon.impl.module.client.ClickGUI
 import com.paragon.impl.module.client.Colours
 import com.paragon.impl.ui.configuration.GuiImplementation
 import com.paragon.impl.ui.configuration.panel.impl.CategoryPanel
