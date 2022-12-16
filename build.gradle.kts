@@ -36,6 +36,7 @@ repositories {
 
     maven("https://files.minecraftforge.net/maven/")
     maven("https://jitpack.io")
+    maven("https://impactdevelopment.github.io/maven/")
 }
 
 configure<UserDevExtension> {
@@ -75,7 +76,8 @@ dependencies {
     "libraries"("com.github.Litarvan:OpenAuth:1.1.2")
     "libraries"("club.minnced:java-discord-rpc:2.0.1")
     "libraries"("com.github.therealbush:translator:1.0.2")
-    "libraries"("com.github.Wolfsurge:animationsystem:6098d839c7")
+    "libraries"("com.github.Wolfsurge:animationsystem:1.1")
+    "libraries"("com.github.cabaletta:baritone:1.2.14")
 
     "libraries"("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.7.20") {
         exclude("module", "kotlin-stdlib-common")

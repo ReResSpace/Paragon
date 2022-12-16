@@ -4,8 +4,8 @@ import com.paragon.Paragon
 import com.paragon.impl.module.Category
 import com.paragon.impl.module.client.ClickGUI
 import com.paragon.impl.module.client.Colours
-import com.paragon.impl.ui.configuration.shared.Panel
 import com.paragon.impl.ui.configuration.camper.CamperCheatGUI
+import com.paragon.impl.ui.configuration.shared.Panel
 import com.paragon.impl.ui.util.Click
 import com.paragon.util.render.ColourUtil.fade
 import com.paragon.util.render.RenderUtil
@@ -84,7 +84,7 @@ class CategoryPanel(val gui: CamperCheatGUI?, val category: Category, x: Float, 
         }
 
         RenderUtil.drawRect(x, y + height, width, moduleHeight.toFloat(), Color(0, 0, 0, 100))
-        RenderUtil.pushScissor(x, y + height, width, moduleHeight.toFloat())
+        RenderUtil.pushScissor(x, y + height + 1, width, moduleHeight.toFloat() - 1)
 
         var offset = y + height + scroll + 1
         getFilteredModules().forEach {

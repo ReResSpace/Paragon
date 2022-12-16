@@ -1,11 +1,8 @@
 package com.paragon.impl.ui.windows.impl
 
 import com.paragon.Paragon
-import com.paragon.impl.module.client.ClickGUI
-import com.paragon.impl.module.client.Colours
 import com.paragon.impl.ui.util.Click
 import com.paragon.impl.ui.windows.Window
-import com.paragon.util.render.BlurUtil
 import com.paragon.util.render.RenderUtil
 import com.paragon.util.render.font.FontUtil
 import me.surge.animation.Animation
@@ -20,7 +17,7 @@ import java.io.File
  * @author Surge
  * @since 27/07/2022
  */
-class ConfigWindow(x: Float, y: Float, width: Float, height: Float, grabbableHeight: Float) : Window(x, y, width, height, grabbableHeight) {
+class ConfigWindow(x: Float, y: Float, width: Float, height: Float, grabbableHeight: Float) : Window("Configs", x, y, width, height, grabbableHeight) {
 
     private val configsList: ArrayList<ConfigElement> = arrayListOf()
 
@@ -64,49 +61,6 @@ class ConfigWindow(x: Float, y: Float, width: Float, height: Float, grabbableHei
     override fun draw(mouseX: Int, mouseY: Int, mouseDelta: Int) {
         super.draw(mouseX, mouseY, mouseDelta)
 
-        RenderUtil.drawRect(
-            x,
-            y + grabbableHeight,
-            (width * openAnimation.getAnimationFactor()).toFloat(),
-            ((height - grabbableHeight) * openAnimation.getAnimationFactor()).toFloat(),
-            Color(0, 0, 0, 120)
-        )
-
-        if (ClickGUI.blur.value) {
-            BlurUtil.blur(
-                x,
-                y + grabbableHeight,
-                (width * openAnimation.getAnimationFactor()).toFloat(),
-                ((height - grabbableHeight) * openAnimation.getAnimationFactor()).toFloat(),
-                ClickGUI.intensity.value
-            )
-        }
-
-        RenderUtil.drawRect(
-            x,
-            y,
-            width * openAnimation.getAnimationFactor().toFloat(),
-            grabbableHeight,
-            Colours.mainColour.value
-        )
-
-        RenderUtil.pushScissor(
-            x,
-            y,
-            width * openAnimation.getAnimationFactor().toFloat(),
-            16 * openAnimation.getAnimationFactor().toFloat()
-        )
-
-        FontUtil.drawStringWithShadow("Changelog", x + 3, y + 4, Color.WHITE)
-
-        RenderUtil.scaleTo((x + width - 7f) - FontUtil.font.getStringWidth("X"), y + 1, 0f, 0.7, 0.7, 0.7) {
-            FontUtil.drawIcon(FontUtil.Icon.CLOSE, (x + width - 7f) - FontUtil.font.getStringWidth("X"), y + 1, Color.WHITE)
-        }
-
-        RenderUtil.popScissor()
-
-        RenderUtil.drawBorder(x, y, (width * openAnimation.getAnimationFactor()).toFloat(), (height * openAnimation.getAnimationFactor()).toFloat(), 0.5f, Colours.mainColour.value)
-
         if (scroll > 0) {
             scroll = 0f
         }
@@ -135,7 +89,7 @@ class ConfigWindow(x: Float, y: Float, width: Float, height: Float, grabbableHei
 
         configsList.removeIf { it.remove || !configDirectory.list()?.contains(it.name)!! }
 
-        RenderUtil.pushScissor(x, y + grabbableHeight + 1, width * openAnimation.getAnimationFactor().toFloat(), (height - (grabbableHeight * 2) - 3) * openAnimation.getAnimationFactor().toFloat())
+        RenderUtil.pushScissor(x, y + grabbableHeight + 1, width, height - (grabbableHeight * 2) - 3)
 
         if (configsList.isNotEmpty()) {
             val last = configsList[configsList.size - 1]
@@ -161,11 +115,6 @@ class ConfigWindow(x: Float, y: Float, width: Float, height: Float, grabbableHei
     }
 
     override fun mouseClicked(mouseX: Int, mouseY: Int, click: Click): Boolean {
-        if (mouseX.toFloat() in x + width - FontUtil.getStringWidth("X") - 5..x + width && mouseY.toFloat() in y..y + grabbableHeight) {
-            openAnimation.state = false
-            return true
-        }
-
         if (mouseY.toFloat() in y + grabbableHeight..y + (height - 19f)) {
             configsList.forEach {
                 it.clicked(mouseX, mouseY, click)
@@ -210,8 +159,6 @@ class ConfigWindow(x: Float, y: Float, width: Float, height: Float, grabbableHei
                     if (mouseX.toFloat() in x + width - 9f..x + width && mouseY.toFloat() in y..y + height) Color.RED else Color.WHITE
                 )
             }
-
-            // FontUtil.font.drawStringWithShadow("D", x + width - 12.5f, y + 1.5f, if (mouseX.toFloat() in x + width - 9f..x + width && mouseY.toFloat() in y..y + height) Color.RED else Color.WHITE)
         }
 
         fun clicked(mouseX: Int, mouseY: Int, click: Click): Boolean {

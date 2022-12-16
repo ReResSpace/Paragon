@@ -5,6 +5,7 @@ import com.paragon.impl.module.client.Colours
 import com.paragon.impl.module.hud.impl.HUDEditor
 import com.paragon.impl.ui.configuration.shared.Panel
 import com.paragon.impl.ui.util.Click
+import com.paragon.impl.ui.windows.impl.BaritoneWindow
 import com.paragon.impl.ui.windows.impl.ChangelogWindow
 import com.paragon.impl.ui.windows.impl.ConfigWindow
 import com.paragon.util.Wrapper
@@ -31,7 +32,7 @@ class HubWindow(x: Float, y: Float, width: Float, height: Float) : Panel(x, y, w
 
         Task("Changelog", {
             if (Paragon.INSTANCE.configurationGUI.windowsList.any { it is ChangelogWindow }) {
-                Paragon.INSTANCE.configurationGUI.windowsList.filterIsInstance<ChangelogWindow>().forEach { it.openAnimation.state = false }
+                Paragon.INSTANCE.configurationGUI.windowsList.filterIsInstance<ChangelogWindow>().forEach { Paragon.INSTANCE.configurationGUI.removeBuffer.add(it) }
             } else {
                 Paragon.INSTANCE.configurationGUI.windowsList.add(ChangelogWindow(200f, 200f, 300f, 250f, 16f))
             }
@@ -39,9 +40,17 @@ class HubWindow(x: Float, y: Float, width: Float, height: Float) : Panel(x, y, w
 
         Task("Configs", {
             if (Paragon.INSTANCE.configurationGUI.windowsList.any { it is ConfigWindow }) {
-                Paragon.INSTANCE.configurationGUI.windowsList.filterIsInstance<ConfigWindow>().forEach { it.openAnimation.state = false }
+                Paragon.INSTANCE.configurationGUI.windowsList.filterIsInstance<ChangelogWindow>().forEach { Paragon.INSTANCE.configurationGUI.removeBuffer.add(it) }
             } else {
                 Paragon.INSTANCE.configurationGUI.windowsList.add(ConfigWindow(200f, 200f, 200f, 150f, 16f))
+            }
+        }, x, y, width - 8f, 12f),
+
+        Task("Baritone", {
+            if (Paragon.INSTANCE.configurationGUI.windowsList.any { it is BaritoneWindow }) {
+                Paragon.INSTANCE.configurationGUI.windowsList.filterIsInstance<ChangelogWindow>().forEach { Paragon.INSTANCE.configurationGUI.removeBuffer.add(it) }
+            } else {
+                Paragon.INSTANCE.configurationGUI.windowsList.add(BaritoneWindow(200f, 200f, 200f, 150f, 16f))
             }
         }, x, y, width - 8f, 12f),
 

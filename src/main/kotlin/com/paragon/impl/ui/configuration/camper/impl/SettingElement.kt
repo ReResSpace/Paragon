@@ -4,18 +4,16 @@ import com.paragon.impl.module.client.ClickGUI
 import com.paragon.impl.module.client.Colours
 import com.paragon.impl.setting.Bind
 import com.paragon.impl.setting.Setting
-import com.paragon.impl.ui.configuration.shared.RawElement
 import com.paragon.impl.ui.configuration.camper.CamperCheatGUI
 import com.paragon.impl.ui.configuration.camper.impl.setting.*
+import com.paragon.impl.ui.configuration.shared.RawElement
 import com.paragon.impl.ui.util.Click
 import com.paragon.util.render.ColourUtil.fade
-import com.paragon.util.render.ColourUtil.glColour
 import com.paragon.util.render.RenderUtil
 import me.surge.animation.Animation
 import me.surge.animation.ColourAnimation
 import me.surge.animation.Easing
 import net.minecraft.util.math.MathHelper
-import org.lwjgl.opengl.GL11.*
 import java.awt.Color
 
 open class SettingElement<T>(
@@ -71,7 +69,7 @@ open class SettingElement<T>(
     }
 
     fun drawSettings(mouseX: Float, mouseY: Float, mouseDelta: Int) {
-        if (expanded.getAnimationFactor() > 0) {
+        if (expanded.getAnimationFactor() > 0 && this !is ColourElement) {
             var offset = y + height + 1
             val factor = expanded.getAnimationFactor()
 
@@ -112,51 +110,8 @@ open class SettingElement<T>(
             }
         }
 
-        if (elements.filter { it.setting.isVisible() }.size > 2) {
-            RenderUtil.rotate((90 * expanded.getAnimationFactor()).toFloat(), x + parent.width - 6f, y + 6.5f, 0f) {
-                // RenderUtil.drawTriangle(x + parent.width - 6, y + 6.5f, 4f, 6f, Color.DARK_GRAY)
-
-                fun drawTriangle(x: Float, y: Float, width: Float, height: Float, lineWidth: Float, colour: Color) {
-                    glDisable(GL_DEPTH_TEST)
-                    glDisable(GL_TEXTURE_2D)
-                    glEnable(GL_BLEND)
-                    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
-                    glDepthMask(true)
-
-                    glEnable(GL_LINE_SMOOTH)
-                    glHint(GL_LINE_SMOOTH_HINT, GL_NICEST)
-
-                    glEnable(GL_POLYGON_SMOOTH)
-                    glHint(GL_POLYGON_SMOOTH_HINT, GL_NICEST)
-
-                    glLineWidth(lineWidth)
-
-                    colour.glColour()
-
-                    glTranslatef(-(width / 2f), -(height / 2f), 0f)
-
-                    glBegin(GL_LINE_STRIP)
-
-                    glVertex2f(x, y)
-                    glVertex2f(x + width, y + height / 2)
-                    glVertex2f(x, y + height)
-
-                    glEnd()
-
-                    glTranslatef(width / 2f, height / 2f, 0f)
-
-                    glDisable(GL_LINE_SMOOTH)
-                    glDisable(GL_POLYGON_SMOOTH)
-                    glHint(GL_LINE_SMOOTH_HINT, GL_DONT_CARE)
-                    glHint(GL_POLYGON_SMOOTH_HINT, GL_DONT_CARE)
-
-                    glEnable(GL_TEXTURE_2D)
-                    glEnable(GL_DEPTH_TEST)
-                    glColor4f(1f, 1f, 1f, 1f)
-                }
-
-                drawTriangle(x + parent.width - 6, y + 6.5f, 3f, 5f, 1f, Color.WHITE)
-            }
+        if (elements.any { it.setting.isVisible() } || this is ColourElement) {
+            RenderUtil.drawArrow(x + getRenderableWidth() + 6f, y + 6.5f, 3f, 5f, 1f, Color.WHITE, angle = expanded.getAnimationFactor().toFloat() * 90)
         }
     }
 
@@ -191,12 +146,11 @@ open class SettingElement<T>(
     }
 
     fun getRenderableWidth(): Float {
-        return if (elements.filter { it.setting.isVisible() }.size > 2) width - 12f else width
+        return if (elements.any { it.setting.isVisible() } || this is ColourElement) width - 12f else width
     }
 
     open fun getAbsoluteHeight(): Float {
-        return height + ((elements.filter { it.setting.isVisible() }
-            .sumOf { it.getAbsoluteHeight().toDouble() + 1 } + 1) * expanded.getAnimationFactor()).toFloat()
+        return height + ((elements.filter { it.setting.isVisible() }.sumOf { it.getAbsoluteHeight().toDouble() + 1 } + 1) * expanded.getAnimationFactor()).toFloat()
     }
 
 }

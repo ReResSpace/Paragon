@@ -250,6 +250,53 @@ object RenderUtil : Wrapper {
     }
 
     /**
+     * Draws an arrow at the center of the given coordinates
+     * @param x The center X of the arrow
+     * @param y The center Y of the arrow
+     * @param colour The colour of the arrow
+     */
+    fun drawArrow(x: Float, y: Float, width: Float, height: Float, lineWidth: Float, colour: Color, angle: Float = 0f) {
+        rotate(angle, x, y, 0f) {
+            glDisable(GL_DEPTH_TEST)
+            glDisable(GL_TEXTURE_2D)
+            glEnable(GL_BLEND)
+            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
+            glDepthMask(true)
+
+            glEnable(GL_LINE_SMOOTH)
+            glHint(GL_LINE_SMOOTH_HINT, GL_NICEST)
+
+            glEnable(GL_POLYGON_SMOOTH)
+            glHint(GL_POLYGON_SMOOTH_HINT, GL_NICEST)
+
+            glLineWidth(lineWidth)
+
+            colour.glColour()
+
+            glTranslatef(-(width / 2f), -(height / 2f), 0f)
+
+            glBegin(GL_LINE_STRIP)
+
+            glVertex2f(x, y)
+            glVertex2f(x + width, y + height / 2)
+            glVertex2f(x, y + height)
+
+            glEnd()
+
+            glTranslatef(width / 2f, height / 2f, 0f)
+
+            glDisable(GL_LINE_SMOOTH)
+            glDisable(GL_POLYGON_SMOOTH)
+            glHint(GL_LINE_SMOOTH_HINT, GL_DONT_CARE)
+            glHint(GL_POLYGON_SMOOTH_HINT, GL_DONT_CARE)
+
+            glEnable(GL_TEXTURE_2D)
+            glEnable(GL_DEPTH_TEST)
+            glColor4f(1f, 1f, 1f, 1f)
+        }
+    }
+
+    /**
      * Draws a rounded rectangle at the given coordinates
      * @param x The X coordinate of the rectangle
      * @param y The Y coordinate of the rectangle
@@ -409,33 +456,10 @@ object RenderUtil : Wrapper {
     }
 
     fun drawBorder(x: Float, y: Float, width: Float, height: Float, border: Float, colour: Color) {
-        glPushMatrix()
-        glDisable(GL_TEXTURE_2D)
-        glDisable(GL_ALPHA_TEST)
-        glEnable(GL_BLEND)
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
-        glShadeModel(GL_SMOOTH)
-
-        glLineWidth(border)
-
-        colour.glColour()
-
-        glBegin(GL_LINE_LOOP)
-
-        glVertex2f(x, y)
-        glVertex2f(x + width + border, y)
-        glVertex2f(x + width + border, y + height)
-
-        // amusing
-        glVertex2f(x - border, y + height)
-
-        glEnd()
-
-        glShadeModel(GL_FLAT)
-        glEnable(GL_ALPHA_TEST)
-        glDisable(GL_BLEND)
-        glEnable(GL_TEXTURE_2D)
-        glPopMatrix()
+        drawRect(x - border, y - border, width + (border * 2f), border, colour)
+        drawRect(x - border, y, border, height, colour)
+        drawRect(x - border, y + height, width + (border * 2f), border, colour)
+        drawRect(x + width, y, border, height, colour)
     }
 
     /**

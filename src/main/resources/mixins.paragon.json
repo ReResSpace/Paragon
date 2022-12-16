@@ -3,7 +3,6 @@
   "compatibilityLevel": "JAVA_8",
   "package": "com.paragon.mixins",
   "refmap": "mixins.paragon.refmap.json",
-  "minVersion": "0.8",
   "client": [
     "MixinMinecraft",
     "accessor.ICPacketCloseWindow",

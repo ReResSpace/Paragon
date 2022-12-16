@@ -51,9 +51,11 @@ class ConfigurationGUI : GuiScreen() {
         currentGUI?.height = height.toFloat()
         currentGUI?.drawScreen(mouseX, mouseY, mouseDelta)
 
-        windowsList.forEach { it.draw(mouseX, mouseY, mouseDelta) }
-
         hub.draw(mouseX.toFloat(), mouseY.toFloat(), mouseDelta)
+
+        windowsList.forEach {
+            it.draw(mouseX, mouseY, mouseDelta)
+        }
     }
 
     override fun mouseClicked(mouseX: Int, mouseY: Int, mouseButton: Int) {

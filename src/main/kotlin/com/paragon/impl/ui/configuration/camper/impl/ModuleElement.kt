@@ -5,9 +5,9 @@ import com.paragon.impl.module.client.ClickGUI
 import com.paragon.impl.module.client.Colours
 import com.paragon.impl.setting.Bind
 import com.paragon.impl.setting.Setting
-import com.paragon.impl.ui.configuration.shared.RawElement
 import com.paragon.impl.ui.configuration.camper.CamperCheatGUI
 import com.paragon.impl.ui.configuration.camper.impl.setting.*
+import com.paragon.impl.ui.configuration.shared.RawElement
 import com.paragon.impl.ui.util.Click
 import com.paragon.util.render.ColourUtil.fade
 import com.paragon.util.render.RenderUtil
@@ -67,12 +67,7 @@ class ModuleElement(val parent: CategoryPanel, val module: Module, x: Float, y: 
         RenderUtil.drawRect(x, y, width, height, (hover.getColour().fade(Colours.mainColour.value.fade(Colours.mainColour.value.darker(), hover.getAnimationFactor()), enabled.getAnimationFactor())))
 
         RenderUtil.scaleTo(x + 3, y + 5f, 0f, 0.9, 0.9, 0.9) {
-            FontUtil.drawStringWithShadow(
-                module.name,
-                x + 3,
-                y + 2.5f,
-                Color.WHITE
-            )
+            FontUtil.drawStringWithShadow(module.name, x + 3, y + 2.5f, Color.WHITE)
         }
 
         if (expanded.getAnimationFactor() > 0) {

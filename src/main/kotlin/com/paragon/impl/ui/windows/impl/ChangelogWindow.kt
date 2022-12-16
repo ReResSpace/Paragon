@@ -1,10 +1,8 @@
 package com.paragon.impl.ui.windows.impl
 
-import com.paragon.impl.module.client.ClickGUI
-import com.paragon.impl.module.client.Colours
+import com.paragon.Paragon
 import com.paragon.impl.ui.util.Click
 import com.paragon.impl.ui.windows.Window
-import com.paragon.util.render.BlurUtil
 import com.paragon.util.render.RenderUtil
 import com.paragon.util.render.font.FontUtil
 import net.minecraft.util.math.MathHelper
@@ -17,7 +15,7 @@ import kotlin.math.max
  * @author Surge
  * @since 27/07/2022
  */
-class ChangelogWindow(x: Float, y: Float, width: Float, height: Float, grabbableHeight: Float) : Window(x, y, width, height, grabbableHeight) {
+class ChangelogWindow(x: Float, y: Float, width: Float, height: Float, grabbableHeight: Float) : Window("Changelog", x, y, width, height, grabbableHeight) {
 
     private val changelog: ArrayList<String> = arrayListOf()
     private var scroll = 0f
@@ -42,56 +40,9 @@ class ChangelogWindow(x: Float, y: Float, width: Float, height: Float, grabbable
 
         val changelogHeight = changelog.size * FontUtil.getHeight()
 
-        scroll = MathHelper.clamp(
-            scroll.toDouble(),
-            -max(0.0, (changelogHeight - height + grabbableHeight + 6).toDouble()),
-            0.0
-        ).toFloat()
+        scroll = MathHelper.clamp(scroll.toDouble(), -max(0.0, (changelogHeight - height + grabbableHeight + 6).toDouble()), 0.0).toFloat()
 
-        if (ClickGUI.blur.value) {
-            BlurUtil.blur(
-                x,
-                y + grabbableHeight,
-                (width * openAnimation.getAnimationFactor()).toFloat(),
-                ((height - grabbableHeight) * openAnimation.getAnimationFactor()).toFloat(),
-                ClickGUI.intensity.value
-            )
-        }
-
-        RenderUtil.drawRect(
-            x,
-            y + grabbableHeight,
-            (width * openAnimation.getAnimationFactor()).toFloat(),
-            ((height - grabbableHeight) * openAnimation.getAnimationFactor()).toFloat(),
-            Color(0, 0, 0, 120)
-        )
-
-        RenderUtil.drawRect(
-            x,
-            y,
-            width * openAnimation.getAnimationFactor().toFloat(),
-            grabbableHeight,
-            Colours.mainColour.value
-        )
-
-        RenderUtil.pushScissor(
-            x,
-            y,
-            width * openAnimation.getAnimationFactor().toFloat(),
-            16 * openAnimation.getAnimationFactor().toFloat()
-        )
-
-        FontUtil.drawStringWithShadow("Changelog", x + 3, y + 4, Color.WHITE)
-
-        RenderUtil.scaleTo((x + width - 7f) - FontUtil.font.getStringWidth("X"), y + 1, 0f, 0.7, 0.7, 0.7) {
-            FontUtil.drawIcon(FontUtil.Icon.CLOSE, (x + width - 7f) - FontUtil.font.getStringWidth("X"), y + 1, Color.WHITE)
-        }
-
-        RenderUtil.popScissor()
-
-        RenderUtil.drawBorder(x, y, (width * openAnimation.getAnimationFactor()).toFloat(), (height * openAnimation.getAnimationFactor()).toFloat(), 0.5f, Colours.mainColour.value)
-
-        RenderUtil.pushScissor(x, y + 17, width * openAnimation.getAnimationFactor().toFloat(), (height - 18) * openAnimation.getAnimationFactor().toFloat())
+        RenderUtil.pushScissor(x, y + 17, width, height - 17)
 
         var offset = grabbableHeight + 5f
 
@@ -108,7 +59,7 @@ class ChangelogWindow(x: Float, y: Float, width: Float, height: Float, grabbable
 
     override fun mouseClicked(mouseX: Int, mouseY: Int, click: Click): Boolean {
         if (mouseX.toFloat() in x + width - FontUtil.getStringWidth("X") - 5..x + width && mouseY.toFloat() in y..y + grabbableHeight) {
-            openAnimation.state = false
+            Paragon.INSTANCE.configurationGUI.removeBuffer.add(this)
             return true
         }
 

@@ -1,7 +1,6 @@
 package com.paragon.impl.module.hud.impl
 
 import com.google.common.collect.Ordering
-import com.paragon.impl.module.client.ClientFont
 import com.paragon.impl.module.client.Colours
 import com.paragon.impl.module.hud.HUDEditorGUI
 import com.paragon.impl.module.hud.HUDModule
@@ -25,43 +24,27 @@ import java.awt.Color
  */
 object PotionHUD : HUDModule("Potions", "Shows active potion effects") {
 
-    private val scale = Setting(
-        "Size", 1.0, 0.5, 5.0, 0.1
-    ) describedBy "The size of the Potions"
-
+    private val scale = Setting("Size", 1.0, 0.5, 5.0, 0.1) describedBy "The size of the Potions"
     private val mode = Setting("Mode", Mode.INVENTORY)
-
-    private val rainbowSpeed = Setting(
-        "Rainbow speed", 20F, 5F, 50F, 2.5F
-    ) visibleWhen { mode.value == Mode.PYRO }
-
-    private val showBg = Setting(
-        "Background", true
-    ) visibleWhen { mode.value == Mode.PYRO }
-
-    private val syncTextColor = Setting(
-        "Sync text", false
-    ) visibleWhen { mode.value == Mode.PYRO }
-
-    private val offset = Setting(
-        "Offset", 0F, 0F, 10F, 1F
-    ) describedBy "The offset between the effects"
+    private val rainbowSpeed = Setting("Rainbow speed", 20F, 5F, 50F, 2.5F) visibleWhen { mode.value == Mode.PYRO }
+    private val showBg = Setting("Background", true) visibleWhen { mode.value == Mode.PYRO }
+    private val syncTextColor = Setting("Sync text", false) visibleWhen { mode.value == Mode.PYRO }
+    private val offset = Setting("Offset", 0F, 0F, 10F, 1F) describedBy "The offset between the effects"
 
     override fun render() {
         val activeEffects = minecraft.player.activePotionEffects
 
         if (activeEffects.isEmpty()) {
-            if (minecraft.currentScreen is HUDEditorGUI) { //Dummy for positioning
-                RenderUtil.drawRect(
-                    x, y, width, height, Color(255, 255, 255, 100)
-                )
+            if (minecraft.currentScreen is HUDEditorGUI) { // Dummy for positioning
+                RenderUtil.drawRect(x, y, width, height, Color(255, 255, 255, 100))
             }
+
             return
         }
 
         scaleTo(x, y, 0F, scale.value, scale.value, 1.0) {
             when (mode.value) {
-                Mode.INVENTORY -> { //Pasted from InventoryEffectRenderer
+                Mode.INVENTORY -> { // Pasted from InventoryEffectRenderer
                     GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f)
                     GlStateManager.disableLighting()
 
@@ -85,9 +68,8 @@ object PotionHUD : HUDModule("Potions", "Shows active potion effects") {
 
                         if (potion.hasStatusIcon()) {
                             val iconIndex = potion.statusIconIndex
-                            drawTexturedModalRect(
-                                x.toInt(), effectY + 7, 0 + iconIndex % 8 * 18, 198 + iconIndex / 8 * 18, 18, 18
-                            )
+
+                            drawTexturedModalRect(x.toInt(), effectY + 7, 0 + iconIndex % 8 * 18, 198 + iconIndex / 8 * 18, 18, 18)
                         }
 
                         if (!potion.shouldRenderInvText(effect)) {
@@ -98,9 +80,7 @@ object PotionHUD : HUDModule("Potions", "Shows active potion effects") {
                         val effectName = I18n.format(potion.name) + " " + I18n.format("enchantment.level.${effect.amplifier + 1}")
                         FontUtil.drawStringWithShadow(effectName, (x + 22), (effectY + 6).toFloat(), 16777215.toColour(), alignment.value)
 
-                        FontUtil.drawStringWithShadow(
-                            Potion.getPotionDurationString(effect, 1F), (x + 22), (effectY + 6 + 10).toFloat(), 8355711.toColour(), alignment.value
-                        )
+                        FontUtil.drawStringWithShadow(Potion.getPotionDurationString(effect, 1F), (x + 22), (effectY + 6 + 10).toFloat(), 8355711.toColour(), alignment.value)
 
                         effectY += entryHeight
                     }
@@ -112,29 +92,17 @@ object PotionHUD : HUDModule("Potions", "Shows active potion effects") {
                     var effectY = y
 
                     val maxWidth = activeEffects.maxWith(Comparator.comparingDouble {
-                        FontUtil.getStringWidth(
-                            I18n.format(it.potion.name) + " " + I18n.format("enchantment.level.${it.amplifier + 1}") + " ${Potion.getPotionDurationString(it, 1F)}"
-                        ).toDouble()
+                        FontUtil.getStringWidth(I18n.format(it.potion.name) + " " + I18n.format("enchantment.level.${it.amplifier + 1}") + " ${Potion.getPotionDurationString(it, 1F)}").toDouble()
                     }).let {
-                        FontUtil.getStringWidth(
-                            I18n.format(it.potion.name) + " " + I18n.format("enchantment.level.${it.amplifier + 1}") + " ${Potion.getPotionDurationString(it, 1F)}"
-                        ) + FontUtil.getHeight() + 1F
-                    } + 2 //💀
+                        FontUtil.getStringWidth(I18n.format(it.potion.name) + " " + I18n.format("enchantment.level.${it.amplifier + 1}") + " ${Potion.getPotionDurationString(it, 1F)}") + FontUtil.getHeight() + 1F
+                    } + 2 // 💀
 
                     for (effect in activeEffects) {
-                        val color = Color(
-                            ColourUtil.getRainbow(
-                                rainbowSpeed.value, Colours.mainColour.rainbowSaturation / 100f, (effectY * effectY).toInt()
-                            )
-                        )
+                        val color = Color(ColourUtil.getRainbow(rainbowSpeed.value, Colours.mainColour.rainbowSaturation / 100f, (effectY * effectY).toInt()))
 
                         if (showBg.value) {
-                            RenderUtil.drawRect(
-                                x, effectY, maxWidth, FontUtil.getHeight() + 3F, color.integrateAlpha(100F)
-                            )
-                            RenderUtil.drawBorder(
-                                x, effectY, maxWidth, FontUtil.getHeight() + 3F, 1F, color.darker()
-                            )
+                            RenderUtil.drawRect(x, effectY, maxWidth, FontUtil.getHeight() + 3F, color.integrateAlpha(100F))
+                            RenderUtil.drawBorder(x, effectY, maxWidth, FontUtil.getHeight() + 3F, 0.5F, color.darker())
                         }
 
                         val scaleFac = FontUtil.getHeight() / 18.0

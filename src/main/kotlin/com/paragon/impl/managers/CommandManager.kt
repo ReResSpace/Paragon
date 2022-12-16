@@ -3,7 +3,7 @@ package com.paragon.impl.managers
 import com.paragon.Paragon
 import com.paragon.impl.command.Command
 import com.paragon.impl.command.impl.*
-import com.paragon.impl.command.syntax.Argument
+import com.paragon.impl.command.syntax.ArgumentData
 import com.paragon.impl.command.syntax.SyntaxBuilder
 import com.paragon.impl.managers.notifications.Notification
 import com.paragon.impl.managers.notifications.NotificationType
@@ -33,16 +33,48 @@ class CommandManager : Wrapper {
 
     val commonPrefixes = listOf("/", ".", "*", ";", ",") as MutableList<String>
 
+    //SyntaxBuilder()
+    //                .addArgument(Argument("setting", it.settings.map { s -> s.name.replace(" ", "") }.toTypedArray()))
+    //                .addArgument(Argument("value", arrayOf("any_str"))
+
     init {
         Paragon.INSTANCE.moduleManager.modules.forEach {
-            val command = object : Command(it.name, SyntaxBuilder()
-                .addArgument(Argument("setting", it.settings.map { s -> s.name.replace(" ", "") }.toTypedArray()))
-                .addArgument(Argument("value", arrayOf("any_str")))
-            ) {
+            val command = object : Command(it.name, SyntaxBuilder.createBuilder(arrayListOf(
+                ArgumentData("setting", it.settings.map { s -> s.name.replace(" ", "") }.toTypedArray()),
+                ArgumentData("value", arrayOf("any_str"))
+            ))) {
                 override fun whenCalled(args: Array<String>, fromConsole: Boolean) {
                     if (args.isNotEmpty()) {
-                        val setting = it.settings
-                            .find { s -> s.name.replace(" ", "").equals(args[0], true) }
+                        //val setting = it.settings
+                            //.find { s -> s.name.replace(" ", "").equals(args[0], true) }
+
+                        var setting = it.settings.find { s -> s.name.replace(" ", "").equals(args[0], true) }
+
+                        // subsettings
+                        if (args[0].contains(".")) {
+                            val split = args[0].split(".")
+                            val initial = it.settings.find { s -> s.name.replace(" ", "").equals(split[0], true) }
+
+                            if (initial != null) {
+                                var parent: Setting<*>? = setting ?: return
+
+                                // $autocrystal targeting.range 15.0
+
+                                for (str in split) {
+                                    if (str != split.last()) {
+                                        parent = parent!!.subsettings.find { s ->
+                                            s.name.replace(" ", "").equals(args[0], true)
+                                        }
+                                    }
+                                }
+
+                                if (parent == null) {
+                                    return
+                                }
+
+                                println(parent.name)
+                            }
+                        }
 
                         if (setting == null) {
                             Paragon.INSTANCE.notificationManager.addNotification(

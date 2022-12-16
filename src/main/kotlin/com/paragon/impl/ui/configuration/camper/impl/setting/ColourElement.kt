@@ -137,6 +137,8 @@ class ColourElement(parent: ModuleElement, setting: Setting<Color>, x: Float, y:
 
         setting.rainbowSaturation = picker.saturation * 100f
         setting.setValue(colour)
+
+        drawSettings(mouseX, mouseY, mouseDelta)
     }
 
     override fun mouseClicked(mouseX: Float, mouseY: Float, click: Click) {

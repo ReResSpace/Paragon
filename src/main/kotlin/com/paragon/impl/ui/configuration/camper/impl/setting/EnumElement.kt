@@ -26,7 +26,7 @@ class EnumElement(parent: ModuleElement, setting: Setting<Enum<*>>, x: Float, y:
 
             val factor = 1 / 0.7f
 
-            val valueX = (x + getRenderableWidth() - FontUtil.getStringWidth(StringUtil.getFormattedText(setting.value)) * 0.7f - 5) * factor
+            val valueX = (x + getRenderableWidth() - FontUtil.getStringWidth(StringUtil.getFormattedText(setting.value)) * 0.7f - if (getRenderableWidth() != width) 0 else 5) * factor
 
             FontUtil.drawStringWithShadow(StringUtil.getFormattedText(setting.value), valueX, (y + 3.5f) * factor, Color.GRAY)
 
