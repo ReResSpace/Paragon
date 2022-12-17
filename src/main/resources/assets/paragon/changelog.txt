@@ -33,6 +33,8 @@ Added:
   - Added MultiTask module
   - Removed Taskbar and added Hub Panel in the bottom left of the screen
   - Removed Console
+  - Added Setting command
+  - Added command syntax preview
 
 Reworked:
   - Main Menu
@@ -40,7 +42,6 @@ Reworked:
   - ArrayList module
   - HoleESP module
   - AutoCrystal module
-  - The style of most HUD modules
   - Offhand module
 
 Changed:
@@ -48,6 +49,7 @@ Changed:
   - Merged the Notifier module and DonkeyAlert module into the Alert module
   - Changed the AutoWalk module's category to Movement
   - Updated Nametags
+  - The style of most HUD modules
 
 Bug Fixes:
   - Fixed unicode character error in ShulkerViewer

@@ -13,12 +13,7 @@ import java.util.function.Predicate
 
 class ModuleManager {
 
-    val modules: ArrayList<Module>
-
-    init {
-        MinecraftForge.EVENT_BUS.register(this)
-
-        modules = arrayListOf(
+    val modules: ArrayList<Module> = arrayListOf(
             // Combat
             Aura,
             AutoCrystal,
@@ -152,6 +147,9 @@ class ModuleManager {
             Totems,
             Watermark
         )
+
+    init {
+        MinecraftForge.EVENT_BUS.register(this)
 
         modules.forEach { it.reflectSettings() }
     }

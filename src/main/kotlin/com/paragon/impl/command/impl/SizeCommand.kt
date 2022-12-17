@@ -12,10 +12,11 @@ import net.minecraft.network.PacketBuffer
  */
 object SizeCommand : Command("Size", SyntaxBuilder()) {
 
-    override fun whenCalled(args: Array<String>, fromConsole: Boolean) {
+    override fun call(args: Array<String>, fromConsole: Boolean): Boolean {
         val stack = Minecraft.getMinecraft().player.heldItemMainhand
 
         sendMessage(if (stack.isEmpty) "You are not holding any item" else "Item weighs " + getItemSize(stack).toString() + " bytes")
+        return true
     }
 
     private fun getItemSize(stack: ItemStack): Int {

@@ -2,6 +2,7 @@ package com.paragon.impl.command.impl
 
 import com.paragon.impl.command.Command
 import com.paragon.impl.command.syntax.SyntaxBuilder
+import net.minecraft.util.text.TextFormatting
 
 /**
  * @author EBS
@@ -12,9 +13,13 @@ object NearestStronghold : Command("Nearest", SyntaxBuilder()) {
         intArrayOf(1888, -32), intArrayOf(-560, 1504), intArrayOf(2064, -4400), intArrayOf(-4992, -512), intArrayOf(2960, 4208), intArrayOf(-3200, 4480), intArrayOf(-5568, 608), intArrayOf(-2496, 5296)
     )
 
-    override fun whenCalled(args: Array<String>, fromConsole: Boolean) {
+    override fun call(args: Array<String>, fromConsole: Boolean): Boolean {
         // check if server is 2b2t.org using Minecraft.getCurrentServerData()
-        if ((minecraft.currentServerData ?: return).serverIP == "connect.2b2t.org") {
+        if ((minecraft.currentServerData ?:
+            run {
+                sendMessage("${TextFormatting.RED}You need to be on 2b2t.org for this command to work!")
+                return false
+            }).serverIP == "connect.2b2t.org") {
 
             // Check if player is in the nether
             if (minecraft.player.dimension == 1) {
@@ -42,8 +47,10 @@ object NearestStronghold : Command("Nearest", SyntaxBuilder()) {
             }
 
             sendMessage("Nearest stronghold around ($closestX, $closestZ)")
+
+            return true
         } else {
-            sendMessage("you are not in 2b2t, please join to use this")
+            return false
         }
     }
 }

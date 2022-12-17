@@ -34,15 +34,14 @@ object SaveMapCommand : Command("SaveMap", SyntaxBuilder.createBuilder(arrayList
 
     private var currentJob: Job? = null
 
-    override fun whenCalled(args: Array<String>, fromConsole: Boolean) {
+    override fun call(args: Array<String>, fromConsole: Boolean): Boolean {
         if (args.isEmpty()) {
-            sendMessage("${TextFormatting.RED}Wrong syntax! Run '\$syntax saveMap' to get the correct syntax.")
-            return
+            return false
         }
 
-        if (currentJob != null && (currentJob ?: return).isActive) {
+        if (currentJob != null && (currentJob ?: return true).isActive) {
             sendMessage("${TextFormatting.RED}Already in the process of saving maps!")
-            return
+            return true
         }
 
         @Suppress("IncorrectFormatting")
@@ -65,6 +64,8 @@ object SaveMapCommand : Command("SaveMap", SyntaxBuilder.createBuilder(arrayList
                         )
                     }
                 }
+
+                return true
             }
 
             "frames" -> {
@@ -85,6 +86,8 @@ object SaveMapCommand : Command("SaveMap", SyntaxBuilder.createBuilder(arrayList
 
                     sendMessage("${TextFormatting.GREEN}Finished saving all loaded maps!")
                 }
+
+                return true
             }
 
             "smart" -> {
@@ -99,10 +102,12 @@ object SaveMapCommand : Command("SaveMap", SyntaxBuilder.createBuilder(arrayList
 
                     sendMessage("${TextFormatting.GREEN}Finished merging and saving all loaded maps!")
                 }
+
+                return true
             }
 
             else -> {
-                sendMessage("${TextFormatting.RED}Wrong syntax! Run '\$syntax saveMap' to get the correct syntax.")
+                return false
             }
         }
     }

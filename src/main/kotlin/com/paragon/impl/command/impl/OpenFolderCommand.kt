@@ -8,9 +8,11 @@ import java.io.File
 
 object OpenFolderCommand : Command("OpenFolder", SyntaxBuilder()) {
 
-    override fun whenCalled(args: Array<String>, fromConsole: Boolean) {
+    override fun call(args: Array<String>, fromConsole: Boolean): Boolean {
         Desktop.getDesktop().open(File("paragon"))
         sendMessage("${TextFormatting.GREEN}Opened Paragon folder")
+
+        return true
     }
 
 }

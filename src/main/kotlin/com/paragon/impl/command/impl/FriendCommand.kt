@@ -17,46 +17,44 @@ object FriendCommand : Command("Friend", SyntaxBuilder.createBuilder(arrayListOf
     ))
 ))) {
 
-    override fun whenCalled(args: Array<String>, fromConsole: Boolean) {
+    override fun call(args: Array<String>, fromConsole: Boolean): Boolean {
         if (args.size == 1 && args[0].equals("list", ignoreCase = true)) {
             // List all players
             if (Paragon.INSTANCE.friendManager.names.isEmpty()) {
                 sendMessage("${TextFormatting.RED}You haven't added anyone to your social list!")
-
-                return
             }
 
             for (player in Paragon.INSTANCE.friendManager.names) {
                 Paragon.INSTANCE.commandManager.sendClientMessage(player)
             }
-        }
-        else if (args.size == 2 && args[0].equals("add", ignoreCase = true)) {
+
+            return true
+        } else if (args.size == 2 && args[0].equals("add", ignoreCase = true)) {
             // Add a player
             runCatching {
                 val name = args[1]
 
                 Paragon.INSTANCE.friendManager.addName(name)
 
-                sendMessage("${TextFormatting.GREEN}Added player " + name + " to your socials list!")
+                sendMessage("${TextFormatting.GREEN}Added player " + name + " to your friends list!")
 
                 // Save social
                 Paragon.INSTANCE.storageManager.saveSocial()
-            }.onFailure {
-                sendMessage("${TextFormatting.RED}Invalid argument! Should be 'friend', 'neutral', or 'enemy'")
             }
-        }
-        else if (args.size == 2 && args[0].equals("remove", ignoreCase = true)) {
+
+            return true
+        } else if (args.size == 2 && args[0].equals("remove", ignoreCase = true)) {
             // Remove a player
             val name = args[1]
             Paragon.INSTANCE.friendManager.removePlayer(name)
-            sendMessage("${TextFormatting.GREEN}Removed player $name from your socials list!")
+            sendMessage("${TextFormatting.GREEN}Removed player $name from your friends list!")
 
             // Save socials
             Paragon.INSTANCE.storageManager.saveSocial()
-        }
-        else {
-            // Say that we have given an invalid syntax
-            sendMessage("${TextFormatting.RED}Invalid Syntax!")
+
+            return true
+        } else {
+            return false
         }
     }
 

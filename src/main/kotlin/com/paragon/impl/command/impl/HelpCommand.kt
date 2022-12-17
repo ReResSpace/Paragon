@@ -9,10 +9,12 @@ import com.paragon.impl.command.syntax.SyntaxBuilder
  */
 object HelpCommand : Command("Help", SyntaxBuilder()) {
 
-    override fun whenCalled(args: Array<String>, fromConsole: Boolean) {
+    override fun call(args: Array<String>, fromConsole: Boolean): Boolean {
         Paragon.INSTANCE.commandManager.commands.forEach {
             sendMessage(it.name)
         }
+
+        return true
     }
 
 }

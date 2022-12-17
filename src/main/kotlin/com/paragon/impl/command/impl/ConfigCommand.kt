@@ -15,7 +15,7 @@ object ConfigCommand : Command("Config", SyntaxBuilder.createBuilder(arrayListOf
     ArgumentData("name", arrayOf("any_str"))
 ))) {
 
-    override fun whenCalled(args: Array<String>, fromConsole: Boolean) {
+    override fun call(args: Array<String>, fromConsole: Boolean): Boolean {
         if (args.size == 2) {
             when (args[0].lowercase()) {
                 "save" -> {
@@ -38,8 +38,10 @@ object ConfigCommand : Command("Config", SyntaxBuilder.createBuilder(arrayListOf
                     }
                 }
             }
+
+            return true
         } else {
-            sendMessage("${TextFormatting.RED}Incorrect syntax! Run '\$syntax config' to get the correct syntax.")
+            return false
         }
     }
 

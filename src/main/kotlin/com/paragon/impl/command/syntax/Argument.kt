@@ -15,7 +15,7 @@ class Argument(val builder: SyntaxBuilder, val name: String, val valid: Array<St
     }
 
     fun isComplete(input: String): Boolean {
-        return valid.any { it.equals(input, true) }
+        return valid.any { it.equals(input, true) } || valid[0].equals("any_str", false)
     }
 
     fun isVisible(args: ArrayList<String>): Boolean {
