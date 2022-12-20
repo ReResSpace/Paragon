@@ -25,10 +25,10 @@ class PopManager : Wrapper {
     fun onPacketReceive(event: PreReceive) {
         if (event.packet is SPacketEntityStatus && event.packet.opCode.toInt() == 35 && (event.packet as SPacketEntityStatus).getEntity(minecraft.world) is EntityPlayer) {
             val packet = event.packet
+
             pops[packet.getEntity(minecraft.world) as EntityPlayer] = if (pops.containsKey(packet.getEntity(minecraft.world) as EntityPlayer)) pops[packet.getEntity(minecraft.world) as EntityPlayer]!! + 1 else 1
 
-            val totemPopEvent = TotemPopEvent((event.packet.getEntity(minecraft.world) as EntityPlayer))
-            Paragon.INSTANCE.eventBus.post(totemPopEvent)
+            Paragon.INSTANCE.eventBus.post(TotemPopEvent((event.packet.getEntity(minecraft.world) as EntityPlayer)))
         }
     }
 
@@ -44,8 +44,6 @@ class PopManager : Wrapper {
         }
     }
 
-    fun getPops(player: EntityPlayer): Int {
-        return pops.getOrDefault(player, 0)
-    }
+    fun getPops(player: EntityPlayer) = pops.getOrDefault(player, 0)
 
 }

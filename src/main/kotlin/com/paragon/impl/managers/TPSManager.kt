@@ -43,9 +43,7 @@ class TPSManager : Wrapper {
     }
 
     @Listener
-    fun onConnect(event: ServerEvent.Connect) {
-        reset()
-    }
+    fun onConnect(event: ServerEvent.Connect) = reset()
 
     private fun reset() {
         tickRates.reset()

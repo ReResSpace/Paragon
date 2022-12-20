@@ -18,19 +18,22 @@ class LagCompensator : Wrapper {
         get() {
             var numTicks = 0.0f
             var sumTickRates = 0.0f
-            for (tickRate in tickRates) {
-                if (tickRate > 0.0F) {
-                    sumTickRates += tickRate
+            tickRates.forEach {
+                if (it > 0.0F) {
+                    sumTickRates += it
                     numTicks += 1.0f
                 }
             }
-            val calcTickRate = (sumTickRates / numTicks).coerceIn(0.0F, 20.0F)
-            return if (calcTickRate == 0.0f) 20.0f else calcTickRate
+            val calcTickRate = (sumTickRates / numTicks).coerceIn(0.0F..20.0F)
+            return if (calcTickRate == 0.0f) 20.0F else calcTickRate
         }
 
-    val adjustTicks: Float get() = tickRate - 20.0F
-    val syncTicks: Float get() = 20.0F - tickRate
-    val factor: Float get() = 20.0F / tickRate
+    val adjustTicks: Float
+        get() = tickRate - 20.0F
+    val syncTicks: Float
+        get() = 20.0F - tickRate
+    val factor: Float
+        get() = 20.0F / tickRate
 
     @Listener
     fun onPacketReceive(event: PacketEvent.PreReceive) {
@@ -48,9 +51,7 @@ class LagCompensator : Wrapper {
     }
 
     @Listener
-    fun onConnect(event: ServerEvent.Connect) {
-        reset()
-    }
+    fun onConnect(event: ServerEvent.Connect) = reset()
 
     private fun reset() {
         index = 0
@@ -61,4 +62,5 @@ class LagCompensator : Wrapper {
     init {
         Paragon.INSTANCE.eventBus.register(this)
     }
+
 }

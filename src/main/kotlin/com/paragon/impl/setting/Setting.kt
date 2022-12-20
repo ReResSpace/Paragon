@@ -15,10 +15,15 @@ class Setting<T>(val name: String, value: T, val min: T = value, val max: T = va
     private val constant = this.javaClass.isAnnotationPresent(Constant::class.java)
     private val exclusions = arrayListOf<T>()
 
+    /**
+     * The description of the setting.
+     */
     var description = ""
         private set
 
-    // Value of the setting
+    /**
+     * The current value held by the setting.
+     */
     var value: T = value
         private set
         get() {
@@ -149,18 +154,19 @@ class Setting<T>(val name: String, value: T, val min: T = value, val max: T = va
      */
     val nextMode: T
         get() {
-            val enumeration = value as Enum<*>
-            val values = enumeration.javaClass.enumConstants.map { it.name }.toTypedArray()
+            val enum = value as Enum<*>
 
-            return java.lang.Enum.valueOf(enumeration::class.java, values[nextIndex]) as T
+            return java.lang.Enum.valueOf(
+                enum::class.java,
+                enum.javaClass.enumConstants.map { it.name }[nextIndex]
+            ) as T
         }
 
     private val nextIndex: Int
         get() {
-            val enumeration = value as Enum<*>
-            val values = enumeration.javaClass.enumConstants.map { it.name }.toTypedArray()
+            val enum = value as Enum<*>
 
-            return if (index + 1 > values.size - 1) 0 else index + 1
+            return if (index + 1 > enum.javaClass.enumConstants.map { it.name }.size - 1) 0 else index + 1
         }
 
     infix fun describedBy(description: String) = setDescription(description)

@@ -7,6 +7,7 @@ open class ServerEvent : CancellableEvent() {
     class Connect(val state: State) : ServerEvent()
 
     enum class State {
+
         /**
          * Called before the connection attempt
          */
@@ -25,6 +26,7 @@ open class ServerEvent : CancellableEvent() {
     }
 
     class Disconnect(forced: Boolean) : ServerEvent() {
+
         /**
          * @return Whether the connection was forcefully closed
          */

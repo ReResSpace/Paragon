@@ -78,9 +78,7 @@ class RotationManager : Wrapper {
         }
     }
 
-    fun addRotation(rotation: Rotation) {
-        rotationsQueue.add(rotation)
-    }
+    fun addRotation(rotation: Rotation) = rotationsQueue.add(rotation).let { return@let }
 
     private fun calculateAngle(playerAngle: Float, wantedAngle: Float, threshold: Float): Float {
         var distance = wantedAngle - playerAngle

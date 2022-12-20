@@ -26,9 +26,7 @@ class CapeManager {
     init {
         runCatching {
             runBlocking {
-                String(
-                    TextureUtil.client.get("https://ParagonBot.wolfsurge.repl.co/capes").readBytes()
-                ).split(',').forEach {
+                TextureUtil.client.get("https://ParagonBot.wolfsurge.repl.co/capes").bodyAsText().split(',').forEach {
                     val data = it.split(":")
                     capedPlayers[data[0]] = Cape.valueOf(data[1].uppercase(Locale.getDefault()))
                 }

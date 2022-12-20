@@ -4,19 +4,27 @@ package com.paragon.impl.command.syntax
  * @author Surge
  * @since 27/11/2022
  */
-class Argument(val builder: SyntaxBuilder, val name: String, val valid: Array<String>, visibleWhen: Array<Pair<String, String>> = arrayOf()) {
+class Argument(
+    val builder: SyntaxBuilder,
+    val name: String,
+    val valid: Array<String>,
+    visibleWhen: Array<Pair<String, String>> = arrayOf()
+) {
 
-    val visibilityFactors = arrayListOf<Pair<Int, String>>()
+    private val visibilityFactors = ArrayList<Pair<Int, String>>()
 
     init {
         visibleWhen.forEach { pair ->
-            visibilityFactors.add(Pair(builder.arguments.indexOf( builder.arguments.firstOrNull { it.name.equals(pair.first, true )}), pair.second))
+            visibilityFactors.add(Pair(builder.arguments.indexOf(builder.arguments.firstOrNull {
+                it.name.equals(
+                    pair.first,
+                    true
+                )
+            }), pair.second))
         }
     }
 
-    fun isComplete(input: String): Boolean {
-        return valid.any { it.equals(input, true) } || valid[0].equals("any_str", false)
-    }
+    fun isComplete(input: String) = valid.any { it.equals(input, true) } || valid[0].equals("any_str", false)
 
     fun isVisible(args: ArrayList<String>): Boolean {
         if (visibilityFactors.isEmpty()) {

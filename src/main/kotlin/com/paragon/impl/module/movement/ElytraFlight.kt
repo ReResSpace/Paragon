@@ -96,6 +96,7 @@ object ElytraFlight : Module("ElytraFlight", Category.MOVEMENT, "Allows for easi
         if (minecraft.anyNull) {
             return
         }
+
         if (minecraft.player.isElytraFlying) {
 
             // Set us to normal speed if we are flying

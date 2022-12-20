@@ -29,12 +29,10 @@ open class Module(val name: String, val category: Category, val description: Str
     val isIgnored = javaClass.isAnnotationPresent(IgnoredByNotifications::class.java)
 
     // List of search aliases
-    val aliases = run {
-        if (javaClass.isAnnotationPresent(Aliases::class.java)) {
-            javaClass.getAnnotation(Aliases::class.java).aliases
-        } else {
-            arrayOf()
-        }
+    val aliases = if (javaClass.isAnnotationPresent(Aliases::class.java)) {
+        javaClass.getAnnotation(Aliases::class.java).aliases
+    } else {
+        arrayOf()
     }
 
     // Module Settings
@@ -43,7 +41,11 @@ open class Module(val name: String, val category: Category, val description: Str
     // Arraylist animation
     val animation = Animation({ ArrayListHUD.animationSpeed.value }, false) { ArrayListHUD.easing.value }
 
-    // Whether the module is enabled
+    /**
+     * Used to check if a module is enabled or not
+     *
+     * @see isActive
+     */
     var isEnabled = false
 
     init {
@@ -60,9 +62,11 @@ open class Module(val name: String, val category: Category, val description: Str
         this.bind.setValue(bind)
     }
 
-    // TEMPORARY
+    /**
+     * Adds all the settings of a module to [settings] using reflection.
+     */
     fun reflectSettings() {
-        Arrays.stream(javaClass.declaredFields).filter { Setting::class.java.isAssignableFrom(it.type) }.forEach {
+        javaClass.declaredFields.filter { Setting::class.java.isAssignableFrom(it.type) }.forEach {
             it.isAccessible = true
             try {
                 val setting = it[this] as Setting<*>
@@ -90,6 +94,9 @@ open class Module(val name: String, val category: Category, val description: Str
 
     /**
      * Toggles the module
+     *
+     * @see onEnable
+     * @see onDisable
      */
     fun toggle() {
         // We don't want to toggle if the module is constant

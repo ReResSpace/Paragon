@@ -21,18 +21,18 @@ class Bind(var buttonCode: Int, var device: Device) {
             if (!alreadyPressed) {
                 alreadyPressed = true
                 true
-            }
-            else {
+            } else {
                 false
             }
-        }
-        else {
+        } else {
             alreadyPressed = false
             false
         }
     }
 
-    fun getButtonName(): String = if (device == Device.KEYBOARD) Keyboard.getKeyName(buttonCode) else Mouse.getButtonName(buttonCode)
+    fun getButtonName(): String = if (device == Device.KEYBOARD) {
+        Keyboard.getKeyName(buttonCode)
+    } else Mouse.getButtonName(buttonCode)
 
 
     enum class Device {

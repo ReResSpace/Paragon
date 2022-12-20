@@ -8,14 +8,13 @@ open class SyntaxBuilder {
 
     val arguments = arrayListOf<Argument>()
 
-    fun addArgument(argument: Argument): SyntaxBuilder {
-        arguments.add(argument)
+    /**
+     * Adds an argument to the syntax.
+     */
+    fun addArgument(argument: Argument) = arguments.add(argument).let { return@let this }
 
-        return this
-    }
-
-    fun join(): String {
-        return arguments.joinToString { "[${it.name}: <${it.valid.joinToString("|", transform = { valid -> valid } )}>]" }
+    fun join() = arguments.joinToString {
+        "[${it.name}: <${it.valid.joinToString("|", transform = { valid -> valid })}>]"
     }
 
     companion object {

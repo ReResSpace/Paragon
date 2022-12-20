@@ -39,13 +39,21 @@ class CommandManager : Wrapper {
     }
 
     private fun handleCommands(message: String, fromConsole: Boolean) {
-        if (message.split(" ".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray().isNotEmpty()) {
+        if (message.split(" ".toRegex()).dropLastWhile { it.isEmpty() }.isNotEmpty()) {
             var commandFound = false
             val commandName = message.split(" ".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[0]
 
             for (command in commands) {
                 if (command.name.equals(commandName, ignoreCase = true)) {
-                    if (!command.call(message.split(" ".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray().copyOfRange(1, message.split(" ".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray().size), fromConsole)) {
+                    if (!command.call(
+                            message
+                                .split(" ".toRegex())
+                                .dropLastWhile { it.isEmpty() }
+                                .toTypedArray()
+                                .copyOfRange(1, message.split(" ".toRegex()).dropLastWhile { it.isEmpty() }.size),
+                            fromConsole
+                        )
+                    ) {
                         command.sendInvalidSyntaxMessage()
                     }
 
@@ -61,9 +69,12 @@ class CommandManager : Wrapper {
         }
     }
 
-    fun sendClientMessage(message: String) {
-        minecraft.player.sendMessage(TextComponentString(LIGHT_PURPLE.toString() + "Paragon " + WHITE + "> " + message))
-    }
+    /**
+     * Sends a client side chat message with client prefix.
+     */
+    fun sendClientMessage(message: String) = minecraft.player.sendMessage(
+        TextComponentString(LIGHT_PURPLE.toString() + "Paragon " + WHITE + "> " + message)
+    )
 
     @SubscribeEvent
     fun onChatMessage(event: ClientChatEvent) {
@@ -74,8 +85,17 @@ class CommandManager : Wrapper {
         }
     }
 
-    fun startsWithPrefix(message: String) = message.split(" ".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[0].lowercase(Locale.getDefault()).startsWith(prefix.lowercase()) || commonPrefixes.contains(
-        message.split(" ".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[0].lowercase(Locale.getDefault())
-    )
+    fun startsWithPrefix(message: String): Boolean {
+        return message.split(" ".toRegex())
+            .dropLastWhile { it.isEmpty() }[0]
+            .lowercase(Locale.getDefault())
+            .startsWith(prefix.lowercase())
+                ||
+                commonPrefixes.contains(
+                    message.split(" ".toRegex())
+                        .dropLastWhile { it.isEmpty() }[0]
+                        .lowercase(Locale.getDefault())
+                )
+    }
 
 }

@@ -1,6 +1,7 @@
 package com.paragon.util.player
 
 import com.paragon.util.Wrapper
+import com.paragon.util.mc
 import net.minecraft.block.Block
 import net.minecraft.item.Item
 import net.minecraft.item.ItemBlock
@@ -14,40 +15,33 @@ object InventoryUtil : Wrapper {
         return minecraft.player.heldItemMainhand.item == item || minecraft.player.heldItemOffhand.item == item
     }
 
-    fun isHolding(item: Item, hand: EnumHand): Boolean {
-        return minecraft.player.getHeldItem(hand).item == item
+    /**
+     * Checks whether the player is holding the given [Item] in the given [EnumHand].
+     *
+     * @return the result of the check.
+     */
+    fun isHolding(item: Item, hand: EnumHand) = minecraft.player.getHeldItem(hand).item == item
+
+    /**
+     * @return The hand holding the given [Item], null if the player isn't holding it.
+     */
+    fun getHandHolding(item: Item) = when {
+        minecraft.player.heldItemMainhand.item === item -> EnumHand.MAIN_HAND
+        minecraft.player.heldItemOffhand.item === item -> EnumHand.OFF_HAND
+        else -> null
     }
 
-    fun getHandHolding(item: Item): EnumHand? {
-        if (minecraft.player.heldItemMainhand.item === item) {
-            return EnumHand.MAIN_HAND
-        } else if (minecraft.player.heldItemOffhand.item === item) {
-            return EnumHand.OFF_HAND
-        }
-
-        return null
-    }
-
+    /**
+     * @return the inventory slot the given [Item] is in.
+     */
     @JvmStatic
-    fun getItemSlot(itemIn: Item): Int {
-        for (i in 9..35) {
-            val itemInInv = minecraft.player.inventory.getStackInSlot(i).item
-            if (itemInInv === itemIn) {
-                return i
-            }
-        }
-        return -1
-    }
+    fun getItemSlot(itemIn: Item) = (9..35).firstOrNull { mc.player.inventory.getStackInSlot(it).item == itemIn } ?: -1
 
+    /**
+     * @return the hotbar slot of the given [Item].
+     */
     @JvmStatic
-    fun getItemInHotbar(itemIn: Item): Int {
-        for (i in 0..8) {
-            if (minecraft.player.inventory.getStackInSlot(i).item === itemIn) {
-                return i
-            }
-        }
-        return -1
-    }
+    fun getItemInHotbar(itemIn: Item) = (0..8).firstOrNull { mc.player.inventory.getStackInSlot(it).item == itemIn } ?: -1
 
     /**
      * Switches to an item in the player's hotbar
@@ -63,9 +57,7 @@ object InventoryUtil : Wrapper {
 
         if (packet) {
             minecraft.connection!!.sendPacket(CPacketHeldItemChange(getItemInHotbar(itemIn)))
-        }
-
-        else {
+        } else {
             minecraft.player.inventory.currentItem = getItemInHotbar(itemIn)
         }
 
