@@ -1,40 +1,53 @@
 Changelog for 1.1.0
 
-Added:
-  - $saveMap command
-  - $copySkin command
+Modules added:
   - AntiGhast module
   - LogoutSpots module
   - MainMenu module
-  - IgnoreActive setting in ViewModel module
-  - More easings to the ClickGUI and ArrayList modules
   - SuperheroFX module
   - EnchantColour module
-  - LagNotifier HUD module
-  - A panel to the HUD editor
   - Blur module
   - NewChunks module
   - UnfocusedCPU module
-  - Particle settings to NoRender
-  - Added TPS HUD module
-  - Added CPS HUD module
-  - Packet, UpdatedNCP, and Minis modes to Criticals
   - AutoSable module
-  - Packet graphs HUD modules
   - BetterScreenshot module
   - NoHandshake module
-  - ServerBrand HUD module
-  - Added Infinite setting to ChatModifications
-  - Added TickShift module
-  - Added Movement setting to Timer
-  - Added SafeWalk module
-  - Added AutoXP module
-  - Added 'CamperCheat' GUI (RusherHack styled)
-  - Added MultiTask module
-  - Removed Taskbar and added Hub Panel in the bottom left of the screen
-  - Removed Console
-  - Added Setting command
-  - Added command syntax preview
+  - TickShift module
+  - SafeWalk module
+  - AutoXP module
+  - MultiTask module
+  - PacketFlight module
+
+HUD modules added:
+  - LagNotifier
+  - TPS
+  - CPS
+  - Packet Graphs
+  - Serverbrance
+
+Commands added:
+  - SaveMap command
+  - CopySkin command
+  - Setting command
+
+Settings added:
+  - ViewModel -> IgnoreActive
+  - ClickGUI & ArrayList -> More Easings
+  - Criticals -> Packet, UpdatedNCP, and Minis modes
+  - ChatModifications -> Infinite
+  - Timer -> Movement
+  - NoRender -> Particles
+
+Other additions:
+  - Command Syntax Preview
+  - CamperCheat (RusherHack) Styled GUI
+  - Panel in HUD Editor
+  - Hub Panel in GUIs
+  - Console window
+
+Removed:
+  - Taskbar
+  - Console
 
 Reworked:
   - Main Menu

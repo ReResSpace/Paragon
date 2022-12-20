@@ -35,6 +35,7 @@ class ModuleManager {
         InventoryWalk,
         NoFall,
         NoSlow,
+        PacketFlight,
         ReverseStep,
         SafeWalk,
         Sprint,
