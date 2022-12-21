@@ -9,16 +9,18 @@ import com.paragon.impl.module.annotation.NotVisibleByDefault
 import com.paragon.impl.module.hud.impl.ArrayListHUD
 import com.paragon.impl.setting.Bind
 import com.paragon.impl.setting.Setting
-import com.paragon.util.Wrapper
 import me.surge.animation.Animation
 import net.minecraftforge.common.MinecraftForge
 import org.lwjgl.input.Keyboard
 import java.util.*
 
-open class Module(val name: String, val category: Category, val description: String) : Wrapper {
+open class Module(val name: String, val category: Category, val description: String) {
 
     // Whether the module is visible in the Array List or not
-    private val visible = Setting("Visible", !javaClass.isAnnotationPresent(NotVisibleByDefault::class.java)) describedBy "Whether the module is visible in the array list or not"
+    private val visible = Setting(
+        "Visible",
+        !javaClass.isAnnotationPresent(NotVisibleByDefault::class.java)
+    ) describedBy "Whether the module is visible in the array list or not"
 
     val bind = Setting("Bind", Bind(Keyboard.KEY_NONE, Bind.Device.KEYBOARD)) describedBy "The keybind of the module"
 

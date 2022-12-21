@@ -5,6 +5,7 @@ import com.paragon.impl.module.Category
 import com.paragon.impl.module.Module
 import com.paragon.impl.setting.Setting
 import com.paragon.util.anyNull
+import com.paragon.util.mc
 import com.paragon.util.player.InventoryUtil
 import net.minecraft.enchantment.EnchantmentHelper
 import net.minecraft.init.Enchantments
@@ -28,7 +29,7 @@ object AutoXP : Module("AutoXP", Category.COMBAT, "Automatically repairs armour"
     override fun onTick() {
 
         // Being in creative can cause us to spam experience bottles with no end causing EXTREME lag.
-        if (minecraft.anyNull || minecraft.player.isCreative) {
+        if (mc.anyNull || mc.player.isCreative) {
 
             // Reset repairing
             repairing = null
@@ -39,7 +40,7 @@ object AutoXP : Module("AutoXP", Category.COMBAT, "Automatically repairs armour"
         var lowest = Float.MAX_VALUE
 
         // Iterate through armour slots
-        for (armour in minecraft.player.armorInventoryList) {
+        for (armour in mc.player.armorInventoryList) {
 
             // Don't do anything if there isn't an item in the slot
             if (armour.isEmpty || !EnchantmentHelper.getEnchantments(armour).containsKey(Enchantments.MENDING) || armour.maxDamage == 0) {
@@ -64,7 +65,7 @@ object AutoXP : Module("AutoXP", Category.COMBAT, "Automatically repairs armour"
         }
 
         // Get hotbar slots
-        val previousSlot = minecraft.player.inventory.currentItem
+        val previousSlot = mc.player.inventory.currentItem
         val slot = InventoryUtil.getItemInHotbar(Items.EXPERIENCE_BOTTLE)
 
         // We haven't found a slot
@@ -74,14 +75,14 @@ object AutoXP : Module("AutoXP", Category.COMBAT, "Automatically repairs armour"
 
         // Rotate straight downwards
         if (Paragon.INSTANCE.rotationManager.serverRotation.y != 90f) {
-            minecraft.player.connection.sendPacket(CPacketPlayer.Rotation(minecraft.player.rotationYaw, 90f, minecraft.player.onGround))
+            mc.player.connection.sendPacket(CPacketPlayer.Rotation(mc.player.rotationYaw, 90f, mc.player.onGround))
         }
 
         // Switch to experience bottle
         InventoryUtil.switchToSlot(slot, false)
 
         // Throw experience bottle
-        minecraft.player.connection.sendPacket(CPacketPlayerTryUseItem(EnumHand.MAIN_HAND))
+        mc.player.connection.sendPacket(CPacketPlayerTryUseItem(EnumHand.MAIN_HAND))
 
         // Switch back
         InventoryUtil.switchToSlot(previousSlot, false)

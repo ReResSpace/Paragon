@@ -6,6 +6,7 @@ import com.paragon.impl.module.hud.HUDModule
 import com.paragon.impl.setting.Setting
 import com.paragon.util.anyNull
 import com.paragon.util.calculations.Timer
+import com.paragon.util.mc
 import com.paragon.util.render.RenderUtil
 
 /**
@@ -43,7 +44,7 @@ object GraphReceivedPackets : HUDModule("ReceivedPacketsGraph", "Graph showing t
     }
 
     override fun onTick() {
-        if (minecraft.anyNull) {
+        if (mc.anyNull) {
             return
         }
 

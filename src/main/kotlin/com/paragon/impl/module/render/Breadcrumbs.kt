@@ -5,6 +5,7 @@ import com.paragon.impl.module.Module
 import com.paragon.impl.module.annotation.Aliases
 import com.paragon.impl.setting.Setting
 import com.paragon.util.anyNull
+import com.paragon.util.mc
 import com.paragon.util.player.PlayerUtil
 import com.paragon.util.render.ColourUtil.glColour
 import net.minecraft.util.math.Vec3d
@@ -33,7 +34,7 @@ object Breadcrumbs : Module("Breadcrumbs", Category.RENDER, "Draws a trail behin
     }
 
     override fun onTick() {
-        if (minecraft.anyNull || minecraft.player.ticksExisted <= 20) {
+        if (mc.anyNull || mc.player.ticksExisted <= 20) {
             // We may have just loaded into a world, so we need to clear the positions
             positions.clear()
             return
@@ -42,9 +43,9 @@ object Breadcrumbs : Module("Breadcrumbs", Category.RENDER, "Draws a trail behin
         // Create position
         val pos = Position(
             Vec3d(
-                minecraft.player.lastTickPosX,
-                minecraft.player.lastTickPosY,
-                minecraft.player.lastTickPosZ
+                mc.player.lastTickPosX,
+                mc.player.lastTickPosY,
+                mc.player.lastTickPosZ
             ),
             Color(
                 Color.HSBtoRGB(
@@ -54,7 +55,7 @@ object Breadcrumbs : Module("Breadcrumbs", Category.RENDER, "Draws a trail behin
             )
         )
 
-        if (PlayerUtil.isMoving || minecraft.player.posY != minecraft.player.lastTickPosY) {
+        if (PlayerUtil.isMoving || mc.player.posY != mc.player.lastTickPosY) {
             colourHue++
         }
 
@@ -80,14 +81,14 @@ object Breadcrumbs : Module("Breadcrumbs", Category.RENDER, "Draws a trail behin
         glLineWidth(lineWidth.value)
 
         // Disable lighting
-        minecraft.entityRenderer.disableLightmap()
+        mc.entityRenderer.disableLightmap()
 
         glBegin(GL_LINE_STRIP)
 
         for (pos in positions) {
-            val renderPosX = minecraft.renderManager.viewerPosX
-            val renderPosY = minecraft.renderManager.viewerPosY
-            val renderPosZ = minecraft.renderManager.viewerPosZ
+            val renderPosX = mc.renderManager.viewerPosX
+            val renderPosY = mc.renderManager.viewerPosY
+            val renderPosZ = mc.renderManager.viewerPosZ
 
             (if (rainbow.value) pos.colour else colour.value).glColour()
 

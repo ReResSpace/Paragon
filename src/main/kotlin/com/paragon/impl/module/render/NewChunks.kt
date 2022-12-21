@@ -6,6 +6,7 @@ import com.paragon.impl.module.Category
 import com.paragon.impl.module.Module
 import com.paragon.impl.setting.Setting
 import com.paragon.util.anyNull
+import com.paragon.util.mc
 import com.paragon.util.render.builder.BoxRenderMode
 import com.paragon.util.render.builder.RenderBuilder
 import net.minecraft.network.play.server.SPacketChunkData
@@ -35,7 +36,7 @@ object NewChunks : Module("NewChunks", Category.RENDER, "Highlights chunks that 
     }
 
     override fun onTick() {
-        if (minecraft.anyNull) {
+        if (mc.anyNull) {
             // Clear if we aren't in a world
             chunkList.clear()
         }
@@ -43,7 +44,7 @@ object NewChunks : Module("NewChunks", Category.RENDER, "Highlights chunks that 
 
     override fun onRender3D() {
         // Render chunks that are within our render distance. If we don't filter this, then we get some weird rendering bugs.
-        chunkList.filter { minecraft.player.getDistance(it.x.toDouble(), minecraft.player.posY, it.z.toDouble()) < minecraft.gameSettings.renderDistanceChunks * 16 }.forEach {
+        chunkList.filter { mc.player.getDistance(it.x.toDouble(), mc.player.posY, it.z.toDouble()) < mc.gameSettings.renderDistanceChunks * 16 }.forEach {
             RenderBuilder()
                 .boundingBox(AxisAlignedBB(it.x.toDouble(), 0.0, it.z.toDouble(), it.x + 16.0, height.value, it.z.toDouble() + 16.0))
                 .inner(colour.value)

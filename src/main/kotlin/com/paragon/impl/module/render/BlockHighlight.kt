@@ -5,6 +5,7 @@ import com.paragon.impl.event.render.world.BlockHighlightEvent
 import com.paragon.impl.module.Category
 import com.paragon.impl.module.Module
 import com.paragon.impl.setting.Setting
+import com.paragon.util.mc
 import com.paragon.util.render.ColourUtil.integrateAlpha
 import com.paragon.util.render.builder.BoxRenderMode
 import com.paragon.util.render.builder.RenderBuilder
@@ -34,17 +35,17 @@ object BlockHighlight : Module("BlockHighlight", Category.RENDER, "Highlights th
     }
 
     override fun onRender3D() {
-        if (minecraft.objectMouseOver != null && minecraft.objectMouseOver.typeOfHit == RayTraceResult.Type.BLOCK) {
-            val bp = minecraft.objectMouseOver.blockPos
+        if (mc.objectMouseOver != null && mc.objectMouseOver.typeOfHit == RayTraceResult.Type.BLOCK) {
+            val bp = mc.objectMouseOver.blockPos
 
             // Get bounding box (yoinked from RenderGlobal)
-            val bb = minecraft.world.getBlockState(bp)
-                .getSelectedBoundingBox(minecraft.world, bp)
+            val bb = mc.world.getBlockState(bp)
+                .getSelectedBoundingBox(mc.world, bp)
                 .grow(0.0020000000949949026)
                 .offset(
-                    -minecraft.renderManager.viewerPosX,
-                    -minecraft.renderManager.viewerPosY,
-                    -minecraft.renderManager.viewerPosZ
+                    -mc.renderManager.viewerPosX,
+                    -mc.renderManager.viewerPosY,
+                    -mc.renderManager.viewerPosZ
                 )
 
             RenderBuilder()

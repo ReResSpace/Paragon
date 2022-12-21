@@ -3,6 +3,7 @@ package com.paragon.impl.module.render
 import com.paragon.impl.module.Module
 import com.paragon.impl.module.Category
 import com.paragon.util.entity.EntityUtil
+import com.paragon.util.mc
 import com.paragon.util.render.RenderUtil.drawNametagText
 import net.minecraft.entity.IEntityOwnable
 import net.minecraft.entity.passive.AbstractHorse
@@ -12,7 +13,7 @@ import java.awt.Color
 object MobOwner : Module("MobOwner", Category.RENDER, "Displays the owner of a mob") {
 
     override fun onRender3D() {
-        minecraft.world.loadedEntityList.forEach {
+        mc.world.loadedEntityList.forEach {
             if (it is IEntityOwnable) {
                 val name = if (it.customNameTag == "") it.name else it.customNameTag
                 val owner = if ((it as IEntityOwnable).owner == null) {

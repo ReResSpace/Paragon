@@ -6,6 +6,7 @@ import com.paragon.impl.module.Module
 import com.paragon.impl.setting.Setting
 import com.paragon.bus.listener.Listener
 import com.paragon.impl.module.Category
+import com.paragon.util.mc
 import com.paragon.util.render.RubiksCrystalUtil
 import me.surge.animation.Easing
 import net.minecraft.client.Minecraft
@@ -579,7 +580,7 @@ object Chams : Module("Chams", Category.RENDER, "Shows entities through walls") 
      * @return Is the entity valid
      */
     private fun isEntityValid(entityIn: Entity): Boolean {
-        return entityIn is EntityPlayer && entityIn !== minecraft.player && players.value || entityIn is EntityLiving && entityIn !is EntityMob && passives.value || entityIn is EntityMob && mobs.value
+        return entityIn is EntityPlayer && entityIn !== mc.player && players.value || entityIn is EntityLiving && entityIn !is EntityMob && passives.value || entityIn is EntityMob && mobs.value
     }
 
     enum class Mode {

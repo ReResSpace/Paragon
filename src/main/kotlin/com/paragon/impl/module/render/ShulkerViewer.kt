@@ -5,6 +5,7 @@ import com.paragon.impl.event.render.gui.RenderTooltipEvent
 import com.paragon.impl.module.Category
 import com.paragon.impl.module.Module
 import com.paragon.impl.module.client.Colours
+import com.paragon.util.mc
 import com.paragon.util.render.RenderUtil
 import com.paragon.util.render.font.FontUtil
 import net.minecraft.client.renderer.GlStateManager
@@ -52,7 +53,7 @@ object ShulkerViewer : Module("ShulkerViewer", Category.RENDER, "Preview shulker
             RenderUtil.drawBorder(event.x + 2, y, width, 71f, 1f, Colours.mainColour.value)
 
             // Shulker box name
-            minecraft.fontRenderer.drawStringWithShadow(event.stack.displayName, event.x + 6, y + 3.5f, -1)
+            mc.fontRenderer.drawStringWithShadow(event.stack.displayName, event.x + 6, y + 3.5f, -1)
 
             // Item X and Y
             var itemX = event.x + 5

@@ -2,6 +2,7 @@ package com.paragon.impl.module.hud.impl
 
 import com.paragon.impl.module.client.Colours
 import com.paragon.impl.module.hud.HUDModule
+import com.paragon.util.mc
 import com.paragon.util.render.RenderUtil
 import com.paragon.util.render.RenderUtil.renderItemStack
 import com.paragon.util.render.font.FontUtil
@@ -40,19 +41,19 @@ object Crystals : HUDModule("Crystals", "Displays the amount of crystals in your
             var count = 0
 
             for (i in 0..35) {
-                val itemStack: ItemStack = minecraft.player.inventory.getStackInSlot(i)
+                val itemStack: ItemStack = mc.player.inventory.getStackInSlot(i)
 
                 if (itemStack.item === Items.END_CRYSTAL) {
                     count += itemStack.count
                 }
             }
 
-            if (minecraft.player.heldItemMainhand.item === Items.END_CRYSTAL) {
-                count += minecraft.player.heldItemMainhand.count
+            if (mc.player.heldItemMainhand.item === Items.END_CRYSTAL) {
+                count += mc.player.heldItemMainhand.count
             }
 
-            if (minecraft.player.heldItemOffhand.item === Items.END_CRYSTAL) {
-                count += minecraft.player.heldItemOffhand.count
+            if (mc.player.heldItemOffhand.item === Items.END_CRYSTAL) {
+                count += mc.player.heldItemOffhand.count
             }
 
             return count

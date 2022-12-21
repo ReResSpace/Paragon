@@ -5,6 +5,7 @@ import com.paragon.impl.setting.Setting
 import com.paragon.util.render.font.FontUtil.drawStringWithShadow
 import com.paragon.impl.module.hud.HUDModule
 import com.paragon.impl.module.client.Colours
+import com.paragon.util.mc
 import com.paragon.util.render.RenderUtil.drawModalRectWithCustomSizedTexture
 import com.paragon.util.render.RenderUtil.scaleTo
 import net.minecraft.client.Minecraft
@@ -30,7 +31,7 @@ object Watermark : HUDModule("Watermark", "Renders the client's name on screen")
             )
 
             Display.IMAGE -> {
-                minecraft.textureManager.bindTexture(icon)
+                mc.textureManager.bindTexture(icon)
                 val width = 880 / 4.0f
                 val height = 331 / 4.0f
 

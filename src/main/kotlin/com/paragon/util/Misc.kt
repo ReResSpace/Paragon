@@ -85,3 +85,18 @@ fun Number.roundToNearest(a: Number): Number {
         else -> 0.0 // Shouldn't be reached
     }
 }
+
+/**
+ * Checks if the mouse is in the given rectangle.
+ *
+ * @param x top left x coordinate of the rectangle.
+ * @param y top left y coordinate of the rectangle.
+ * @param width of the rectangle.
+ * @param height of the rectangle.
+ * @param mouseX the x coordinate of the mouse.
+ * @param mouseY the y coordinate of the mouse.
+ * @return the result of the check.
+ */
+fun isHovered(x: Float, y: Float, width: Float, height: Float, mouseX: Int, mouseY: Int): Boolean {
+    return mouseX >= x && mouseX <= x + width && mouseY >= y && mouseY <= y + height
+}

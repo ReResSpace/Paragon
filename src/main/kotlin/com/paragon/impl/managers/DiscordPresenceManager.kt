@@ -3,14 +3,13 @@ package com.paragon.impl.managers
 import club.minnced.discord.rpc.DiscordEventHandlers
 import club.minnced.discord.rpc.DiscordRPC
 import club.minnced.discord.rpc.DiscordRichPresence
-import com.paragon.util.Wrapper
 import com.paragon.util.anyNull
 import com.paragon.util.mc
 
 /**
  * @author Surge
  */
-class DiscordPresenceManager : Wrapper {
+class DiscordPresenceManager {
 
     /**
      * ID of the discord application
@@ -47,10 +46,10 @@ class DiscordPresenceManager : Wrapper {
     }
 
     private fun getDetails() = when {
-        minecraft.anyNull || !com.paragon.impl.module.client.DiscordRPC.showServer.value -> "Idling"
-        minecraft.isSingleplayer -> "Playing on singleplayer"
-        minecraft.currentServerData == null -> "paragon client threw a java.lang.NullPointerException"
-        else -> "Playing on " + minecraft.currentServerData!!.serverIP
+        mc.anyNull || !com.paragon.impl.module.client.DiscordRPC.showServer.value -> "Idling"
+        mc.isSingleplayer -> "Playing on singleplayer"
+        mc.currentServerData == null -> "paragon client threw a java.lang.NullPointerException"
+        else -> "Playing on " + mc.currentServerData!!.serverIP
     }
 
 }

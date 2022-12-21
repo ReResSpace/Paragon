@@ -5,6 +5,7 @@ import com.paragon.impl.module.Module
 import com.paragon.impl.setting.Setting
 import com.paragon.bus.listener.Listener
 import com.paragon.impl.module.Category
+import com.paragon.util.mc
 import net.minecraft.client.model.ModelPlayer
 import net.minecraft.client.renderer.GlStateManager
 import net.minecraft.client.renderer.OpenGlHelper
@@ -48,7 +49,7 @@ object HandChams : Module("HandChams", Category.RENDER, "Changes the hand colour
 
     @Listener
     fun onRenderLeftPre(event: RenderArmEvent.LeftArmPre) {
-        if (event.player == minecraft.player) {
+        if (event.player == mc.player) {
             // Enable transparency
             if (transparent.value) {
                 GlStateManager.enableBlendProfile(GlStateManager.Profile.TRANSPARENT_MODEL)
@@ -104,7 +105,7 @@ object HandChams : Module("HandChams", Category.RENDER, "Changes the hand colour
 
     @Listener
     fun onRenderLeftPost(event: RenderArmEvent.LeftArmPost) {
-        if (event.player == minecraft.player) {
+        if (event.player == mc.player) {
             // Enable lighting
             if (lighting.value) {
                 glEnable(GL_LIGHTING)
@@ -131,7 +132,7 @@ object HandChams : Module("HandChams", Category.RENDER, "Changes the hand colour
 
     @Listener
     fun onRenderRightPre(event: RenderArmEvent.RightArmPre) {
-        if (event.player == minecraft.player) {
+        if (event.player == mc.player) {
             // Enable transparency
             if (transparent.value) {
                 GlStateManager.enableBlendProfile(GlStateManager.Profile.TRANSPARENT_MODEL)
@@ -188,7 +189,7 @@ object HandChams : Module("HandChams", Category.RENDER, "Changes the hand colour
 
     @Listener
     fun onRenderRightPost(event: RenderArmEvent.RightArmPost) {
-        if (event.player == minecraft.player) {
+        if (event.player == mc.player) {
             // Enable lighting
             if (lighting.value) {
                 glEnable(GL_LIGHTING)

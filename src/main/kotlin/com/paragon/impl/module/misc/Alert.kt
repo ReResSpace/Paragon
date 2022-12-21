@@ -15,6 +15,7 @@ import com.paragon.impl.setting.Setting
 import com.paragon.util.anyNull
 import com.paragon.util.calculations.Timer
 import com.paragon.util.entity.EntityUtil
+import com.paragon.util.mc
 import com.paragon.util.system.backgroundThread
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -99,7 +100,7 @@ object Alert : Module("Alert", Category.MISC, "Alerts you about certain events")
     }
 
     override fun onTick() {
-        if (minecraft.anyNull) {
+        if (mc.anyNull) {
             // Reset
             Arrays.fill(selfWarnedArmourPieces, false)
             othersWarnedArmourPieces.clear()
@@ -129,7 +130,7 @@ object Alert : Module("Alert", Category.MISC, "Alerts you about certain events")
         if (armour.value) {
             if (armourSelf.value) {
                 // Iterate through armour pieces
-                minecraft.player.armorInventoryList.filter { stack -> stack != null && stack.item != Items.AIR }.forEachIndexed { index, itemStack ->
+                mc.player.armorInventoryList.filter { stack -> stack != null && stack.item != Items.AIR }.forEachIndexed { index, itemStack ->
                     if (lessThanThreshold(itemStack)) {
                         // Check we haven't already warned about that armour piece
                         if (!selfWarnedArmourPieces[index]) {
@@ -151,7 +152,7 @@ object Alert : Module("Alert", Category.MISC, "Alerts you about certain events")
             }
 
             if (armourFriends.value || armourEnemies.value) {
-                minecraft.world.loadedEntityList.filter {
+                mc.world.loadedEntityList.filter {
                     it is EntityPlayer && (Paragon.INSTANCE.friendManager.isFriend(it.name) && armourFriends.value || !Paragon.INSTANCE.friendManager.isFriend(it.name) && armourEnemies.value)
                 }.forEach {
                     if (!othersWarnedArmourPieces.containsKey(it)) {
@@ -178,7 +179,7 @@ object Alert : Module("Alert", Category.MISC, "Alerts you about certain events")
 
         if (health.value) {
             if (healthSelf.value) {
-                if (EntityUtil.getEntityHealth(minecraft.player) <= healthThreshold.value) {
+                if (EntityUtil.getEntityHealth(mc.player) <= healthThreshold.value) {
                     if (!warnedHealth) {
                         warnedHealth = true
 
@@ -193,8 +194,8 @@ object Alert : Module("Alert", Category.MISC, "Alerts you about certain events")
             }
 
             if (healthFriends.value || healthEnemies.value) {
-                minecraft.world.loadedEntityList.filter {
-                    it != minecraft.player &&
+                mc.world.loadedEntityList.filter {
+                    it != mc.player &&
                             (it is EntityPlayer && ((Paragon.INSTANCE.friendManager.isFriend(it.name) && healthFriends.value || !Paragon.INSTANCE.friendManager.isFriend(it.name) && healthEnemies.value)))
                 }.forEach {
                     if (!othersWarnedHealth.containsKey(it as EntityPlayer)) {
@@ -218,7 +219,7 @@ object Alert : Module("Alert", Category.MISC, "Alerts you about certain events")
         }
 
         if (animals.value) {
-            for (entity in minecraft.world.loadedEntityList) {
+            for (entity in mc.world.loadedEntityList) {
                 if (this.founds.any { it.second == entity }) {
                     continue
                 }
@@ -311,7 +312,7 @@ object Alert : Module("Alert", Category.MISC, "Alerts you about certain events")
 
     @Listener
     fun onPlayerDeath(event: PlayerDeathEvent) {
-        if (!death.value || event.player == minecraft.player) {
+        if (!death.value || event.player == mc.player) {
             return
         }
 

@@ -5,6 +5,7 @@ import com.paragon.impl.setting.Setting
 import com.paragon.impl.module.Category
 import com.paragon.mixins.accessor.IKeyBinding
 import com.paragon.util.anyNull
+import com.paragon.util.mc
 import net.minecraft.client.settings.KeyBinding
 
 /**
@@ -18,7 +19,7 @@ object AutoWalk : Module("AutoWalk", Category.MOVEMENT, "Makes you constantly wa
     ) describedBy "The direction to walk in"
 
     override fun onDisable() {
-        if (minecraft.anyNull) {
+        if (mc.anyNull) {
             return
         }
 
@@ -27,7 +28,7 @@ object AutoWalk : Module("AutoWalk", Category.MOVEMENT, "Makes you constantly wa
     }
 
     override fun onTick() {
-        if (minecraft.anyNull) {
+        if (mc.anyNull) {
             return
         }
 
@@ -39,22 +40,22 @@ object AutoWalk : Module("AutoWalk", Category.MOVEMENT, "Makes you constantly wa
         /**
          * Walk forward
          */
-        FORWARD(minecraft.gameSettings.keyBindForward),
+        FORWARD(mc.gameSettings.keyBindForward),
 
         /**
          * Walk backward
          */
-        BACKWARD(minecraft.gameSettings.keyBindBack),
+        BACKWARD(mc.gameSettings.keyBindBack),
 
         /**
          * Walk left
          */
-        LEFT(minecraft.gameSettings.keyBindLeft),
+        LEFT(mc.gameSettings.keyBindLeft),
 
         /**
          * Walk right
          */
-        RIGHT(minecraft.gameSettings.keyBindRight);
+        RIGHT(mc.gameSettings.keyBindRight);
 
     }
 

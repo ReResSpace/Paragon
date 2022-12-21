@@ -8,6 +8,7 @@ import com.paragon.impl.module.hud.HUDModule
 import com.paragon.impl.module.client.Colours
 import com.paragon.mixins.accessor.IMinecraft
 import com.paragon.mixins.accessor.ITimer
+import com.paragon.util.mc
 import net.minecraft.util.text.TextFormatting
 import java.util.*
 import kotlin.math.hypot
@@ -26,7 +27,7 @@ object Speed : HUDModule("Speed", "Displays your current speed") {
             "Speed " + TextFormatting.WHITE + String.format(
                 "%.2f", unit.value.algorithm(
                     getPlayerSpeed(
-                        minecraft.player.posX - minecraft.player.lastTickPosX, minecraft.player.posZ - minecraft.player.lastTickPosZ
+                        mc.player.posX - mc.player.lastTickPosX, mc.player.posZ - mc.player.lastTickPosZ
                     )
                 )
             ) + unit.value.name.lowercase(
@@ -40,7 +41,7 @@ object Speed : HUDModule("Speed", "Displays your current speed") {
             "Speed " + String.format(
                 "%.2f", unit.value.algorithm(
                     getPlayerSpeed(
-                        minecraft.player.posX - minecraft.player.lastTickPosX, minecraft.player.posZ - minecraft.player.lastTickPosZ
+                        mc.player.posX - mc.player.lastTickPosX, mc.player.posZ - mc.player.lastTickPosZ
                     )
                 )
             ) + unit.value.name.lowercase(
@@ -70,7 +71,7 @@ object Speed : HUDModule("Speed", "Displays your current speed") {
     }
 
     fun getPlayerSpeed(distX: Double, distZ: Double): Double {
-        return hypot(distX, distZ) * (1000 / ((minecraft as IMinecraft).hookGetTimer() as ITimer).hookGetTickLength()).toDouble()
+        return hypot(distX, distZ) * (1000 / ((mc as IMinecraft).hookGetTimer() as ITimer).hookGetTickLength()).toDouble()
     }
 
 }

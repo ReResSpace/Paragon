@@ -5,6 +5,7 @@ import com.paragon.impl.module.Category
 import com.paragon.impl.module.Module
 import com.paragon.impl.module.client.ClientFont
 import com.paragon.impl.setting.Setting
+import com.paragon.util.mc
 import com.paragon.util.render.ColourUtil
 import com.paragon.util.render.ColourUtil.integrateAlpha
 import com.paragon.util.render.ColourUtil.toColour
@@ -44,7 +45,7 @@ object ArrayListHUD : Module("ArrayList", Category.HUD, "Renders the enabled mod
     val easing = Setting("Easing", Easing.LINEAR) describedBy "The easing type of the animation" excludes Easing.BACK_IN
 
     override fun onRender2D() {
-        val scaledResolution = ScaledResolution(minecraft)
+        val scaledResolution = ScaledResolution(mc)
 
         val modules = Paragon.INSTANCE.moduleManager.getModulesThroughPredicate { it.animation.getAnimationFactor() > 0 && it.isVisible() }
                 .sortedBy { FontUtil.getStringWidth(it.name + if (dataMode.value != Data.OFF) "" + if (it.getData().isNotEmpty()) " " + dataMode.value.first + it.getData() + dataMode.value.second else "" else "") }

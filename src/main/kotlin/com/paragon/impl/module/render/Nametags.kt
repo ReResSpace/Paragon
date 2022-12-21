@@ -8,6 +8,7 @@ import com.paragon.impl.module.Module
 import com.paragon.impl.setting.Setting
 import com.paragon.util.anyNull
 import com.paragon.util.entity.EntityUtil
+import com.paragon.util.mc
 import com.paragon.util.player.EntityFakePlayer
 import com.paragon.util.render.RenderUtil
 import com.paragon.util.render.font.FontUtil
@@ -44,12 +45,12 @@ object Nametags : Module("Nametags", Category.RENDER, "Draws nametags above play
 
     override fun onRender3D() {
         // Prevent null pointer exceptions
-        if (minecraft.anyNull || minecraft.player.connection == null || minecraft.player.ticksExisted < 20) {
+        if (mc.anyNull || mc.player.connection == null || mc.player.ticksExisted < 20) {
             return
         }
 
-        for (player in minecraft.world.playerEntities) {
-            if (player === minecraft.player) {
+        for (player in mc.world.playerEntities) {
+            if (player === mc.player) {
                continue
             }
 
@@ -65,7 +66,7 @@ object Nametags : Module("Nametags", Category.RENDER, "Draws nametags above play
                         .append(EntityUtil.getEntityHealth(player).roundToInt())
                 }
 
-                if (ping.value && minecraft.connection != null) {
+                if (ping.value && mc.connection != null) {
                     runCatching {
                         if (player is EntityFakePlayer) {
                             builder.append(" ")
@@ -73,8 +74,8 @@ object Nametags : Module("Nametags", Category.RENDER, "Draws nametags above play
                                 .append(-1)
                         } else {
                             builder.append(" ")
-                                .append(getPingColour(minecraft.connection!!.getPlayerInfo(player.uniqueID).responseTime))
-                                .append(minecraft.connection!!.getPlayerInfo(player.uniqueID).responseTime)
+                                .append(getPingColour(mc.connection!!.getPlayerInfo(player.uniqueID).responseTime))
+                                .append(mc.connection!!.getPlayerInfo(player.uniqueID).responseTime)
                         }
                     }
                 }

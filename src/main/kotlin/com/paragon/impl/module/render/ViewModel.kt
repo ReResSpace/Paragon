@@ -5,6 +5,7 @@ import com.paragon.impl.module.Module
 import com.paragon.impl.setting.Setting
 import com.paragon.bus.listener.Listener
 import com.paragon.impl.module.Category
+import com.paragon.util.mc
 import net.minecraft.client.renderer.GlStateManager
 import net.minecraft.util.EnumHand
 import net.minecraft.util.EnumHandSide
@@ -99,7 +100,7 @@ object ViewModel : Module("ViewModel", Category.RENDER, "Changes the way items a
     @Listener
     fun onRenderItemPre(event: RenderItemEvent.Pre) {
         if (event.side == EnumHandSide.LEFT && offhand.value) {
-            if (minecraft.player.isHandActive && minecraft.player.activeHand == EnumHand.OFF_HAND && ignoreActive.value) {
+            if (mc.player.isHandActive && mc.player.activeHand == EnumHand.OFF_HAND && ignoreActive.value) {
                 return
             }
 
@@ -111,7 +112,7 @@ object ViewModel : Module("ViewModel", Category.RENDER, "Changes the way items a
         }
 
         if (event.side == EnumHandSide.RIGHT && main.value) {
-            if (minecraft.player.isHandActive && minecraft.player.activeHand == EnumHand.MAIN_HAND && ignoreActive.value) {
+            if (mc.player.isHandActive && mc.player.activeHand == EnumHand.MAIN_HAND && ignoreActive.value) {
                 return
             }
 

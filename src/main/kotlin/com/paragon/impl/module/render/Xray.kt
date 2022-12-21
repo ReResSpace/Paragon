@@ -6,6 +6,7 @@ import com.paragon.bus.listener.Listener
 import com.paragon.impl.module.annotation.Aliases
 import com.paragon.impl.module.Category
 import com.paragon.util.anyNull
+import com.paragon.util.mc
 import com.paragon.util.world.BlockUtil.getBlockAtPos
 import net.minecraft.init.Blocks
 
@@ -20,19 +21,19 @@ object Xray : Module("Xray", Category.RENDER, "Lets you see ores and liquids thr
     )
 
     override fun onEnable() {
-        if (minecraft.anyNull) {
+        if (mc.anyNull) {
             return
         }
 
-        minecraft.renderGlobal.loadRenderers()
+        mc.renderGlobal.loadRenderers()
     }
 
     override fun onDisable() {
-        if (minecraft.anyNull) {
+        if (mc.anyNull) {
             return
         }
 
-        minecraft.renderGlobal.loadRenderers()
+        mc.renderGlobal.loadRenderers()
     }
 
     @Listener

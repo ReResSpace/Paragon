@@ -2,6 +2,7 @@ package com.paragon.impl.module.hud.impl
 
 import com.paragon.impl.module.client.Colours
 import com.paragon.impl.module.hud.HUDModule
+import com.paragon.util.mc
 import com.paragon.util.render.font.FontUtil
 import net.minecraft.util.text.TextFormatting
 
@@ -21,6 +22,6 @@ object ServerBrand : HUDModule("ServerBrand", "Shows the brand of the server you
     override var height = FontUtil.getHeight()
         get() = FontUtil.getHeight()
 
-    private fun getText() = "Server Brand " + TextFormatting.WHITE + if (minecraft.player != null) if (minecraft.isSingleplayer) "Singleplayer" else minecraft.player.serverBrand else ""
+    private fun getText() = "Server Brand " + TextFormatting.WHITE + if (mc.player != null) if (mc.isSingleplayer) "Singleplayer" else mc.player.serverBrand else ""
 
 }

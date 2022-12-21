@@ -5,6 +5,7 @@ import com.paragon.impl.module.client.Colours
 import com.paragon.impl.module.hud.HUDEditorGUI
 import com.paragon.impl.module.hud.HUDModule
 import com.paragon.impl.setting.Setting
+import com.paragon.util.mc
 import com.paragon.util.render.ColourUtil
 import com.paragon.util.render.ColourUtil.integrateAlpha
 import com.paragon.util.render.ColourUtil.toColour
@@ -32,10 +33,10 @@ object PotionHUD : HUDModule("Potions", "Shows active potion effects") {
     private val offset = Setting("Offset", 0F, 0F, 10F, 1F) describedBy "The offset between the effects"
 
     override fun render() {
-        val activeEffects = minecraft.player.activePotionEffects
+        val activeEffects = mc.player.activePotionEffects
 
         if (activeEffects.isEmpty()) {
-            if (minecraft.currentScreen is HUDEditorGUI) { // Dummy for positioning
+            if (mc.currentScreen is HUDEditorGUI) { // Dummy for positioning
                 RenderUtil.drawRect(x, y, width, height, Color(255, 255, 255, 100))
             }
 
@@ -63,7 +64,7 @@ object PotionHUD : HUDModule("Potions", "Shows active potion effects") {
                         }
 
                         GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f)
-                        minecraft.textureManager.bindTexture(GuiContainer.INVENTORY_BACKGROUND) // Idfk but this is needed to the icon renders properly
+                        mc.textureManager.bindTexture(GuiContainer.INVENTORY_BACKGROUND) // Idfk but this is needed to the icon renders properly
                         FontUtil.drawStringWithShadow("", x, y, Color.WHITE, alignment.value) //Why? Idfk it makes no sense
 
                         if (potion.hasStatusIcon()) {
@@ -109,7 +110,7 @@ object PotionHUD : HUDModule("Potions", "Shows active potion effects") {
                         scaleTo(x, effectY, 0F, scaleFac, scaleFac, 1.0) {
                             GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f)
                             GlStateManager.disableLighting()
-                            minecraft.textureManager.bindTexture(GuiContainer.INVENTORY_BACKGROUND) //Idfk but this is needed to the icon renders properly
+                            mc.textureManager.bindTexture(GuiContainer.INVENTORY_BACKGROUND) //Idfk but this is needed to the icon renders properly
                             FontUtil.drawStringWithShadow("", x, y, Color.WHITE, alignment.value) //How? Idfk it makes no sense
 
                             if (effect.potion.hasStatusIcon()) {

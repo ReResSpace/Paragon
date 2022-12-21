@@ -8,6 +8,7 @@ import com.paragon.impl.setting.Bind
 import com.paragon.impl.setting.Setting
 import com.paragon.impl.ui.configuration.GuiImplementation
 import com.paragon.impl.ui.configuration.camper.CamperCheatGUI
+import com.paragon.util.mc
 import me.surge.animation.Easing
 import org.lwjgl.input.Keyboard
 
@@ -60,7 +61,7 @@ object ClickGUI : Module("ClickGUI", Category.CLIENT, "The ClickGUI of the clien
     }
 
     override fun onEnable() {
-        minecraft.displayGuiScreen(Paragon.INSTANCE.configurationGUI)
+        mc.displayGuiScreen(Paragon.INSTANCE.configurationGUI)
         toggle()
     }
 

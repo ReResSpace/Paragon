@@ -7,6 +7,7 @@ import com.paragon.impl.module.Module
 import com.paragon.impl.module.annotation.Constant
 import com.paragon.impl.module.annotation.NotVisibleByDefault
 import com.paragon.impl.ui.menu.ParagonMenu
+import com.paragon.util.mc
 import net.minecraft.client.gui.GuiMainMenu
 
 @NotVisibleByDefault
@@ -15,7 +16,7 @@ object MainMenu : Module("MainMenu", Category.CLIENT, "Use the client's custom m
     @Listener
     fun onGuiUpdate(event: GuiUpdateEvent) {
         if (event.screen is GuiMainMenu) {
-            minecraft.displayGuiScreen(ParagonMenu())
+            mc.displayGuiScreen(ParagonMenu())
             event.cancel()
         }
     }

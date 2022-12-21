@@ -4,6 +4,7 @@ import com.paragon.impl.module.hud.HUDModule
 import com.paragon.impl.module.hud.impl.Speed
 import com.paragon.impl.setting.Setting
 import com.paragon.util.anyNull
+import com.paragon.util.mc
 import com.paragon.util.render.RenderUtil.scaleTo
 
 /**
@@ -24,14 +25,14 @@ object GraphSpeed : HUDModule("SpeedGraph", "Graph showing your speed") {
     }
 
     override fun onTick() {
-        if (minecraft.anyNull || minecraft.player.ticksExisted < 10) {
+        if (mc.anyNull || mc.player.ticksExisted < 10) {
             this.graph.points = Array(75) { 0.0 }
             return
         }
 
         graph.update(
             Speed.getPlayerSpeed(
-                minecraft.player.posX - minecraft.player.lastTickPosX, minecraft.player.posZ - minecraft.player.lastTickPosZ
+                mc.player.posX - mc.player.lastTickPosX, mc.player.posZ - mc.player.lastTickPosZ
             )
         )
     }

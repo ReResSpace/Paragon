@@ -3,6 +3,7 @@ package com.paragon.impl.module.hud.impl.graphs
 import com.paragon.impl.module.hud.HUDModule
 import com.paragon.impl.setting.Setting
 import com.paragon.util.anyNull
+import com.paragon.util.mc
 import com.paragon.util.render.RenderUtil
 import net.minecraft.client.Minecraft
 
@@ -24,7 +25,7 @@ object GraphFPS : HUDModule("FPSGraph", "Graph showing your Ping") {
     }
 
     override fun onTick() {
-        if (minecraft.anyNull) {
+        if (mc.anyNull) {
             return
         }
 

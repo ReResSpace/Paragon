@@ -5,6 +5,7 @@ import com.paragon.impl.module.Category
 import com.paragon.impl.module.client.Colours
 import com.paragon.impl.ui.configuration.panel.impl.CategoryPanel
 import com.paragon.impl.ui.util.Click
+import com.paragon.util.isHovered
 import com.paragon.util.render.ColourUtil.integrateAlpha
 import com.paragon.util.render.RenderUtil
 import com.paragon.util.render.font.FontUtil
@@ -42,7 +43,7 @@ class HUDEditorGUI : GuiScreen() {
             (it as HUDModule).updateComponent(mouseX, mouseY)
 
             RenderUtil.scaleTo(it.x + (it.width / 2), it.y + (it.height / 2), 0f, it.animation.getAnimationFactor(), it.animation.getAnimationFactor(), 0.0) {
-                if (it.isDragging || it.isHovered(it.x, it.y, it.width, it.height, mouseX, mouseY)) {
+                if (it.isDragging || isHovered(it.x, it.y, it.width, it.height, mouseX, mouseY)) {
                     RenderUtil.drawRoundedRect(it.x - 2, it.y - 2, it.width + 4, it.height + 4, 5f, Colours.mainColour.value.integrateAlpha(150f))
                 }
 

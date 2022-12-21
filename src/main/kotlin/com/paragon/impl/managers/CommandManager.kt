@@ -2,7 +2,7 @@ package com.paragon.impl.managers
 
 import com.paragon.Paragon
 import com.paragon.impl.command.impl.*
-import com.paragon.util.Wrapper
+import com.paragon.util.mc
 import net.minecraft.util.text.TextComponentString
 import net.minecraft.util.text.TextFormatting.*
 import net.minecraftforge.client.event.ClientChatEvent
@@ -13,7 +13,7 @@ import java.util.*
 /**
  * @author Surge
  */
-class CommandManager : Wrapper {
+class CommandManager {
 
     val prefix = "$"
     var lastCommand = ""
@@ -72,7 +72,7 @@ class CommandManager : Wrapper {
     /**
      * Sends a client side chat message with client prefix.
      */
-    fun sendClientMessage(message: String) = minecraft.player.sendMessage(
+    fun sendClientMessage(message: String) = mc.player.sendMessage(
         TextComponentString(LIGHT_PURPLE.toString() + "Paragon " + WHITE + "> " + message)
     )
 

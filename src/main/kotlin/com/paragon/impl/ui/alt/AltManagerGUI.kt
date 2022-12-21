@@ -3,7 +3,7 @@ package com.paragon.impl.ui.alt
 import com.paragon.Paragon
 import com.paragon.impl.managers.alt.Alt
 import com.paragon.mixins.accessor.IMinecraft
-import com.paragon.util.Wrapper
+import com.paragon.util.isHovered
 import com.paragon.util.render.RenderUtil
 import com.paragon.util.render.font.FontUtil
 import net.minecraft.client.Minecraft
@@ -16,7 +16,7 @@ import org.lwjgl.input.Mouse
 import java.awt.Color
 import java.io.IOException
 
-class AltManagerGUI : GuiScreen(), Wrapper {
+class AltManagerGUI : GuiScreen() {
 
     private val altEntries = ArrayList<AltEntry>(3)
 
@@ -102,8 +102,8 @@ class AltManagerGUI : GuiScreen(), Wrapper {
 
     override fun actionPerformed(button: GuiButton) {
         when (button.id) {
-            0 -> minecraft.displayGuiScreen(GuiMultiplayer(GuiMainMenu()))
-            1 -> minecraft.displayGuiScreen(com.paragon.impl.ui.alt.AddAltGUI())
+            0 -> com.paragon.util.mc.displayGuiScreen(GuiMultiplayer(GuiMainMenu()))
+            1 -> com.paragon.util.mc.displayGuiScreen(com.paragon.impl.ui.alt.AddAltGUI())
             2 -> {
                 Paragon.INSTANCE.altManager.alts.removeIf { alt: Alt -> alt.email == selectedAltEntry!!.alt.email && alt.password == selectedAltEntry!!.alt.password }
                 altEntries.remove(selectedAltEntry)

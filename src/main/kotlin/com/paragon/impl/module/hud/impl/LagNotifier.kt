@@ -9,6 +9,7 @@ import com.paragon.impl.module.hud.HUDEditorGUI
 import com.paragon.impl.module.hud.HUDModule
 import com.paragon.impl.setting.Setting
 import com.paragon.util.calculations.Timer
+import com.paragon.util.mc
 import com.paragon.util.render.RenderUtil
 import com.paragon.util.render.font.FontUtil
 import me.surge.animation.Animation
@@ -29,7 +30,7 @@ object LagNotifier : HUDModule("LagNotifier", "Tells you when the server is lagg
     override fun render() {
         slide.state = lastPacketTimer.hasMSPassed(threshold.value)
 
-        if (minecraft.currentScreen is HUDEditorGUI) {
+        if (mc.currentScreen is HUDEditorGUI) {
             FontUtil.drawStringWithShadow("Server has been lagging for [sec]s", x, y, Colours.mainColour.value, alignment.value)
         } else {
             if (slide.getAnimationFactor() > 0) {

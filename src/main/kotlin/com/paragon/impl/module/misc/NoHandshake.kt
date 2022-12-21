@@ -5,6 +5,7 @@ import com.paragon.impl.event.network.PacketEvent
 import com.paragon.impl.module.Category
 import com.paragon.impl.module.Module
 import com.paragon.mixins.accessor.ICPacketCustomPayload
+import com.paragon.util.mc
 import io.netty.buffer.Unpooled
 import net.minecraft.network.PacketBuffer
 import net.minecraft.network.play.client.CPacketCustomPayload
@@ -19,7 +20,7 @@ object NoHandshake : Module("NoHandshake", Category.MISC, "Cancel the Forge serv
     @Listener
     fun onPacketSend(event: PacketEvent.PreSend) {
         // Don't send proxy packets if we're in multiplayer
-        if (event.packet is FMLProxyPacket && !minecraft.isSingleplayer) {
+        if (event.packet is FMLProxyPacket && !mc.isSingleplayer) {
             event.cancel()
         }
 

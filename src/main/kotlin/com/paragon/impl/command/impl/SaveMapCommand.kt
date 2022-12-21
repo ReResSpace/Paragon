@@ -6,6 +6,7 @@ import com.paragon.impl.command.syntax.SyntaxBuilder
 import com.paragon.mixins.accessor.IEntityRenderer
 import com.paragon.mixins.accessor.IMapItemRenderer
 import com.paragon.mixins.accessor.IMapItemRendererInstance
+import com.paragon.util.mc
 import com.paragon.util.system.backgroundThread
 import kotlinx.coroutines.Job
 import net.minecraft.client.renderer.Vector3d
@@ -24,9 +25,10 @@ import kotlin.math.roundToInt
 /**
  * @author SooStrator1136
  */
-object SaveMapCommand : Command("SaveMap", SyntaxBuilder.createBuilder(arrayListOf(
-    ArgumentData("mode", arrayOf("holding", "frames", "smart"))
-))) {
+object SaveMapCommand : Command(
+    "SaveMap",
+    SyntaxBuilder.createBuilder(arrayListOf(ArgumentData("mode", arrayOf("holding", "frames", "smart"))))
+) {
 
     private lateinit var itemRenderInstances: Map<String, Any>
 
@@ -45,13 +47,13 @@ object SaveMapCommand : Command("SaveMap", SyntaxBuilder.createBuilder(arrayList
         }
 
         @Suppress("IncorrectFormatting")
-        itemRenderInstances = ((minecraft.entityRenderer as IEntityRenderer).mapItemRenderer as IMapItemRenderer).hookGetLoadedMaps()
+        itemRenderInstances = ((mc.entityRenderer as IEntityRenderer).mapItemRenderer as IMapItemRenderer).hookGetLoadedMaps()
 
         when (args[0]) {
             "holding" -> {
                 currentJob = backgroundThread {
                     arrayOf(
-                        minecraft.player.heldItemMainhand, minecraft.player.heldItemOffhand
+                        mc.player.heldItemMainhand, mc.player.heldItemOffhand
                     ).forEach {
                         if (it.item !is ItemMap) {
                             return@forEach
@@ -59,7 +61,7 @@ object SaveMapCommand : Command("SaveMap", SyntaxBuilder.createBuilder(arrayList
 
                         saveMapImage(
                             it.displayName, getImageById(
-                                ((it.item as ItemMap).getMapData(it, minecraft.world) ?: return@forEach).mapName
+                                ((it.item as ItemMap).getMapData(it, mc.world) ?: return@forEach).mapName
                             )
                         )
                     }
@@ -70,7 +72,7 @@ object SaveMapCommand : Command("SaveMap", SyntaxBuilder.createBuilder(arrayList
 
             "frames" -> {
                 currentJob = backgroundThread {
-                    minecraft.world.loadedEntityList.filterIsInstance<EntityItemFrame>().forEach {
+                    mc.world.loadedEntityList.filterIsInstance<EntityItemFrame>().forEach {
                         if (it.displayedItem.item !is ItemMap) {
                             return@forEach
                         }
@@ -78,7 +80,7 @@ object SaveMapCommand : Command("SaveMap", SyntaxBuilder.createBuilder(arrayList
                         saveMapImage(
                             it.displayedItem.displayName, getImageById(
                                 ((it.displayedItem.item as ItemMap).getMapData(
-                                    it.displayedItem, minecraft.world
+                                    it.displayedItem, mc.world
                                 ) ?: return@forEach).mapName
                             )
                         )
@@ -92,7 +94,7 @@ object SaveMapCommand : Command("SaveMap", SyntaxBuilder.createBuilder(arrayList
 
             "smart" -> {
                 currentJob = backgroundThread {
-                    frameList.addAll(minecraft.world.loadedEntityList.filterIsInstance<EntityItemFrame>().filter {
+                    frameList.addAll(mc.world.loadedEntityList.filterIsInstance<EntityItemFrame>().filter {
                         it.displayedItem.item is ItemMap
                     })
 
@@ -188,14 +190,15 @@ object SaveMapCommand : Command("SaveMap", SyntaxBuilder.createBuilder(arrayList
 
         if (maxVec.x == minVec.x && maxVec.z == minVec.z && maxVec.y == minVec.y) {
             return arrayOf(arrayOf(getMapImageByFrame(knownMap)))
-        }
-        else {
+        } else {
             return Array((maxVec.y - minVec.y).roundToInt() + 1) { outerIndex ->
                 Array(
                     if (maxVec.x == minVec.x) (maxVec.z - minVec.z).roundToInt() + 1 else (maxVec.x - minVec.x).roundToInt() + 1
                 ) { innerIndex ->
                     getMapImageByFrame(getFrameAtPosition(
-                        minVec.x + if (maxVec.x == minVec.x) 0 else innerIndex, minVec.y + outerIndex, minVec.z + if (maxVec.x == minVec.x) innerIndex else 0
+                        minVec.x + if (maxVec.x == minVec.x) 0 else innerIndex,
+                        minVec.y + outerIndex,
+                        minVec.z + if (maxVec.x == minVec.x) innerIndex else 0
                     ).also {
                         frameList.remove(it)
                     })
@@ -208,37 +211,33 @@ object SaveMapCommand : Command("SaveMap", SyntaxBuilder.createBuilder(arrayList
         return if (frame != null) {
             getImageById(
                 ((frame.displayedItem.item as ItemMap).getMapData(
-                    frame.displayedItem, minecraft.world
+                    frame.displayedItem, mc.world
                 ) ?: return BufferedImage(128, 128, BufferedImage.TYPE_BYTE_GRAY)).mapName
             )
-        }
-        else {
+        } else {
             BufferedImage(128, 128, BufferedImage.TYPE_BYTE_GRAY) //Black (placeholder) img
         }
     }
 
-    private fun getMapsNextTo(from: EntityItemFrame): Array<EntityItemFrame?> {
-        return arrayOf(
-            getFrameAtPosition(from.posX, from.posY + 1.0, from.posZ), getFrameAtPosition(from.posX, from.posY - 1.0, from.posZ), getFrameAtPosition(from.posX + 1, from.posY, from.posZ), getFrameAtPosition(from.posX - 1, from.posY, from.posZ), getFrameAtPosition(from.posX, from.posY, from.posZ + 1), getFrameAtPosition(from.posX, from.posY, from.posZ - 1)
-        )
-    }
+    private fun getMapsNextTo(from: EntityItemFrame) = arrayOf(
+        getFrameAtPosition(from.posX, from.posY + 1.0, from.posZ),
+        getFrameAtPosition(from.posX, from.posY - 1.0, from.posZ),
+        getFrameAtPosition(from.posX + 1, from.posY, from.posZ),
+        getFrameAtPosition(from.posX - 1, from.posY, from.posZ),
+        getFrameAtPosition(from.posX, from.posY, from.posZ + 1),
+        getFrameAtPosition(from.posX, from.posY, from.posZ - 1)
+    )
 
-    private fun getFrameAtPosition(x: Double, y: Double, z: Double): EntityItemFrame? {
-        frameList.filter {
-            it.posX == x && it.posY == y && it.posZ == z
-        }.let {
-            if (it.isNotEmpty()) {
-                return it[0]
-            }
-        }
-
-        return null
+    private fun getFrameAtPosition(x: Double, y: Double, z: Double) = frameList.firstOrNull {
+        it.posX == x && it.posY == y && it.posZ == z
     }
 
     //0 = above, 1 = right, 2 = left //TODO clean this shit
     private fun mergeImages(startImage: BufferedImage, toMerge: BufferedImage, position: Int): BufferedImage {
         return BufferedImage(
-            startImage.width + if (position == 1 || position == 2) toMerge.width else 0, startImage.height + if (position == 0) toMerge.height else 0, BufferedImage.TYPE_INT_RGB
+            startImage.width + if (position == 1 || position == 2) toMerge.width else 0,
+            startImage.height + if (position == 0) toMerge.height else 0,
+            BufferedImage.TYPE_INT_RGB
         ).also { mergedImg ->
             val startPixels = IntArray(startImage.width * startImage.height).let {
                 startImage.getRGB(
@@ -264,23 +263,39 @@ object SaveMapCommand : Command("SaveMap", SyntaxBuilder.createBuilder(arrayList
 
                 1, 2 -> {
                     mergedImg.setRGB(
-                        0, 0, if (position == 1) startImage.width else toMerge.width, if (position == 1) startImage.height else toMerge.height, if (position == 1) startPixels else toMergePixels, 0, if (position == 1) startImage.width else toMerge.width
+                        0,
+                        0,
+                        if (position == 1) startImage.width else toMerge.width,
+                        if (position == 1) startImage.height else toMerge.height,
+                        if (position == 1) startPixels else toMergePixels,
+                        0,
+                        if (position == 1) startImage.width else toMerge.width
                     )
 
                     mergedImg.setRGB(
-                        if (position == 1) startImage.width else toMerge.width, 0, if (position == 1) toMerge.width else startImage.width, if (position == 1) toMerge.height else startImage.height, if (position == 1) toMergePixels else startPixels, 0, if (position == 1) toMerge.width else startImage.width
+                        if (position == 1) startImage.width else toMerge.width,
+                        0,
+                        if (position == 1) toMerge.width else startImage.width,
+                        if (position == 1) toMerge.height else startImage.height,
+                        if (position == 1) toMergePixels else startPixels,
+                        0,
+                        if (position == 1) toMerge.width else startImage.width
                     )
                 }
             }
         }
     }
 
-    private fun getImageById(id: String): BufferedImage {
-        return BufferedImage(128, 128, BufferedImage.TYPE_INT_RGB).also {
-            it.setRGB(
-                0, 0, 128, 128, ((itemRenderInstances[id] ?: return@also) as IMapItemRendererInstance).hookGetMapTexture().textureData, 0, 128
-            )
-        }
+    private fun getImageById(id: String) = BufferedImage(128, 128, BufferedImage.TYPE_INT_RGB).also {
+        it.setRGB(
+            0,
+            0,
+            128,
+            128,
+            ((itemRenderInstances[id] ?: return@also) as IMapItemRendererInstance).hookGetMapTexture().textureData,
+            0,
+            128
+        )
     }
 
     private fun saveMapImage(name: String, img: BufferedImage) {
@@ -296,8 +311,7 @@ object SaveMapCommand : Command("SaveMap", SyntaxBuilder.createBuilder(arrayList
             index++
             saveLoc = if (index == 1) {
                 File("paragon${File.separator}maps${File.separator}${name} (1).jpg")
-            }
-            else {
+            } else {
                 File(
                     saveLoc.path.substring(
                         0, saveLoc.path.length - (6 + (index - 1).toString().length)

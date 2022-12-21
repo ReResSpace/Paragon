@@ -4,6 +4,7 @@ import com.paragon.impl.module.Category
 import com.paragon.impl.module.Module
 import com.paragon.impl.setting.Setting
 import com.paragon.mixins.accessor.IRenderGlobal
+import com.paragon.util.mc
 import com.paragon.util.render.RenderUtil.drawNametagText
 import com.paragon.util.render.builder.BoxRenderMode
 import com.paragon.util.render.builder.RenderBuilder
@@ -33,7 +34,7 @@ object BreakESP : Module("BreakESP", Category.RENDER, "Highlights blocks that ar
 
     override fun onRender3D() {
         // Iterate through all blocks being broken
-        (minecraft.renderGlobal as IRenderGlobal).hookGetDamagedBlocks().forEach { (_: Int?, progress: DestroyBlockProgress?) ->
+        (mc.renderGlobal as IRenderGlobal).hookGetDamagedBlocks().forEach { (_: Int?, progress: DestroyBlockProgress?) ->
             if (progress == null) {
                 return@forEach
             }
@@ -48,7 +49,7 @@ object BreakESP : Module("BreakESP", Category.RENDER, "Highlights blocks that ar
 
             // Check block is within range
             if (blockPos.getDistance(
-                    minecraft.player.posX.toInt(), minecraft.player.posY.toInt(), minecraft.player.posZ.toInt()
+                    mc.player.posX.toInt(), mc.player.posY.toInt(), mc.player.posZ.toInt()
                 ) > range.value
             ) {
                 return@forEach

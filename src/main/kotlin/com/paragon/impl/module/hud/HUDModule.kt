@@ -5,6 +5,8 @@ import com.paragon.impl.module.Module
 import com.paragon.impl.module.annotation.NotVisibleByDefault
 import com.paragon.impl.module.hud.impl.HUDEditor
 import com.paragon.impl.setting.Setting
+import com.paragon.util.isHovered
+import com.paragon.util.mc
 import com.paragon.util.render.font.FontUtil
 import com.paragon.util.roundToNearest
 import net.minecraft.client.gui.ScaledResolution
@@ -35,7 +37,7 @@ abstract class HUDModule(name: String, description: String) : Module(name, Categ
     fun updateComponent(mouseX: Int, mouseY: Int) {
         // Set X and Y
         if (isDragging) {
-            val sr = ScaledResolution(minecraft)
+            val sr = ScaledResolution(mc)
             val newX = mouseX - lastX
             val newY = mouseY - lastY
 

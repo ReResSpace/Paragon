@@ -5,6 +5,7 @@ import com.paragon.impl.setting.Setting
 import com.paragon.util.render.ColourUtil.integrateAlpha
 import com.paragon.impl.module.Category
 import com.paragon.util.anyNull
+import com.paragon.util.mc
 import com.paragon.util.render.RenderUtil
 import com.paragon.util.render.builder.BoxRenderMode
 import com.paragon.util.render.builder.RenderBuilder
@@ -60,7 +61,7 @@ object VoidESP : Module("VoidESP", Category.RENDER, "Highlights void holes in th
     private var lastJob: Job? = null
 
     override fun onTick() {
-        if (minecraft.anyNull) {
+        if (mc.anyNull) {
             return
         }
 
@@ -68,11 +69,11 @@ object VoidESP : Module("VoidESP", Category.RENDER, "Highlights void holes in th
             if (lastJob == null || (lastJob ?: return@backgroundThread).isCompleted) {
                 lastJob = launch {
                     holes.addAll(BlockUtil.getSphere(range.value, false).filter {
-                        it.y == 0 && minecraft.world.getBlockState(it).material.isReplaceable && !holes.contains(it)
+                        it.y == 0 && mc.world.getBlockState(it).material.isReplaceable && !holes.contains(it)
                     })
 
                     holes.removeIf {
-                        it.y != 0 || !minecraft.world.getBlockState(it).material.isReplaceable
+                        it.y != 0 || !mc.world.getBlockState(it).material.isReplaceable
                     }
                 }
             }

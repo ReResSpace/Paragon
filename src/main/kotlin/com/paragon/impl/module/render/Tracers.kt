@@ -7,6 +7,7 @@ import com.paragon.util.entity.EntityUtil
 import com.paragon.util.entity.EntityUtil.isEntityAllowed
 import com.paragon.util.entity.EntityUtil.isMonster
 import com.paragon.util.entity.EntityUtil.isPassive
+import com.paragon.util.mc
 import com.paragon.util.render.ColourUtil.glColour
 import com.paragon.util.render.ColourUtil.integrateAlpha
 import net.minecraft.entity.Entity
@@ -64,16 +65,16 @@ object Tracers : Module("Tracers", Category.RENDER, "Draws lines to entities in 
 
     @SubscribeEvent
     fun onRenderWorld(event: RenderWorldLastEvent?) {
-        minecraft.world.loadedEntityList.forEach { entity: Entity ->
-            if (entity.isEntityAllowed(players.value, mobs.value, passive.value) && entity !== minecraft.player || entity is EntityEnderCrystal && crystals.value) {
+        mc.world.loadedEntityList.forEach { entity: Entity ->
+            if (entity.isEntityAllowed(players.value, mobs.value, passive.value) && entity !== mc.player || entity is EntityEnderCrystal && crystals.value) {
                 val vec = EntityUtil.getInterpolatedPosition(entity)
-                val x = vec.x - minecraft.renderManager.viewerPosX
-                val y = vec.y - minecraft.renderManager.viewerPosY
-                val z = vec.z - minecraft.renderManager.viewerPosZ
+                val x = vec.x - mc.renderManager.viewerPosX
+                val y = vec.y - mc.renderManager.viewerPosY
+                val z = vec.z - mc.renderManager.viewerPosZ
 
-                val eyes = Vec3d(0.0, 0.0, 1.0).rotatePitch(-Math.toRadians(minecraft.player.rotationPitch.toDouble()).toFloat()).rotateYaw(
+                val eyes = Vec3d(0.0, 0.0, 1.0).rotatePitch(-Math.toRadians(mc.player.rotationPitch.toDouble()).toFloat()).rotateYaw(
                     -Math.toRadians(
-                        minecraft.player.rotationYaw.toDouble()
+                        mc.player.rotationYaw.toDouble()
                     ).toFloat()
                 )
 
@@ -100,7 +101,7 @@ object Tracers : Module("Tracers", Category.RENDER, "Draws lines to entities in 
                 glBegin(GL_LINE_STRIP)
 
                 // Draw line
-                glVertex3d(eyes.x, eyes.y + minecraft.player.getEyeHeight(), eyes.z)
+                glVertex3d(eyes.x, eyes.y + mc.player.getEyeHeight(), eyes.z)
                 glVertex3d(x, y + entity.height / 2, z)
                 glEnd()
 
@@ -142,7 +143,7 @@ object Tracers : Module("Tracers", Category.RENDER, "Draws lines to entities in 
 
         if (distance.value != Distance.OFF) {
             val factor = MathHelper.clamp(
-                (minecraft.player.getDistanceSq(entityIn) / distanceDivider.value).toFloat(), 0f, 1f
+                (mc.player.getDistanceSq(entityIn) / distanceDivider.value).toFloat(), 0f, 1f
             )
 
             colour = if (distance.value == Distance.COLOUR) {

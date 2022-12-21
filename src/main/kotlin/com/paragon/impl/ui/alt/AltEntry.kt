@@ -2,11 +2,11 @@ package com.paragon.impl.ui.alt
 
 import com.paragon.util.render.font.FontUtil.drawCenteredString
 import com.paragon.impl.managers.alt.Alt
-import com.paragon.util.Wrapper
+import com.paragon.util.isHovered
 import com.paragon.util.render.RenderUtil.drawRect
 import java.awt.Color
 
-class AltEntry(val alt: Alt, var offset: Float) : Wrapper {
+class AltEntry(val alt: Alt, var offset: Float) {
 
     fun drawAlt(screenWidth: Int) {
         drawRect(

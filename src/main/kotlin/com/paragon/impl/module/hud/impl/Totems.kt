@@ -2,6 +2,7 @@ package com.paragon.impl.module.hud.impl
 
 import com.paragon.impl.module.client.Colours
 import com.paragon.impl.module.hud.HUDModule
+import com.paragon.util.mc
 import com.paragon.util.render.ColourUtil.toColour
 import com.paragon.util.render.RenderUtil
 import com.paragon.util.render.RenderUtil.drawBorder
@@ -38,15 +39,15 @@ object Totems : HUDModule("Totems", "Displays the amount of totems in your inven
         var count = 0
 
         for (i in 0..35) {
-            if (minecraft.player.inventory.getStackInSlot(i).item === Items.TOTEM_OF_UNDYING) {
+            if (mc.player.inventory.getStackInSlot(i).item === Items.TOTEM_OF_UNDYING) {
                 count++
             }
         }
 
-        if (minecraft.player.heldItemMainhand.item === Items.TOTEM_OF_UNDYING) {
+        if (mc.player.heldItemMainhand.item === Items.TOTEM_OF_UNDYING) {
             count++
         }
-        if (minecraft.player.heldItemOffhand.item === Items.TOTEM_OF_UNDYING) {
+        if (mc.player.heldItemOffhand.item === Items.TOTEM_OF_UNDYING) {
             count++
         }
 

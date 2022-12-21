@@ -20,6 +20,7 @@ import com.paragon.util.calculations.Timer
 import com.paragon.util.entity.EntityUtil
 import com.paragon.util.entity.EntityUtil.isMonster
 import com.paragon.util.entity.EntityUtil.isPassive
+import com.paragon.util.mc
 import com.paragon.util.player.InventoryUtil
 import com.paragon.util.player.PlayerUtil
 import com.paragon.util.player.RotationUtil
@@ -145,7 +146,7 @@ object AutoCrystal : Module("AutoCrystal", Category.COMBAT, "Automatically place
     private var state = State.PLACING
 
     override fun onTick() {
-        if (minecraft.anyNull) {
+        if (mc.anyNull) {
             return
         }
 
@@ -154,7 +155,7 @@ object AutoCrystal : Module("AutoCrystal", Category.COMBAT, "Automatically place
         crystal = null
 
         // Pause
-        if (pause.value && (pauseEating.value && PlayerUtil.isPlayerConsuming || pauseHealth.value && EntityUtil.getEntityHealth(minecraft.player) <= pauseHealthValue.value)) {
+        if (pause.value && (pauseEating.value && PlayerUtil.isPlayerConsuming || pauseHealth.value && EntityUtil.getEntityHealth(mc.player) <= pauseHealthValue.value)) {
             return
         }
 
@@ -271,7 +272,7 @@ object AutoCrystal : Module("AutoCrystal", Category.COMBAT, "Automatically place
                 // Check it's an explosion sound
                 if (packet.sound == SoundEvents.ENTITY_GENERIC_EXPLODE && packet.category == SoundCategory.BLOCKS) {
                     // Iterate through loaded entities
-                    for (entity in minecraft.world.loadedEntityList) {
+                    for (entity in mc.world.loadedEntityList) {
                         // If the entity isn't an ender crystal, or it is dead, ignore
                         if (entity !is EntityEnderCrystal || entity.isDead) {
                             continue
@@ -298,10 +299,10 @@ object AutoCrystal : Module("AutoCrystal", Category.COMBAT, "Automatically place
     private fun findTargets(): ArrayList<EntityLivingBase> {
         val targets = arrayListOf<EntityLivingBase>()
 
-        minecraft.world.loadedEntityList.forEach {
+        mc.world.loadedEntityList.forEach {
             // Ignore entities that we don't want to target, or are too far away, or aren't living
             if (!(it.isPassive() && targetPassives.value || it.isMonster() && targetHostiles.value || it is EntityOtherPlayerMP && targetPlayers.value) ||
-                it.getDistance(minecraft.player) > targetRange.value || it !is EntityLivingBase) {
+                it.getDistance(mc.player) > targetRange.value || it !is EntityLivingBase) {
 
                 return@forEach
             }
@@ -328,10 +329,10 @@ object AutoCrystal : Module("AutoCrystal", Category.COMBAT, "Automatically place
         }
 
         // Current slot
-        val previousSlot = minecraft.player.inventory.currentItem
+        val previousSlot = mc.player.inventory.currentItem
 
         // The hand we are placing with
-        val hand = if (minecraft.player.heldItemOffhand.item is ItemEndCrystal) EnumHand.OFF_HAND else EnumHand.MAIN_HAND
+        val hand = if (mc.player.heldItemOffhand.item is ItemEndCrystal) EnumHand.OFF_HAND else EnumHand.MAIN_HAND
 
         // Switch to end crystal
         InventoryUtil.switchToItem(Items.END_CRYSTAL, placeSwitch.value == Switch.PACKET)
@@ -357,11 +358,11 @@ object AutoCrystal : Module("AutoCrystal", Category.COMBAT, "Automatically place
         }
 
         // Sync current item
-        (minecraft.playerController as IPlayerControllerMP).hookSyncCurrentPlayItem()
+        (mc.playerController as IPlayerControllerMP).hookSyncCurrentPlayItem()
 
         if (placePacket.value) {
             // Send place packet
-            minecraft.player.connection.sendPacket(CPacketPlayerTryUseItemOnBlock(
+            mc.player.connection.sendPacket(CPacketPlayerTryUseItemOnBlock(
                 placement!!.position,
                 placement!!.facing,
                 hand,
@@ -371,9 +372,9 @@ object AutoCrystal : Module("AutoCrystal", Category.COMBAT, "Automatically place
             ))
         } else {
             // Vanilla place
-            minecraft.playerController.processRightClickBlock(
-                minecraft.player,
-                minecraft.world,
+            mc.playerController.processRightClickBlock(
+                mc.player,
+                mc.world,
                 placement!!.position,
                 placement!!.facing,
                 placement!!.facingVec,
@@ -383,7 +384,7 @@ object AutoCrystal : Module("AutoCrystal", Category.COMBAT, "Automatically place
 
         if (placeSwing.value) {
             // Swing hand
-            minecraft.player.swingArm(hand)
+            mc.player.swingArm(hand)
         }
 
         // Do not switch back if we want to keep the slot
@@ -417,7 +418,7 @@ object AutoCrystal : Module("AutoCrystal", Category.COMBAT, "Automatically place
             val damagePosition = Vec3d(it.x.toDouble() + 0.5, it.y + 1.0, it.z.toDouble() + 0.5)
 
             // The damage we have done to ourselves
-            val selfDamage = BlockUtil.calculateExplosionDamage(damagePosition, minecraft.player)
+            val selfDamage = BlockUtil.calculateExplosionDamage(damagePosition, mc.player)
 
             // The highest damage we can do to a target
             var highestTargetDamage = 0f
@@ -431,7 +432,7 @@ object AutoCrystal : Module("AutoCrystal", Category.COMBAT, "Automatically place
             }
 
             // Calculate target damage
-            highestTargetDamage = calculateDamage(selfDamage, highestTargetDamage, minecraft.player.getDistanceSq(it).toFloat())
+            highestTargetDamage = calculateDamage(selfDamage, highestTargetDamage, mc.player.getDistanceSq(it).toFloat())
 
             // Ignore position if it isn't within our damage bounds
             if (!(highestTargetDamage > placeMinimum.value && selfDamage < placeMaximum.value)) {
@@ -458,8 +459,8 @@ object AutoCrystal : Module("AutoCrystal", Category.COMBAT, "Automatically place
                             val vec = Vec3d(it.x + x, it.y + y, it.z + z)
 
                             // The result of raycasting there
-                            val result = minecraft.world.rayTraceBlocks(
-                                minecraft.player.getPositionEyes(1f),
+                            val result = mc.world.rayTraceBlocks(
+                                mc.player.getPositionEyes(1f),
                                 vec,
                                 false,
                                 false,
@@ -522,7 +523,7 @@ object AutoCrystal : Module("AutoCrystal", Category.COMBAT, "Automatically place
         }
 
         // Check that there are no entities in on top of the position
-        for (entity in minecraft.world.getEntitiesWithinAABB(Entity::class.java, AxisAlignedBB(up()))) {
+        for (entity in mc.world.getEntitiesWithinAABB(Entity::class.java, AxisAlignedBB(up()))) {
             // If the entity is dead, continue
             if (entity.isDead || !placeMultiplace.value && entity is EntityEnderCrystal) {
                 continue
@@ -546,11 +547,11 @@ object AutoCrystal : Module("AutoCrystal", Category.COMBAT, "Automatically place
 
         if (explodeStrictSprint.value) {
             // Set sprint state
-            sprinting = minecraft.player.isSprinting || (minecraft.player as IEntityPlayerSP).hookGetServerSprintState()
+            sprinting = mc.player.isSprinting || (mc.player as IEntityPlayerSP).hookGetServerSprintState()
 
             if (sprinting) {
                 // Force stop sprinting
-                minecraft.player.connection.sendPacket(CPacketEntityAction(minecraft.player, CPacketEntityAction.Action.STOP_SPRINTING))
+                mc.player.connection.sendPacket(CPacketEntityAction(mc.player, CPacketEntityAction.Action.STOP_SPRINTING))
             }
         }
 
@@ -582,7 +583,7 @@ object AutoCrystal : Module("AutoCrystal", Category.COMBAT, "Automatically place
             explodeCrystal(crystal.crystal.entityId)
         } else {
             // Vanilla attack
-            minecraft.playerController.attackEntity(minecraft.player, crystal.crystal)
+            mc.playerController.attackEntity(mc.player, crystal.crystal)
         }
 
         // Set dead
@@ -592,12 +593,12 @@ object AutoCrystal : Module("AutoCrystal", Category.COMBAT, "Automatically place
 
         // Swing hand
         if (explodeSwing.value) {
-            minecraft.player.swingArm(EnumHand.MAIN_HAND)
+            mc.player.swingArm(EnumHand.MAIN_HAND)
         }
 
         if (sprinting) {
             // Start sprinting again
-            minecraft.player.connection.sendPacket(CPacketEntityAction(minecraft.player, CPacketEntityAction.Action.START_SPRINTING))
+            mc.player.connection.sendPacket(CPacketEntityAction(mc.player, CPacketEntityAction.Action.START_SPRINTING))
         }
 
         // Increase limit count
@@ -615,7 +616,7 @@ object AutoCrystal : Module("AutoCrystal", Category.COMBAT, "Automatically place
         (attackPacket as ICPacketUseEntity).hookSetAction(CPacketUseEntity.Action.ATTACK)
         (attackPacket as ICPacketUseEntity).hookSetEntityID(id)
 
-        minecraft.player.connection.sendPacket(attackPacket)
+        mc.player.connection.sendPacket(attackPacket)
     }
 
     private fun findCrystal(): Crystal? {
@@ -629,7 +630,7 @@ object AutoCrystal : Module("AutoCrystal", Category.COMBAT, "Automatically place
         val validCrystals = arrayListOf<Crystal>()
 
         // Iterate through crystals in the world
-        minecraft.world.loadedEntityList.filterIsInstance<EntityEnderCrystal>().forEach {
+        mc.world.loadedEntityList.filterIsInstance<EntityEnderCrystal>().forEach {
             // Get crystal valid status
             val crystal = isValid(it)
 
@@ -648,7 +649,7 @@ object AutoCrystal : Module("AutoCrystal", Category.COMBAT, "Automatically place
         }
 
         // The distance to the crystal
-        val range = crystal.getDistance(minecraft.player)
+        val range = crystal.getDistance(mc.player)
 
         // Ignore if we're past the attack limit or the crystal isn't old enough
         if (explodeLimit.value && attackedCrystals.any { (key, value) -> key.crystal == crystal && value > explodeLimitThreshold.value.toInt() } || crystal.ticksExisted < explodeTicksExisted.value) {
@@ -661,11 +662,11 @@ object AutoCrystal : Module("AutoCrystal", Category.COMBAT, "Automatically place
         }
 
         // Whether we can't see the position
-        val nonVisibility = minecraft.world.rayTraceBlocks(
+        val nonVisibility = mc.world.rayTraceBlocks(
             Vec3d(
-                minecraft.player.posX,
-                minecraft.player.posY + minecraft.player.getEyeHeight(),
-                minecraft.player.posZ
+                mc.player.posX,
+                mc.player.posY + mc.player.getEyeHeight(),
+                mc.player.posZ
             ),
             Vec3d(
                 crystal.posX,
@@ -690,10 +691,10 @@ object AutoCrystal : Module("AutoCrystal", Category.COMBAT, "Automatically place
         }
 
         // Damage to us
-        val selfDamage = BlockUtil.calculateExplosionDamage(crystal.positionVector, minecraft.player)
+        val selfDamage = BlockUtil.calculateExplosionDamage(crystal.positionVector, mc.player)
 
         // Prevent killing / popping us
-        if (selfDamage >= EntityUtil.getEntityHealth(minecraft.player) && explodeAntiSuicide.value) {
+        if (selfDamage >= EntityUtil.getEntityHealth(mc.player) && explodeAntiSuicide.value) {
             return Pair(false, null)
         }
 
@@ -708,7 +709,7 @@ object AutoCrystal : Module("AutoCrystal", Category.COMBAT, "Automatically place
         }
 
         // Calculate damage
-        highestTargetDamage = calculateDamage(selfDamage, highestTargetDamage, minecraft.player.getDistance(crystal))
+        highestTargetDamage = calculateDamage(selfDamage, highestTargetDamage, mc.player.getDistance(crystal))
 
         // Ignore if the damage isn't within our damage bounds
         if (!(highestTargetDamage > explodeMinimum.value && selfDamage < explodeMaximum.value)) {
@@ -783,7 +784,7 @@ object AutoCrystal : Module("AutoCrystal", Category.COMBAT, "Automatically place
         /**
          * Sort targets by distance away from you
          */
-        DISTANCE({ entity -> entity.getDistance(minecraft.player) }),
+        DISTANCE({ entity -> entity.getDistance(mc.player) }),
 
         /**
          * Sort targets by their health

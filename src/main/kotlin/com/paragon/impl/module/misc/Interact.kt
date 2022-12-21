@@ -9,6 +9,7 @@ import com.paragon.impl.setting.Setting
 import com.paragon.bus.listener.Listener
 import com.paragon.impl.module.annotation.Aliases
 import com.paragon.impl.module.Category
+import com.paragon.util.mc
 import net.minecraft.init.Items
 import net.minecraft.item.ItemBlock
 import net.minecraft.item.ItemPickaxe
@@ -81,7 +82,7 @@ object Interact : Module("Interact", Category.MISC, "Changes the way you interac
         if (packet.pos.y >= 255 && packet.direction == EnumFacing.UP) {
 
             // Send new packet with the place direction being down
-            minecraft.player.connection.sendPacket(
+            mc.player.connection.sendPacket(
                 CPacketPlayerTryUseItemOnBlock(
                     packet.pos, EnumFacing.DOWN, packet.hand, packet.facingX, packet.facingY, packet.facingZ
                 )
@@ -99,17 +100,17 @@ object Interact : Module("Interact", Category.MISC, "Changes the way you interac
         }
 
         // Cancel if we are holding a pickaxe
-        if (pickaxe.value && minecraft.player.heldItemMainhand.item is ItemPickaxe) {
+        if (pickaxe.value && mc.player.heldItemMainhand.item is ItemPickaxe) {
             event.cancel()
         }
 
         // Cancel if we are holding crystals
-        if (crystals.value && minecraft.player.heldItemMainhand.item == Items.END_CRYSTAL) {
+        if (crystals.value && mc.player.heldItemMainhand.item == Items.END_CRYSTAL) {
             event.cancel()
         }
 
         // Cancel if we are holding blocks
-        if (blocks.value && (minecraft.player.heldItemMainhand.item is ItemBlock || minecraft.player.heldItemOffhand.item is ItemBlock)) {
+        if (blocks.value && (mc.player.heldItemMainhand.item is ItemBlock || mc.player.heldItemOffhand.item is ItemBlock)) {
             event.cancel()
         }
     }

@@ -3,6 +3,7 @@ package com.paragon.impl.module.hud.impl
 import com.paragon.impl.module.client.Colours
 import com.paragon.impl.setting.Setting
 import com.paragon.impl.module.hud.HUDModule
+import com.paragon.util.mc
 import com.paragon.util.render.RenderUtil.renderItemStack
 import com.paragon.util.render.font.FontUtil
 import com.paragon.util.world.BlockUtil.getBlockAtPos
@@ -16,12 +17,12 @@ object Armour : HUDModule("Armour", "Displays your armour on screen") {
     private val waterOffset = Setting("Water Offset", true, null, null, null).describedBy("Position higher when you are underwater")
 
     override fun render() {
-        val armourList: ArrayList<ItemStack> = ArrayList<ItemStack>(minecraft.player.inventory.armorInventory)
+        val armourList: ArrayList<ItemStack> = ArrayList<ItemStack>(mc.player.inventory.armorInventory)
 
         armourList.reverse()
 
         glPushMatrix()
-        glTranslatef(0f, (if (waterOffset.value!! && minecraft.player.position.up().getBlockAtPos() == Blocks.WATER) -10 else 0).toFloat(), 0f)
+        glTranslatef(0f, (if (waterOffset.value!! && mc.player.position.up().getBlockAtPos() == Blocks.WATER) -10 else 0).toFloat(), 0f)
 
         var xSpacing = 0f
 
@@ -43,7 +44,7 @@ object Armour : HUDModule("Armour", "Displays your armour on screen") {
             val scaleFactor = 1 / 0.75f
 
             // Render the damage percentage
-            FontUtil.drawStringWithShadow(itemDamage.toString(), (x + xSpacing + 9 - minecraft.fontRenderer.getStringWidth(itemDamage.toString()) / 2) * scaleFactor, y * scaleFactor, Colours.mainColour.value, alignment.value)
+            FontUtil.drawStringWithShadow(itemDamage.toString(), (x + xSpacing + 9 - mc.fontRenderer.getStringWidth(itemDamage.toString()) / 2) * scaleFactor, y * scaleFactor, Colours.mainColour.value, alignment.value)
             glScalef(scaleFactor, scaleFactor, scaleFactor)
             xSpacing += 18f
         }

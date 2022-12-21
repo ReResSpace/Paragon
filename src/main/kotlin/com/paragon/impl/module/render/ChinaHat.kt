@@ -5,6 +5,7 @@ import com.paragon.impl.module.Module
 import com.paragon.impl.setting.Setting
 import com.paragon.util.anyNull
 import com.paragon.util.entity.EntityUtil
+import com.paragon.util.mc
 import com.paragon.util.player.PlayerUtil
 import com.paragon.util.render.ColourUtil.glColour
 import net.minecraft.client.renderer.GlStateManager
@@ -39,13 +40,13 @@ object ChinaHat : Module("ChinaHat", Category.RENDER, "-69420 social credit :(("
     ) describedBy "Render the hat on other players"
 
     override fun onRender3D() {
-        if (minecraft.anyNull) {
+        if (mc.anyNull) {
             return
         }
 
-        minecraft.world?.playerEntities?.forEach {
+        mc.world?.playerEntities?.forEach {
             // We don't want to render the hat
-            if (it === minecraft.player && !firstPerson.value && minecraft.gameSettings.thirdPersonView == 0 || !others.value && it !== minecraft.player) {
+            if (it === mc.player && !firstPerson.value && mc.gameSettings.thirdPersonView == 0 || !others.value && it !== mc.player) {
                 return
             }
 
@@ -67,7 +68,7 @@ object ChinaHat : Module("ChinaHat", Category.RENDER, "-69420 social credit :(("
         // Get the vector to start drawing the hat
         val vec = EntityUtil.getInterpolatedPosition(player).add(
             Vec3d(
-                -minecraft.renderManager.viewerPosX, -minecraft.renderManager.viewerPosY + player.getEyeHeight() + 0.5 + if (player.isSneaking) -0.2 else 0.0, -minecraft.renderManager.viewerPosZ
+                -mc.renderManager.viewerPosX, -mc.renderManager.viewerPosY + player.getEyeHeight() + 0.5 + if (player.isSneaking) -0.2 else 0.0, -mc.renderManager.viewerPosZ
             )
         )
 

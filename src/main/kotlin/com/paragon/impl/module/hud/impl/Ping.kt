@@ -5,6 +5,7 @@ package com.paragon.impl.module.hud.impl
 import com.paragon.util.render.font.FontUtil
 import com.paragon.impl.module.hud.HUDModule
 import com.paragon.impl.module.client.Colours
+import com.paragon.util.mc
 import net.minecraft.util.text.TextFormatting
 
 /**
@@ -22,8 +23,8 @@ object Ping : HUDModule("Ping", "Displays your ping in ms") {
     override var height = FontUtil.getHeight()
         get() = FontUtil.getHeight()
 
-    fun getPing(): Int = if (minecraft.connection != null && minecraft.connection!!.getPlayerInfo(minecraft.player.uniqueID) != null) {
-        minecraft.connection!!.getPlayerInfo(minecraft.player.uniqueID).responseTime
+    fun getPing(): Int = if (mc.connection != null && mc.connection!!.getPlayerInfo(mc.player.uniqueID) != null) {
+        mc.connection!!.getPlayerInfo(mc.player.uniqueID).responseTime
     }
     else {
         -1

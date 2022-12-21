@@ -10,6 +10,7 @@ import com.paragon.util.anyNull
 import com.paragon.util.calculations.Timer
 import com.paragon.util.combat.CrystalUtil.getDamageToEntity
 import com.paragon.util.entity.EntityUtil
+import com.paragon.util.mc
 import com.paragon.util.player.InventoryUtil
 import com.paragon.util.world.BlockUtil
 import net.minecraft.client.gui.inventory.GuiInventory
@@ -75,7 +76,7 @@ object Offhand : Module("Offhand", Category.COMBAT, "Automatically manages your 
     private var paused = 0
 
     override fun onTick() {
-        if (minecraft.anyNull || minecraft.currentScreen != null) {
+        if (mc.anyNull || mc.currentScreen != null) {
             return
         }
 
@@ -85,7 +86,7 @@ object Offhand : Module("Offhand", Category.COMBAT, "Automatically manages your 
         if (checkOnNextTick) {
 
             // If we haven't successfully swapped
-            if (minecraft.player.heldItemOffhand.item != item.item) {
+            if (mc.player.heldItemOffhand.item != item.item) {
                 failedAttempts++
             } else {
                 timer.reset()
@@ -102,7 +103,7 @@ object Offhand : Module("Offhand", Category.COMBAT, "Automatically manages your 
         }
 
         // Successfully swapped
-        if (minecraft.player.heldItemOffhand.item == item.item) {
+        if (mc.player.heldItemOffhand.item == item.item) {
             checkOnNextTick = false
             failedAttempts = 0
             paused = 0
@@ -116,7 +117,7 @@ object Offhand : Module("Offhand", Category.COMBAT, "Automatically manages your 
         for (i in 9..36) {
 
             // Current slot stack
-            val itemInInv = minecraft.player.inventory.getStackInSlot(i)
+            val itemInInv = mc.player.inventory.getStackInSlot(i)
 
             // It is our item
             if (itemInInv.item == item.item) {
@@ -139,11 +140,11 @@ object Offhand : Module("Offhand", Category.COMBAT, "Automatically manages your 
         // Spoof inventory
         when (inventory.value) {
             Inventory.PACKET -> {
-                minecraft.player.connection.sendPacket(CPacketEntityAction(minecraft.player, CPacketEntityAction.Action.OPEN_INVENTORY))
+                mc.player.connection.sendPacket(CPacketEntityAction(mc.player, CPacketEntityAction.Action.OPEN_INVENTORY))
             }
 
             Inventory.OPEN -> {
-                minecraft.displayGuiScreen(GuiInventory(minecraft.player))
+                mc.displayGuiScreen(GuiInventory(mc.player))
             }
 
             else -> {}
@@ -155,33 +156,33 @@ object Offhand : Module("Offhand", Category.COMBAT, "Automatically manages your 
         if (strictSprint.value) {
 
             // Set sprint state
-            sprinting = minecraft.player.isSprinting || (minecraft.player as IEntityPlayerSP).hookGetServerSprintState()
+            sprinting = mc.player.isSprinting || (mc.player as IEntityPlayerSP).hookGetServerSprintState()
 
             if (sprinting) {
 
                 // Force stop sprinting
-                minecraft.player.connection.sendPacket(CPacketEntityAction(minecraft.player, CPacketEntityAction.Action.STOP_SPRINTING))
+                mc.player.connection.sendPacket(CPacketEntityAction(mc.player, CPacketEntityAction.Action.STOP_SPRINTING))
             }
         }
 
         // Freeze the player's X and Z motion
         if (freezeMotion.value) {
-            minecraft.player.setVelocity(0.0, minecraft.player.motionY, 0.0)
+            mc.player.setVelocity(0.0, mc.player.motionY, 0.0)
         }
 
         // Click on item slot
-        minecraft.playerController.windowClick(0, slot, 0, ClickType.PICKUP, minecraft.player)
+        mc.playerController.windowClick(0, slot, 0, ClickType.PICKUP, mc.player)
 
         // Click on offhand slot
-        minecraft.playerController.windowClick(0, 45, 0, ClickType.PICKUP, minecraft.player)
+        mc.playerController.windowClick(0, 45, 0, ClickType.PICKUP, mc.player)
 
         // We don't need to find a return slot
-        if (!minecraft.player.inventory.itemStack.isEmpty) {
+        if (!mc.player.inventory.itemStack.isEmpty) {
             var returnSlot = -1
 
             for (i in 9 until 36) {
-                val currentSlot = minecraft.player.inventoryContainer.inventory[i]
-                val canMerge = allowMerging.value && currentSlot.displayName == minecraft.player.inventory.itemStack.displayName && currentSlot.item == minecraft.player.inventory.itemStack.item && (64 - currentSlot.count) >= minecraft.player.inventory.itemStack.count
+                val currentSlot = mc.player.inventoryContainer.inventory[i]
+                val canMerge = allowMerging.value && currentSlot.displayName == mc.player.inventory.itemStack.displayName && currentSlot.item == mc.player.inventory.itemStack.item && (64 - currentSlot.count) >= mc.player.inventory.itemStack.count
 
                 // The slot is empty
                 if (currentSlot.isEmpty || canMerge) {
@@ -193,25 +194,25 @@ object Offhand : Module("Offhand", Category.COMBAT, "Automatically manages your 
             if (returnSlot != -1) {
 
                 // Click on return slot
-                minecraft.playerController.windowClick(0, returnSlot, 0, ClickType.PICKUP, minecraft.player)
-                minecraft.playerController.updateController()
+                mc.playerController.windowClick(0, returnSlot, 0, ClickType.PICKUP, mc.player)
+                mc.playerController.updateController()
             }
         }
 
         if (sprinting) {
 
             // Start sprinting again
-            minecraft.player.connection.sendPacket(CPacketEntityAction(minecraft.player, CPacketEntityAction.Action.START_SPRINTING))
+            mc.player.connection.sendPacket(CPacketEntityAction(mc.player, CPacketEntityAction.Action.START_SPRINTING))
         }
 
         // Spoof closing inventory
         when (inventory.value) {
             Inventory.PACKET -> {
-                minecraft.player.connection.sendPacket(CPacketCloseWindow(minecraft.player.inventoryContainer.windowId))
+                mc.player.connection.sendPacket(CPacketCloseWindow(mc.player.inventoryContainer.windowId))
             }
 
             Inventory.OPEN -> {
-                minecraft.displayGuiScreen(null)
+                mc.displayGuiScreen(null)
             }
 
             else -> {}
@@ -248,12 +249,12 @@ object Offhand : Module("Offhand", Category.COMBAT, "Automatically manages your 
 
                 DynamicGapple.HOLE -> {
                     // The floored position is a safe hole
-                    BlockUtil.isSafeHole(BlockPos(floor(minecraft.player.posX), floor(minecraft.player.posY), floor(minecraft.player.posZ)), true)
+                    BlockUtil.isSafeHole(BlockPos(floor(mc.player.posX), floor(mc.player.posY), floor(mc.player.posZ)), true)
                 }
 
                 else -> {
                     // Holding sword or in safe hole
-                    InventoryUtil.isHoldingSword || BlockUtil.isSafeHole(BlockPos(floor(minecraft.player.posX), floor(minecraft.player.posY), floor(minecraft.player.posZ)), true)
+                    InventoryUtil.isHoldingSword || BlockUtil.isSafeHole(BlockPos(floor(mc.player.posX), floor(mc.player.posY), floor(mc.player.posZ)), true)
                 }
             }) {
 
@@ -263,7 +264,7 @@ object Offhand : Module("Offhand", Category.COMBAT, "Automatically manages your 
             var hasValidGapple = false
 
             for (i in 9..35) {
-                val itemInInv = minecraft.player.inventory.getStackInSlot(i)
+                val itemInInv = mc.player.inventory.getStackInSlot(i)
 
                 if (itemInInv.item === EnumItem.GAPPLE.item) {
                     // crapple checking
@@ -282,7 +283,7 @@ object Offhand : Module("Offhand", Category.COMBAT, "Automatically manages your 
         }
 
         // If we do not have the priority item in our inventory, and the current item in our offhand isn't the priority item
-        if (InventoryUtil.getCountOfItem(priority.value.item, hotbarOnly = false, ignoreHotbar = true) == 0 && minecraft.player.heldItemOffhand.item != priority.value.item) {
+        if (InventoryUtil.getCountOfItem(priority.value.item, hotbarOnly = false, ignoreHotbar = true) == 0 && mc.player.heldItemOffhand.item != priority.value.item) {
             return fallback.value
         }
 
@@ -292,22 +293,22 @@ object Offhand : Module("Offhand", Category.COMBAT, "Automatically manages your 
     private fun shouldApplySafety(): Boolean {
         if (safety.value) {
             // Health is below threshold
-            if (health.value && EntityUtil.getEntityHealth(minecraft.player) <= healthThreshold.value) {
+            if (health.value && EntityUtil.getEntityHealth(mc.player) <= healthThreshold.value) {
                 return true
             }
 
             // We are falling
-            if (falling.value && minecraft.player.fallDistance >= 3) {
+            if (falling.value && mc.player.fallDistance >= 3) {
                 return true
             }
 
             // We are flying
-            if (elytra.value && minecraft.player.isElytraFlying) {
+            if (elytra.value && mc.player.isElytraFlying) {
                 return true
             }
 
             // We are in the vicinity of a lethal crystal
-            if (lethalCrystal.value && minecraft.world.loadedEntityList.filterIsInstance<EntityEnderCrystal>().any { it.getDamageToEntity(minecraft.player) >= EntityUtil.getEntityHealth(minecraft.player) }) {
+            if (lethalCrystal.value && mc.world.loadedEntityList.filterIsInstance<EntityEnderCrystal>().any { it.getDamageToEntity(mc.player) >= EntityUtil.getEntityHealth(mc.player) }) {
                 return true
             }
         }
@@ -316,7 +317,7 @@ object Offhand : Module("Offhand", Category.COMBAT, "Automatically manages your 
     }
 
     private fun shouldApplyKeySwap(safetyIn: Boolean): Boolean {
-        if (minecraft.currentScreen != null) {
+        if (mc.currentScreen != null) {
             return false
         }
 

@@ -6,6 +6,7 @@ import com.paragon.impl.module.Module
 import com.paragon.impl.module.annotation.Aliases
 import com.paragon.impl.setting.Setting
 import com.paragon.util.anyNull
+import com.paragon.util.mc
 import com.paragon.util.player.InventoryUtil
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.init.Items
@@ -34,18 +35,18 @@ object MiddleClick : Module("MiddleClick", Category.MISC, "Allows you to perform
 
     @SubscribeEvent
     fun onMouseInput(event: InputEvent.MouseInputEvent?) {
-        if (minecraft.anyNull) {
+        if (mc.anyNull) {
             return
         }
 
         // Check that middle click button is pressed, and we haven't just clicked
         if (Mouse.isButtonDown(2)) {
-            val result = minecraft.objectMouseOver.typeOfHit
+            val result = mc.objectMouseOver.typeOfHit
             if (!hasClicked) {
                 // If the type of hit is a player
-                if (result == RayTraceResult.Type.ENTITY && minecraft.objectMouseOver.entityHit is EntityPlayer && friend.value) {
+                if (result == RayTraceResult.Type.ENTITY && mc.objectMouseOver.entityHit is EntityPlayer && friend.value) {
                     // Create new player object
-                    val player = minecraft.objectMouseOver.entityHit.name
+                    val player = mc.objectMouseOver.entityHit.name
 
                     if (Paragon.INSTANCE.friendManager.isFriend(player)) {
                         // Remove player from social list
@@ -60,12 +61,12 @@ object MiddleClick : Module("MiddleClick", Category.MISC, "Allows you to perform
                     }
                 } else if (pearl.value) {
                     // The last slot we were on
-                    val prevSlot = minecraft.player.inventory.currentItem
+                    val prevSlot = mc.player.inventory.currentItem
 
                     // Switch to pearl, if we can
                     if (InventoryUtil.switchToItem(Items.ENDER_PEARL, false)) {
                         // Throw pearl
-                        minecraft.playerController.processRightClick(minecraft.player, minecraft.world, EnumHand.MAIN_HAND)
+                        mc.playerController.processRightClick(mc.player, mc.world, EnumHand.MAIN_HAND)
 
                         // Switch back to old slot
                         InventoryUtil.switchToSlot(prevSlot, false)

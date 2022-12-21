@@ -8,6 +8,7 @@ import com.paragon.impl.module.Module
 import com.paragon.impl.module.annotation.Aliases
 import com.paragon.impl.setting.Setting
 import com.paragon.util.anyNull
+import com.paragon.util.mc
 import net.minecraft.util.text.TextComponentString
 import net.minecraftforge.client.event.ClientChatEvent
 import net.minecraftforge.client.event.ClientChatReceivedEvent
@@ -146,7 +147,7 @@ object ChatModifications : Module("ChatModifications", Category.MISC, "Changes t
     }
 
     override fun onTick() {
-        if (minecraft.anyNull || !spammer.value) {
+        if (mc.anyNull || !spammer.value) {
             return
         }
 
@@ -157,7 +158,7 @@ object ChatModifications : Module("ChatModifications", Category.MISC, "Changes t
                 loadLines()
             }
 
-            minecraft.player.sendChatMessage(lines[(Math.random() * lines.size).toInt()])
+            mc.player.sendChatMessage(lines[(Math.random() * lines.size).toInt()])
         }
     }
 
@@ -208,7 +209,7 @@ object ChatModifications : Module("ChatModifications", Category.MISC, "Changes t
                 val rawMessage = message.substring(message.indexOf('>'), message.length - 7)
                 val decoded: String = player + decrypt(rawMessage, message.substring(message.length - 7, message.length - 6).toInt())
 
-                if (player.equals(minecraft.player.name, true)) {
+                if (player.equals(mc.player.name, true)) {
                     return
                 }
 
@@ -216,7 +217,7 @@ object ChatModifications : Module("ChatModifications", Category.MISC, "Changes t
                     event.isCanceled = true
                 }
 
-                minecraft.ingameGUI.chatGUI.printChatMessage(TextComponentString("$decoded [Decrypted by Paragon]"))
+                mc.ingameGUI.chatGUI.printChatMessage(TextComponentString("$decoded [Decrypted by Paragon]"))
             }
         }
     }

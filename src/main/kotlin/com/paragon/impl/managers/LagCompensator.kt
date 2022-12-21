@@ -4,11 +4,10 @@ import com.paragon.Paragon
 import com.paragon.bus.listener.Listener
 import com.paragon.impl.event.network.PacketEvent
 import com.paragon.impl.event.network.ServerEvent
-import com.paragon.util.Wrapper
 import net.minecraft.network.play.server.SPacketTimeUpdate
 import java.util.*
 
-class LagCompensator : Wrapper {
+class LagCompensator {
 
     private val tickRates = FloatArray(100)
     private var index = 0

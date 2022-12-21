@@ -5,6 +5,7 @@ import com.paragon.impl.event.network.PacketEvent
 import com.paragon.impl.module.client.Colours
 import com.paragon.impl.module.hud.HUDModule
 import com.paragon.util.calculations.Timer
+import com.paragon.util.mc
 import com.paragon.util.render.font.FontUtil
 import net.minecraft.entity.item.EntityEnderCrystal
 import net.minecraft.network.play.client.CPacketUseEntity
@@ -34,7 +35,8 @@ object CPS : HUDModule("CPS", "Display Crystals per Second in text") {
 
     @Listener
     fun onPacket(event: PacketEvent.PostSend) {
-        if (event.packet is CPacketUseEntity && event.packet.action == CPacketUseEntity.Action.ATTACK && event.packet.getEntityFromWorld(minecraft.world) is EntityEnderCrystal) {
+        if (event.packet is CPacketUseEntity && event.packet.action == CPacketUseEntity.Action.ATTACK && event.packet.getEntityFromWorld(
+                mc.world) is EntityEnderCrystal) {
             actualACrystals++
         }
     }

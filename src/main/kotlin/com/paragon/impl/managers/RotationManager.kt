@@ -6,8 +6,8 @@ import com.paragon.impl.event.network.PacketEvent.PreSend
 import com.paragon.impl.managers.rotation.Rotate
 import com.paragon.impl.managers.rotation.Rotation
 import com.paragon.mixins.accessor.ICPacketPlayer
-import com.paragon.util.Wrapper
 import com.paragon.util.anyNull
+import com.paragon.util.mc
 import com.paragon.util.player.RotationUtil.normalizeAngle
 import net.minecraft.network.play.client.CPacketPlayer
 import net.minecraft.util.math.Vec2f
@@ -22,7 +22,7 @@ import kotlin.math.abs
 /**
  * @author Surge
  */
-class RotationManager : Wrapper {
+class RotationManager {
 
     private val rotationsQueue = CopyOnWriteArrayList<Rotation>()
     private var packetYaw = -1f
@@ -37,7 +37,7 @@ class RotationManager : Wrapper {
 
     @SubscribeEvent(priority = EventPriority.HIGH)
     fun onTick(event: TickEvent.ClientTickEvent) {
-        if (minecraft.anyNull) {
+        if (mc.anyNull) {
             rotationsQueue.clear()
             return
         }
@@ -60,12 +60,12 @@ class RotationManager : Wrapper {
             packetPitch = calculateAngle(serverRotation.y, rotation.pitch, 180f)
 
             if (rotation.rotate == Rotate.LEGIT) {
-                minecraft.player.rotationYaw = packetYaw
-                minecraft.player.rotationYawHead = packetYaw
-                minecraft.player.rotationPitch = packetPitch
+                mc.player.rotationYaw = packetYaw
+                mc.player.rotationYawHead = packetYaw
+                mc.player.rotationPitch = packetPitch
             }
 
-            minecraft.player.connection.sendPacket(CPacketPlayer.Rotation(packetYaw, packetPitch, minecraft.player.onGround))
+            mc.player.connection.sendPacket(CPacketPlayer.Rotation(packetYaw, packetPitch, mc.player.onGround))
 
             rotationsQueue.clear()
         }

@@ -7,6 +7,7 @@ import com.paragon.impl.managers.notifications.NotificationType
 import com.paragon.impl.module.Category
 import com.paragon.impl.module.Module
 import com.paragon.impl.setting.Setting
+import com.paragon.util.mc
 import com.paragon.util.system.backgroundThread
 import com.paragon.util.system.mainThread
 import me.bush.translator.Language
@@ -61,7 +62,7 @@ object AutoTranslate : Module("AutoTranslate", Category.MISC, "Automatically tra
                 // Send chat on main thread
                 mainThread {
                     val messageSuffix = if (suffix.value && sourceLanguage != targetLanguage) "$GRAY [Translated]" else ""
-                    minecraft.ingameGUI?.chatGUI?.printChatMessage(TextComponentString(translatedText + messageSuffix))
+                    mc.ingameGUI?.chatGUI?.printChatMessage(TextComponentString(translatedText + messageSuffix))
                 }
             }
         }
@@ -78,7 +79,7 @@ object AutoTranslate : Module("AutoTranslate", Category.MISC, "Automatically tra
         backgroundThread {
             translate(event.message, getLanguage(outgoingLang.value) ?: return@backgroundThread) {
                 mainThread {
-                    minecraft.player?.sendChatMessage(translatedText)
+                    mc.player?.sendChatMessage(translatedText)
                 }
             }
         }

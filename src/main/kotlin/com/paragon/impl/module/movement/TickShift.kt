@@ -6,6 +6,7 @@ import com.paragon.impl.setting.Setting
 import com.paragon.mixins.accessor.IMinecraft
 import com.paragon.mixins.accessor.ITimer
 import com.paragon.util.anyNull
+import com.paragon.util.mc
 import com.paragon.util.player.PlayerUtil
 
 /**
@@ -25,16 +26,16 @@ object TickShift : Module("TickShift", Category.MOVEMENT, "Increases your speed 
     }
 
     override fun onDisable() {
-        if (minecraft.anyNull) {
+        if (mc.anyNull) {
             return
         }
 
         // Reset ticks
-        ((minecraft as IMinecraft).hookGetTimer() as ITimer).hookSetTickLength(50f)
+        ((mc as IMinecraft).hookGetTimer() as ITimer).hookSetTickLength(50f)
     }
 
     override fun onTick() {
-        if (minecraft.anyNull) {
+        if (mc.anyNull) {
             return
         }
 
@@ -44,7 +45,7 @@ object TickShift : Module("TickShift", Category.MOVEMENT, "Increases your speed 
             tickCount = 0
 
             // Reset timer speed
-            ((minecraft as IMinecraft).hookGetTimer() as ITimer).hookSetTickLength(50f)
+            ((mc as IMinecraft).hookGetTimer() as ITimer).hookSetTickLength(50f)
         }
 
         if (PlayerUtil.isMoving) {
@@ -53,10 +54,10 @@ object TickShift : Module("TickShift", Category.MOVEMENT, "Increases your speed 
                 this.tickCount--
 
                 // Set timer speed
-                ((minecraft as IMinecraft).hookGetTimer() as ITimer).hookSetTickLength(50f / timer.value)
+                ((mc as IMinecraft).hookGetTimer() as ITimer).hookSetTickLength(50f / timer.value)
             } else {
                 // Reset timer speed
-                ((minecraft as IMinecraft).hookGetTimer() as ITimer).hookSetTickLength(50f)
+                ((mc as IMinecraft).hookGetTimer() as ITimer).hookSetTickLength(50f)
             }
         } else {
             // Increase ticks as long as it isn't above our limit

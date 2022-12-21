@@ -1,6 +1,6 @@
 package com.paragon.util.render
 
-import com.paragon.util.Wrapper
+import com.paragon.util.mc
 import com.paragon.util.render.ColourUtil.glColour
 import com.paragon.util.render.font.FontUtil
 import com.paragon.util.render.shader.Shader
@@ -23,7 +23,7 @@ import kotlin.math.max
 import kotlin.math.sin
 
 @SideOnly(Side.CLIENT)
-object RenderUtil : Wrapper {
+object RenderUtil {
 
     private val tessellator = Tessellator.getInstance()
     private val bufferBuilder = tessellator.buffer
@@ -43,7 +43,13 @@ object RenderUtil : Wrapper {
 
         override fun updateUniforms() {
             glUniform2f(getUniform("size"), width, height)
-            glUniform4f(getUniform("colour"), colour.red / 255f, colour.green / 255f, colour.blue / 255f, colour.alpha / 255f)
+            glUniform4f(
+                getUniform("colour"),
+                colour.red / 255f,
+                colour.green / 255f,
+                colour.blue / 255f,
+                colour.alpha / 255f
+            )
             glUniform1f(getUniform("radius"), radius)
         }
     }
@@ -86,7 +92,13 @@ object RenderUtil : Wrapper {
 
         override fun updateUniforms() {
             glUniform2f(getUniform("size"), width, height)
-            glUniform4f(getUniform("colour"), colour.red / 255f, colour.green / 255f, colour.blue / 255f, colour.alpha / 255f)
+            glUniform4f(
+                getUniform("colour"),
+                colour.red / 255f,
+                colour.green / 255f,
+                colour.blue / 255f,
+                colour.alpha / 255f
+            )
             glUniform1f(getUniform("radius"), radius)
             glUniform1f(getUniform("thickness"), thickness)
         }
@@ -94,6 +106,7 @@ object RenderUtil : Wrapper {
 
     /**
      * Draws a rectangle at the given coordinates
+     *
      * @param x The X (left) coordinate
      * @param y The Y (top) coordinate
      * @param width  The width of the rectangle
@@ -129,6 +142,7 @@ object RenderUtil : Wrapper {
 
     /**
      * Draws a rectangle at the given coordinates, with a gradient going from left to right
+     *
      * @param x The X coordinate of the rectangle
      * @param y The Y coordinate of the rectangle
      * @param width The width of the rectangle
@@ -136,7 +150,14 @@ object RenderUtil : Wrapper {
      * @param leftColour The left colour
      * @param rightColour The colour on the right (what we transition to)
      */
-    fun drawHorizontalGradientRect(x: Float, y: Float, width: Float, height: Float, leftColour: Color, rightColour: Color) {
+    fun drawHorizontalGradientRect(
+        x: Float,
+        y: Float,
+        width: Float,
+        height: Float,
+        leftColour: Color,
+        rightColour: Color
+    ) {
         glPushMatrix()
         glDisable(GL_TEXTURE_2D)
         glDisable(GL_ALPHA_TEST)
@@ -167,6 +188,7 @@ object RenderUtil : Wrapper {
 
     /**
      * Draws a rectangle at the given coordinates, with a gradient going from top to bottom
+     *
      * @param x The X coordinate of the rectangle
      * @param y The Y coordinate of the rectangle
      * @param width The width of the rectangle
@@ -174,7 +196,14 @@ object RenderUtil : Wrapper {
      * @param topColour The top colour
      * @param bottomColour The colour on the bottom (what we transition to)
      */
-    fun drawVerticalGradientRect(x: Float, y: Float, width: Float, height: Float, topColour: Color, bottomColour: Color) {
+    fun drawVerticalGradientRect(
+        x: Float,
+        y: Float,
+        width: Float,
+        height: Float,
+        topColour: Color,
+        bottomColour: Color
+    ) {
         glPushMatrix()
         glDisable(GL_TEXTURE_2D)
         glDisable(GL_ALPHA_TEST)
@@ -208,6 +237,7 @@ object RenderUtil : Wrapper {
 
     /**
      * Draws a triangle at the center of the given coordinates
+     *
      * @param x The center X of the triangle
      * @param y The center Y of the triangle
      * @param colour The colour of the triangle
@@ -251,6 +281,7 @@ object RenderUtil : Wrapper {
 
     /**
      * Draws an arrow at the center of the given coordinates
+     *
      * @param x The center X of the arrow
      * @param y The center Y of the arrow
      * @param colour The colour of the arrow
@@ -298,6 +329,7 @@ object RenderUtil : Wrapper {
 
     /**
      * Draws a rounded rectangle at the given coordinates
+     *
      * @param x The X coordinate of the rectangle
      * @param y The Y coordinate of the rectangle
      * @param width The width of the rectangle
@@ -340,6 +372,7 @@ object RenderUtil : Wrapper {
 
     /**
      * Draws a rounded outline at the given coordinates
+     *
      * @param x The X coordinate of the rectangle
      * @param y The Y coordinate of the rectangle
      * @param width The width of the rectangle
@@ -348,7 +381,15 @@ object RenderUtil : Wrapper {
      * @param thickness How thick the outline is
      * @param colour The colour of the rectangle
      */
-    fun drawRoundedOutline(x: Float, y: Float, width: Float, height: Float, radius: Float, thickness: Float, colour: Color) {
+    fun drawRoundedOutline(
+        x: Float,
+        y: Float,
+        width: Float,
+        height: Float,
+        radius: Float,
+        thickness: Float,
+        colour: Color
+    ) {
         glPushMatrix()
         glDisable(GL_TEXTURE_2D)
         glEnable(GL_BLEND)
@@ -384,6 +425,7 @@ object RenderUtil : Wrapper {
 
     /**
      * Draws a circle at the given coordinates
+     *
      * @param x The center X of the circle
      * @param y The center Y of the circle
      * @param radius The radius (corner size) of the circle
@@ -421,6 +463,7 @@ object RenderUtil : Wrapper {
 
     /**
      * Scales whatever is currently being drawn
+     *
      * @param x The X to scale from
      * @param y The Y to scale from
      * @param z The Z to scale from
@@ -429,7 +472,15 @@ object RenderUtil : Wrapper {
      * @param scaleFacZ How much to scale by on the Z axis
      * @param block The code to run during scaling
      */
-    inline fun scaleTo(x: Float, y: Float, z: Float, scaleFacX: Double, scaleFacY: Double, scaleFacZ: Double, block: () -> Unit) {
+    inline fun scaleTo(
+        x: Float,
+        y: Float,
+        z: Float,
+        scaleFacX: Double,
+        scaleFacY: Double,
+        scaleFacZ: Double,
+        block: () -> Unit
+    ) {
         glPushMatrix()
         glTranslatef(x, y, z)
         glScaled(scaleFacX, scaleFacY, scaleFacZ)
@@ -440,6 +491,7 @@ object RenderUtil : Wrapper {
 
     /**
      * Rotates whatever is currently being drawn
+     *
      * @param angle The angle to rotate by
      * @param x The X coordinate of the pivot
      * @param y The Y coordinate of the pivot
@@ -464,6 +516,7 @@ object RenderUtil : Wrapper {
 
     /**
      * Starts scissoring a rect
+     *
      * @param x The X coordinate of the scissored rect
      * @param y The Y coordinate of the scissored rect
      * @param width The width of the scissored rect
@@ -480,7 +533,7 @@ object RenderUtil : Wrapper {
 
         glPushAttrib(GL_SCISSOR_BIT)
         run {
-            val sr = ScaledResolution(minecraft)
+            val sr = ScaledResolution(mc)
             val scale = sr.scaleFactor
 
             shadowY = sr.scaledHeight - shadowY
@@ -503,6 +556,7 @@ object RenderUtil : Wrapper {
     }
 
     /**
+     *
      * Draws a gradient box at the given AABB
      * @param axisAlignedBB The AABB to draw the box at
      * @param top The top colour
@@ -542,6 +596,7 @@ object RenderUtil : Wrapper {
 
     /**
      * Draws an outline of a gradient box at the given AABB
+     *
      * @param axisAlignedBB The AABB to draw the box at
      * @param top The top colour
      * @param bottom The bottom colour
@@ -627,6 +682,7 @@ object RenderUtil : Wrapper {
 
     /**
      * Adds the gradient outline vertices to the buffer builder
+     *
      * @param boundingBox The AABB to add the vertices around
      * @param topColour The top colour
      * @param bottomColour The bottom colour
@@ -669,6 +725,7 @@ object RenderUtil : Wrapper {
 
     /**
      * Draws a nametag at a given Vec3d
+     *
      * @param text The text to draw
      * @param location Where to draw the text
      * @param textColour The colour of the text
@@ -680,11 +737,11 @@ object RenderUtil : Wrapper {
         // Translate
         val scale = 0.02666667f
 
-        GlStateManager.translate(location.x - minecraft.renderManager.viewerPosX, location.y - minecraft.renderManager.viewerPosY, location.z - minecraft.renderManager.viewerPosZ)
-        GlStateManager.rotate(-minecraft.player.rotationYaw, 0f, 1f, 0f)
+        GlStateManager.translate(location.x - mc.renderManager.viewerPosX, location.y - mc.renderManager.viewerPosY, location.z - mc.renderManager.viewerPosZ)
+        GlStateManager.rotate(-mc.player.rotationYaw, 0f, 1f, 0f)
 
         // Rotate based on the view
-        GlStateManager.rotate(minecraft.player.rotationPitch, if (minecraft.gameSettings.thirdPersonView == 2) -1f else 1.toFloat(), 0f, 0f)
+        GlStateManager.rotate(mc.player.rotationPitch, if (mc.gameSettings.thirdPersonView == 2) -1f else 1.toFloat(), 0f, 0f)
         GlStateManager.scale(-scale, -scale, scale)
         GlStateManager.disableDepth()
         GlStateManager.translate(-(FontUtil.getStringWidth(text) / 2), 0f, 0f)
@@ -697,6 +754,7 @@ object RenderUtil : Wrapper {
 
     /**
      * Translates, scales, and rotates around a location
+     *
      * @param location The location of the nametag
      * @param scaled Whether the nametag is scaled by distance
      * @param defaultScale The minimum scale of the nametag
@@ -704,7 +762,7 @@ object RenderUtil : Wrapper {
      */
     @JvmStatic
     fun drawNametag(location: Vec3d, scaled: Boolean, defaultScale: Double = 0.2, block: () -> Unit) {
-        val distance = minecraft.player.getDistance(location.x, location.y, location.z)
+        val distance = mc.player.getDistance(location.x, location.y, location.z)
 
         var scale = defaultScale / 5
 
@@ -717,17 +775,22 @@ object RenderUtil : Wrapper {
         glDisable(GL_LIGHTING)
 
         GlStateManager.translate(
-            location.x - minecraft.renderManager.viewerPosX,
-            location.y - minecraft.renderManager.viewerPosY,
-            location.z - minecraft.renderManager.viewerPosZ
+            location.x - mc.renderManager.viewerPosX,
+            location.y - mc.renderManager.viewerPosY,
+            location.z - mc.renderManager.viewerPosZ
         )
 
         GlStateManager.glNormal3f(0.0f, 1.0f, 0.0f)
 
-        GlStateManager.rotate(-minecraft.renderManager.playerViewY, 0f, 1f, 0f)
+        GlStateManager.rotate(-mc.renderManager.playerViewY, 0f, 1f, 0f)
 
         // Rotate based on the view
-        GlStateManager.rotate((if (minecraft.gameSettings.thirdPersonView == 2) -1 else 1).toFloat() * minecraft.player.rotationPitch, 1f, 0f, 0f)
+        GlStateManager.rotate(
+            (if (mc.gameSettings.thirdPersonView == 2) -1 else 1).toFloat() * mc.player.rotationPitch,
+            1f,
+            0f,
+            0f
+        )
         GlStateManager.scale(-scale, -scale, scale)
 
         glDisable(GL_DEPTH_TEST)
@@ -742,6 +805,7 @@ object RenderUtil : Wrapper {
 
     /**
      * Renders an item stack at the given coordinates
+     *
      * @param itemStack The item stack to draw
      * @param x The X coordinate
      * @param y The Y coordinate
@@ -756,15 +820,15 @@ object RenderUtil : Wrapper {
         glEnable(GL_DEPTH_TEST)
         glEnable(GL_BLEND)
 
-        minecraft.renderItem.zLevel = -150f
+        mc.renderItem.zLevel = -150f
 
-        minecraft.renderItem.renderItemAndEffectIntoGUI(itemStack, x.toInt(), y.toInt())
+        mc.renderItem.renderItemAndEffectIntoGUI(itemStack, x.toInt(), y.toInt())
 
         if (overlay) {
-            minecraft.renderItem.renderItemOverlays(minecraft.fontRenderer, itemStack, x.toInt(), y.toInt())
+            mc.renderItem.renderItemOverlays(mc.fontRenderer, itemStack, x.toInt(), y.toInt())
         }
 
-        minecraft.renderItem.zLevel = 0f
+        mc.renderItem.zLevel = 0f
 
         glDisable(GL_BLEND)
         glDisable(GL_DEPTH_TEST)
@@ -775,6 +839,7 @@ object RenderUtil : Wrapper {
 
     /**
      * Draws a rectangular texture
+     *
      * @param x The X coordinate
      * @param y The Y coordinate
      * @param u The X offset in the texture (for sprite sheets)
@@ -785,7 +850,16 @@ object RenderUtil : Wrapper {
      * @param textureHeight The height of the texture in the sprite sheet
      */
     @JvmStatic
-    fun drawModalRectWithCustomSizedTexture(x: Float, y: Float, u: Float, v: Float, width: Float, height: Float, textureWidth: Float, textureHeight: Float) {
+    fun drawModalRectWithCustomSizedTexture(
+        x: Float,
+        y: Float,
+        u: Float,
+        v: Float,
+        width: Float,
+        height: Float,
+        textureWidth: Float,
+        textureHeight: Float
+    ) {
         glColor4f(1.0f, 1.0f, 1.0f, 1.0f)
         val f = 1.0f / textureWidth
         val f1 = 1.0f / textureHeight
@@ -800,6 +874,7 @@ object RenderUtil : Wrapper {
 
     /**
      * Draws a rounded texture
+     *
      * @param x The X coordinate
      * @param y The Y coordinate
      * @param u The X offset in the texture (for sprite sheets)
@@ -810,7 +885,18 @@ object RenderUtil : Wrapper {
      * @param textureHeight The height of the texture in the sprite sheet
      */
     @JvmStatic
-    fun drawRoundedTexture(x: Float, y: Float, u: Float, v: Float, width: Float, height: Float, textureWidth: Float, textureHeight: Float, radius: Float, alpha: Int) {
+    fun drawRoundedTexture(
+        x: Float,
+        y: Float,
+        u: Float,
+        v: Float,
+        width: Float,
+        height: Float,
+        textureWidth: Float,
+        textureHeight: Float,
+        radius: Float,
+        alpha: Int
+    ) {
         glColor4f(1.0f, 1.0f, 1.0f, 0.0f)
 
         GlStateManager.pushMatrix()

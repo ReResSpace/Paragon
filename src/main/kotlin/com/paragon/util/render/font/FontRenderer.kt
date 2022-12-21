@@ -1,6 +1,5 @@
 package com.paragon.util.render.font
 
-import com.paragon.util.Wrapper
 import net.minecraft.client.renderer.GlStateManager
 import net.minecraft.util.ChatAllowedCharacters
 import net.minecraftforge.fml.relauncher.Side
@@ -13,10 +12,11 @@ import kotlin.random.Random
 import com.paragon.util.render.font.FontUtil.Align
 
 /**
- * @author Cosmos, Surge
+ * @author Cosmos
+ * @author Surge
  */
 @SideOnly(Side.CLIENT)
-class FontRenderer(font: Font) : Wrapper {
+class FontRenderer(font: Font) {
 
     private val fontHeight: Int
     private val defaultFont: ImageAWT
@@ -36,7 +36,14 @@ class FontRenderer(font: Font) : Wrapper {
         return drawString(text, x, y, colour, true, alignment)
     }
 
-    fun drawString(text: String, x: Float, y: Float, colour: Color, dropShadow: Boolean, alignment: Align = Align.LEFT): Int {
+    fun drawString(
+        text: String,
+        x: Float,
+        y: Float,
+        colour: Color,
+        dropShadow: Boolean,
+        alignment: Align = Align.LEFT
+    ): Int {
         val alpha = colour.alpha.coerceAtLeast(5)
 
         if (text.contains("\n")) {
@@ -62,7 +69,14 @@ class FontRenderer(font: Font) : Wrapper {
         return drawText(text, x, y, colour, false, alignment)
     }
 
-    private fun drawText(text: String?, x: Float, y: Float, colour: Color, ignoreColor: Boolean, alignment: Align = Align.LEFT): Int {
+    private fun drawText(
+        text: String?,
+        x: Float,
+        y: Float,
+        colour: Color,
+        ignoreColor: Boolean,
+        alignment: Align = Align.LEFT
+    ): Int {
         if (text == null) {
             return 0
         }
@@ -135,8 +149,7 @@ class FontRenderer(font: Font) : Wrapper {
 
                 if (randomCase) {
                     currentFont.drawString(ColorUtils.randomMagicText(words), width, 0.0, currentColor)
-                }
-                else {
+                } else {
                     currentFont.drawString(words, width, 0.0, currentColor)
                 }
 

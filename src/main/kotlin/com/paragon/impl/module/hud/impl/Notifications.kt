@@ -4,6 +4,7 @@ import com.paragon.Paragon
 import com.paragon.impl.module.hud.HUDEditorGUI
 import com.paragon.impl.module.hud.HUDModule
 import com.paragon.impl.setting.Setting
+import com.paragon.util.mc
 import com.paragon.util.render.RenderUtil.drawRect
 import com.paragon.util.render.font.FontUtil
 import java.awt.Color
@@ -15,7 +16,7 @@ object Notifications : HUDModule("Notifications", "Where the notifications will 
     private val limit = Setting("Limit", 3f, 1f, 20f, 1f) describedBy "The limit to the amount of notifications displayed" visibleWhen { renderType.value == RenderType.DISPLAY }
 
     override fun render() {
-        if (minecraft.currentScreen is HUDEditorGUI) {
+        if (mc.currentScreen is HUDEditorGUI) {
             drawRect(x, y, width, height, Color(23, 23, 23, 200))
             FontUtil.drawStringWithShadow("[Notifications]", x + 5, y + 5, Color.WHITE)
         }

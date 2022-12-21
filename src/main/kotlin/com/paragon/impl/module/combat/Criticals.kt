@@ -8,6 +8,7 @@ import com.paragon.impl.module.Module
 import com.paragon.impl.setting.Setting
 import com.paragon.mixins.accessor.ICPacketPlayer
 import com.paragon.mixins.accessor.INetworkManager
+import com.paragon.util.mc
 import net.minecraft.entity.EntityLivingBase
 import net.minecraft.network.play.client.CPacketPlayer
 import net.minecraft.network.play.client.CPacketUseEntity
@@ -31,12 +32,12 @@ object Criticals : Module("Criticals", Category.COMBAT, "Makes all your hits cri
         if (event.packet is CPacketUseEntity) {
 
             // Check the packets action and if the entity we are attacking is a living entity
-            if (event.packet.action != CPacketUseEntity.Action.ATTACK || event.packet.getEntityFromWorld(minecraft.world) !is EntityLivingBase) {
+            if (event.packet.action != CPacketUseEntity.Action.ATTACK || event.packet.getEntityFromWorld(mc.world) !is EntityLivingBase) {
                 return
             }
 
             // We are on the ground and we aren't jumping
-            if (minecraft.player.onGround && !minecraft.gameSettings.keyBindJump.isKeyDown) {
+            if (mc.player.onGround && !mc.gameSettings.keyBindJump.isKeyDown) {
 
                 // Send packets
                 when (mode.value) {
@@ -53,7 +54,7 @@ object Criticals : Module("Criticals", Category.COMBAT, "Makes all your hits cri
                         send(0.0000013579)
                     }
 
-                    Mode.MINIS -> minecraft.player.motionY = 0.2
+                    Mode.MINIS -> mc.player.motionY = 0.2
                 }
             }
         } else if (event.packet is CPacketPlayer) {
@@ -70,14 +71,14 @@ object Criticals : Module("Criticals", Category.COMBAT, "Makes all your hits cri
             event.x = 0.0
             event.z = 0.0
 
-            minecraft.player.motionX = 0.0
-            minecraft.player.motionZ = 0.0
+            mc.player.motionX = 0.0
+            mc.player.motionZ = 0.0
         }
     }
 
     private fun send(yOffset: Double) {
-        (minecraft.player.connection.networkManager as INetworkManager).hookDispatchPacket(CPacketPlayer.Position(
-            minecraft.player.posX, minecraft.player.posY + yOffset, minecraft.player.posZ, false
+        (mc.player.connection.networkManager as INetworkManager).hookDispatchPacket(CPacketPlayer.Position(
+            mc.player.posX, mc.player.posY + yOffset, mc.player.posZ, false
         ), null)
     }
 

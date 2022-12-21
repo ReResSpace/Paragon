@@ -4,6 +4,7 @@ import com.paragon.impl.module.hud.HUDModule
 import com.paragon.impl.module.hud.impl.Ping
 import com.paragon.impl.setting.Setting
 import com.paragon.util.anyNull
+import com.paragon.util.mc
 import com.paragon.util.render.RenderUtil
 import kotlin.math.abs
 
@@ -25,7 +26,7 @@ object GraphPing : HUDModule("PingGraph", "Graph showing your ping") {
     }
 
     override fun onTick() {
-        if (minecraft.anyNull) {
+        if (mc.anyNull) {
             return
         }
 

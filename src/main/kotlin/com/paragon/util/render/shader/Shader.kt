@@ -1,7 +1,6 @@
 package com.paragon.util.render.shader
 
 import com.paragon.Paragon
-import com.paragon.util.Wrapper
 import org.apache.commons.io.IOUtils
 import org.lwjgl.opengl.ARBShaderObjects
 import org.lwjgl.opengl.GL20.*
@@ -10,7 +9,7 @@ import java.nio.charset.Charset
 /**
  * @author Surge, Cosmos
  */
-open class Shader(path: String) : Wrapper {
+open class Shader(path: String) {
 
     private var program = 0
     private var uniforms: MutableMap<String, Int>? = null

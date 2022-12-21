@@ -1,6 +1,5 @@
 package com.paragon.util.player
 
-import com.paragon.util.Wrapper
 import com.paragon.util.mc
 import net.minecraft.block.Block
 import net.minecraft.item.Item
@@ -9,10 +8,10 @@ import net.minecraft.item.ItemSword
 import net.minecraft.network.play.client.CPacketHeldItemChange
 import net.minecraft.util.EnumHand
 
-object InventoryUtil : Wrapper {
+object InventoryUtil {
 
     fun isHolding(item: Item): Boolean {
-        return minecraft.player.heldItemMainhand.item == item || minecraft.player.heldItemOffhand.item == item
+        return mc.player.heldItemMainhand.item == item || mc.player.heldItemOffhand.item == item
     }
 
     /**
@@ -20,14 +19,14 @@ object InventoryUtil : Wrapper {
      *
      * @return the result of the check.
      */
-    fun isHolding(item: Item, hand: EnumHand) = minecraft.player.getHeldItem(hand).item == item
+    fun isHolding(item: Item, hand: EnumHand) = mc.player.getHeldItem(hand).item == item
 
     /**
      * @return The hand holding the given [Item], null if the player isn't holding it.
      */
     fun getHandHolding(item: Item) = when {
-        minecraft.player.heldItemMainhand.item === item -> EnumHand.MAIN_HAND
-        minecraft.player.heldItemOffhand.item === item -> EnumHand.OFF_HAND
+        mc.player.heldItemMainhand.item === item -> EnumHand.MAIN_HAND
+        mc.player.heldItemOffhand.item === item -> EnumHand.OFF_HAND
         else -> null
     }
 
@@ -56,9 +55,9 @@ object InventoryUtil : Wrapper {
         }
 
         if (packet) {
-            minecraft.connection!!.sendPacket(CPacketHeldItemChange(getItemInHotbar(itemIn)))
+            mc.connection!!.sendPacket(CPacketHeldItemChange(getItemInHotbar(itemIn)))
         } else {
-            minecraft.player.inventory.currentItem = getItemInHotbar(itemIn)
+            mc.player.inventory.currentItem = getItemInHotbar(itemIn)
         }
 
         return true
@@ -66,42 +65,40 @@ object InventoryUtil : Wrapper {
 
     @JvmStatic
     fun switchToSlot(slot: Int, packet: Boolean) {
-        if (slot == minecraft.player.inventory.currentItem) {
+        if (slot == mc.player.inventory.currentItem) {
             return
         }
 
-        minecraft.player.connection.sendPacket(CPacketHeldItemChange(slot))
+        mc.player.connection.sendPacket(CPacketHeldItemChange(slot))
 
         if (!packet) {
-            minecraft.player.inventory.currentItem = slot
+            mc.player.inventory.currentItem = slot
         }
     }
 
     fun getCountOfItem(item: Item, hotbarOnly: Boolean, ignoreHotbar: Boolean): Int {
         var count = 0
         for (i in (if (ignoreHotbar) 9 else 0) until if (hotbarOnly) 9 else 36) {
-            val stack = minecraft.player.inventory.getStackInSlot(i)
+            val stack = mc.player.inventory.getStackInSlot(i)
             if (stack.item === item) {
                 count += stack.count
             }
         }
+
         return count
     }
 
     val isHoldingSword: Boolean
-        get() = minecraft.player.heldItemMainhand.item is ItemSword
+        get() = mc.player.heldItemMainhand.item is ItemSword
 
+    /**
+     * @return the hotbar slot of the given [Block].
+     */
     @JvmStatic
-    fun getHotbarBlockSlot(block: Block): Int {
-        var slot = -1
-        for (i in 0..8) {
-            val item = minecraft.player.inventory.getStackInSlot(i).item
-            if (item is ItemBlock && item.block == block) {
-                slot = i
-                break
-            }
+    fun getHotbarBlockSlot(block: Block) = (0..8).firstOrNull { i ->
+        mc.player.inventory.getStackInSlot(i).item.let {
+            it is ItemBlock && it.block == block
         }
-        return slot
-    }
+    } ?: -1
 
 }

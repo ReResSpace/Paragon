@@ -8,6 +8,7 @@ import com.paragon.bus.listener.Listener
 import com.paragon.impl.event.render.world.ParticleSpawnEvent
 import com.paragon.impl.module.Category
 import com.paragon.util.anyNull
+import com.paragon.util.mc
 import net.minecraft.client.particle.*
 import net.minecraft.entity.passive.EntityBat
 import net.minecraft.init.SoundEvents
@@ -67,7 +68,7 @@ object NoRender : Module("NoRender", Category.RENDER, "Cancels rendering certain
 
     @SubscribeEvent
     fun onRender(event: RenderGameOverlayEvent.Pre) {
-        if (minecraft.anyNull) {
+        if (mc.anyNull) {
             return
         }
 
@@ -86,7 +87,7 @@ object NoRender : Module("NoRender", Category.RENDER, "Cancels rendering certain
 
     @SubscribeEvent
     fun onRenderLivingEntity(event: RenderLivingEvent.Pre<*>) {
-        if (minecraft.anyNull) {
+        if (mc.anyNull) {
             return
         }
         if (bats.value && event.entity is EntityBat) {
@@ -96,7 +97,7 @@ object NoRender : Module("NoRender", Category.RENDER, "Cancels rendering certain
 
     @SubscribeEvent
     fun onPlaySound(event: PlaySoundAtEntityEvent) {
-        if (minecraft.anyNull) {
+        if (mc.anyNull) {
             return
         }
 

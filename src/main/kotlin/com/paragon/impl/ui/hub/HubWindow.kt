@@ -8,7 +8,7 @@ import com.paragon.impl.ui.util.Click
 import com.paragon.impl.ui.windows.impl.BaritoneWindow
 import com.paragon.impl.ui.windows.impl.ChangelogWindow
 import com.paragon.impl.ui.windows.impl.ConfigWindow
-import com.paragon.util.Wrapper
+import com.paragon.util.mc
 import com.paragon.util.render.RenderUtil
 import com.paragon.util.render.font.FontUtil
 import me.surge.animation.ColourAnimation
@@ -19,14 +19,14 @@ import java.awt.Color
  * @author Surge
  * @since 08/12/2022
  */
-class HubWindow(x: Float, y: Float, width: Float, height: Float) : Panel(x, y, width, height), Wrapper {
+class HubWindow(x: Float, y: Float, width: Float, height: Float) : Panel(x, y, width, height) {
 
     private val hover = ColourAnimation(Color(30, 30, 30), Color(35, 35, 35), { 200f }, false, { Easing.LINEAR })
 
     private val tasks = listOf(
         Task("GUI", {
-            if (minecraft.currentScreen != Paragon.INSTANCE.configurationGUI) {
-                minecraft.displayGuiScreen(Paragon.INSTANCE.configurationGUI)
+            if (mc.currentScreen != Paragon.INSTANCE.configurationGUI) {
+                mc.displayGuiScreen(Paragon.INSTANCE.configurationGUI)
             }
         }, x, y, width - 8f, 12f),
 

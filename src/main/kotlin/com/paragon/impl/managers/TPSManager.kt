@@ -4,11 +4,10 @@ import com.paragon.Paragon
 import com.paragon.bus.listener.Listener
 import com.paragon.impl.event.network.PacketEvent
 import com.paragon.impl.event.network.ServerEvent
-import com.paragon.util.Wrapper
 import com.paragon.util.system.CircularArray
 import net.minecraft.network.play.server.SPacketTimeUpdate
 
-class TPSManager : Wrapper {
+class TPSManager {
 
     init {
         Paragon.INSTANCE.eventBus.register(this)

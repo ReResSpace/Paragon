@@ -6,7 +6,7 @@ import com.paragon.impl.event.network.PacketEvent.PreReceive
 import com.paragon.impl.event.network.PlayerEvent.PlayerJoinEvent
 import com.paragon.impl.event.network.PlayerEvent.PlayerLeaveEvent
 import com.paragon.impl.event.render.gui.RenderChatGuiEvent
-import com.paragon.util.Wrapper
+import com.paragon.util.mc
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.ScaledResolution
 import net.minecraft.network.play.server.SPacketPlayerListItem
@@ -20,7 +20,7 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent
 import org.lwjgl.input.Keyboard
 import java.awt.Color
 
-class EventFactory : Wrapper {
+class EventFactory {
 
     init {
         MinecraftForge.EVENT_BUS.register(this)
@@ -91,9 +91,9 @@ class EventFactory : Wrapper {
     @Listener
     fun onRenderChatGui(event: RenderChatGuiEvent) {
         if (event.text.startsWith(Paragon.INSTANCE.commandManager.prefix)) {
-            val resolution = ScaledResolution(minecraft)
+            val resolution = ScaledResolution(mc)
 
-            minecraft.fontRenderer.drawStringWithShadow("[TAB] to automatically fill in the next argument", 5f, resolution.scaledHeight - 25f, Color.GRAY.rgb)
+            mc.fontRenderer.drawStringWithShadow("[TAB] to automatically fill in the next argument", 5f, resolution.scaledHeight - 25f, Color.GRAY.rgb)
 
             val full = event.text.substring(1, event.text.length).split(" ").toMutableList()
 
@@ -154,9 +154,9 @@ class EventFactory : Wrapper {
             }
 
             // draw behind text
-            minecraft.fontRenderer.drawStringWithShadow(
+            mc.fontRenderer.drawStringWithShadow(
                 (if (markInvalid) "${TextFormatting.RED}" else "") + nonTypedSyntax,
-                4f + minecraft.fontRenderer.getStringWidth(event.text),
+                4f + mc.fontRenderer.getStringWidth(event.text),
                 resolution.scaledHeight - 12f,
                 Color.GRAY.rgb
             )

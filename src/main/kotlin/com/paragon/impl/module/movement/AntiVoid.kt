@@ -5,6 +5,7 @@ import com.paragon.impl.module.Module
 import com.paragon.impl.setting.Setting
 import com.paragon.bus.listener.Listener
 import com.paragon.impl.module.Category
+import com.paragon.util.mc
 import com.paragon.util.render.builder.BoxRenderMode
 import com.paragon.util.render.builder.RenderBuilder
 import com.paragon.util.world.BlockUtil
@@ -26,24 +27,24 @@ object AntiVoid : Module("AntiVoid", Category.MOVEMENT, "Avoids void holes for y
 
     @Listener
     fun onPlayerMove(event: PlayerMoveEvent) {
-        if (minecraft.player.posY < 2.1 && minecraft.world.getBlockState(
+        if (mc.player.posY < 2.1 && mc.world.getBlockState(
                 BlockPos(
-                    minecraft.player.posX, 0.0, minecraft.player.posZ
+                    mc.player.posX, 0.0, mc.player.posZ
                 )
             ).material.isReplaceable
         ) {
-            var y = MathHelper.clamp(minecraft.player.posY, 0.0, Double.MAX_VALUE)
+            var y = MathHelper.clamp(mc.player.posY, 0.0, Double.MAX_VALUE)
 
-            while (y > 0.0 && minecraft.world.getBlockState(
+            while (y > 0.0 && mc.world.getBlockState(
                     BlockPos(
-                        minecraft.player.posX, y, minecraft.player.posZ
+                        mc.player.posX, y, mc.player.posZ
                     )
                 ).material.isReplaceable
             ) {
-                val pos = BlockPos(minecraft.player.posX, y, minecraft.player.posZ)
+                val pos = BlockPos(mc.player.posX, y, mc.player.posZ)
 
                 // Intercepting block
-                if (!minecraft.world.getBlockState(pos).material.isReplaceable) {
+                if (!mc.world.getBlockState(pos).material.isReplaceable) {
                     return
                 }
 
@@ -53,13 +54,13 @@ object AntiVoid : Module("AntiVoid", Category.MOVEMENT, "Avoids void holes for y
             when (mode.value) {
                 Mode.MOTION -> {
                     event.y = 0.0624
-                    minecraft.player.setVelocity(0.0, 0.0624, 0.0)
-                    renderPosition = BlockPos(minecraft.player.posX, 0.0, minecraft.player.posZ)
+                    mc.player.setVelocity(0.0, 0.0624, 0.0)
+                    renderPosition = BlockPos(mc.player.posX, 0.0, mc.player.posZ)
                 }
 
-                Mode.LAGBACK -> minecraft.player.connection.sendPacket(
+                Mode.LAGBACK -> mc.player.connection.sendPacket(
                     CPacketPlayer.Position(
-                        minecraft.player.posX, minecraft.player.posY + 100, minecraft.player.posZ, minecraft.player.onGround
+                        mc.player.posX, mc.player.posY + 100, mc.player.posZ, mc.player.onGround
                     )
                 )
             }

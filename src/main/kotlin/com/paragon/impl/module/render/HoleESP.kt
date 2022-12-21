@@ -4,6 +4,7 @@ import com.paragon.impl.module.Category
 import com.paragon.impl.module.Module
 import com.paragon.impl.setting.Setting
 import com.paragon.util.anyNull
+import com.paragon.util.mc
 import com.paragon.util.render.ColourUtil.integrateAlpha
 import com.paragon.util.render.RenderUtil
 import com.paragon.util.render.builder.BoxRenderMode
@@ -68,7 +69,7 @@ object HoleESP : Module("HoleESP", Category.RENDER, "Highlights holes to stand i
     }
 
     override fun onTick() {
-        if (minecraft.anyNull) {
+        if (mc.anyNull) {
             // clear if we aren't in a world
             holes.clear()
 
@@ -94,12 +95,12 @@ object HoleESP : Module("HoleESP", Category.RENDER, "Highlights holes to stand i
 
         holes.entries.removeIf { (pos, _) ->
             pos.getDistance(
-                minecraft.player.posX.toInt(),
-                minecraft.player.posY.toInt(),
-                minecraft.player.posZ.toInt()
-            ) > range.value || hideCurrent.value && pos.x == floor(minecraft.player.posX).toInt() && pos.y == floor(
-                minecraft.player.posY
-            ).toInt() && pos.z == floor(minecraft.player.posZ).toInt() || getHoleType(pos) == null
+                mc.player.posX.toInt(),
+                mc.player.posY.toInt(),
+                mc.player.posZ.toInt()
+            ) > range.value || hideCurrent.value && pos.x == floor(mc.player.posX).toInt() && pos.y == floor(
+                mc.player.posY
+            ).toInt() && pos.z == floor(mc.player.posZ).toInt() || getHoleType(pos) == null
         }
     }
 
@@ -161,7 +162,7 @@ object HoleESP : Module("HoleESP", Category.RENDER, "Highlights holes to stand i
 
     private fun getHoleType(pos: BlockPos): HoleType? {
         // Return null (invalid hole) if the given [pos] isn't air or the block below it is replaceable
-        if (!pos.getBlockAtPos().isReplaceable(minecraft.world, pos) || pos.down().getBlockAtPos().isReplaceable(minecraft.world, pos.down())) {
+        if (!pos.getBlockAtPos().isReplaceable(mc.world, pos) || pos.down().getBlockAtPos().isReplaceable(mc.world, pos.down())) {
             return null
         }
 

@@ -1,6 +1,6 @@
 package com.paragon.util.entity
 
-import com.paragon.util.Wrapper
+import com.paragon.util.mc
 import net.minecraft.entity.Entity
 import net.minecraft.entity.EntityAgeable
 import net.minecraft.entity.EntityLivingBase
@@ -18,7 +18,7 @@ import net.minecraft.util.math.Vec3d
 import net.minecraft.util.text.TextFormatting
 
 
-object EntityUtil : Wrapper {
+object EntityUtil {
 
     /**
      * Gets the interpolated position of a given entity
@@ -29,7 +29,7 @@ object EntityUtil : Wrapper {
     fun getInterpolatedPosition(entityIn: Entity): Vec3d {
         return Vec3d(entityIn.lastTickPosX, entityIn.lastTickPosY, entityIn.lastTickPosZ).add(
             getInterpolatedAmount(
-                entityIn, minecraft.renderPartialTicks
+                entityIn, mc.renderPartialTicks
             )
         )
     }
@@ -69,12 +69,12 @@ object EntityUtil : Wrapper {
      * @return The bounding box of the entity
      */
     fun getEntityBox(entity: Entity) = AxisAlignedBB(
-        entity.entityBoundingBox.minX - entity.posX + (entity.posX - minecraft.renderManager.viewerPosX),
-        entity.entityBoundingBox.minY - entity.posY + (entity.posY - minecraft.renderManager.viewerPosY),
-        entity.entityBoundingBox.minZ - entity.posZ + (entity.posZ - minecraft.renderManager.viewerPosZ),
-        entity.entityBoundingBox.maxX - entity.posX + (entity.posX - minecraft.renderManager.viewerPosX),
-        entity.entityBoundingBox.maxY - entity.posY + (entity.posY - minecraft.renderManager.viewerPosY),
-        entity.entityBoundingBox.maxZ - entity.posZ + (entity.posZ - minecraft.renderManager.viewerPosZ)
+        entity.entityBoundingBox.minX - entity.posX + (entity.posX - mc.renderManager.viewerPosX),
+        entity.entityBoundingBox.minY - entity.posY + (entity.posY - mc.renderManager.viewerPosY),
+        entity.entityBoundingBox.minZ - entity.posZ + (entity.posZ - mc.renderManager.viewerPosZ),
+        entity.entityBoundingBox.maxX - entity.posX + (entity.posX - mc.renderManager.viewerPosX),
+        entity.entityBoundingBox.maxY - entity.posY + (entity.posY - mc.renderManager.viewerPosY),
+        entity.entityBoundingBox.maxZ - entity.posZ + (entity.posZ - mc.renderManager.viewerPosZ)
     )
 
     /**
@@ -84,11 +84,11 @@ object EntityUtil : Wrapper {
      * @return If the player is too far away from us
      */
     @JvmStatic
-    fun Entity.isTooFarAwayFromSelf(maximumRange: Double) = this.getDistance(minecraft.player) > maximumRange
+    fun Entity.isTooFarAwayFromSelf(maximumRange: Double) = this.getDistance(mc.player) > maximumRange
 
     @JvmStatic
     fun Entity.isEntityAllowed(players: Boolean, mobs: Boolean, passives: Boolean) = when {
-        this is EntityPlayer && players && this !== minecraft.player -> true
+        this is EntityPlayer && players && this !== mc.player -> true
         this.isMonster() && mobs -> true
         else -> this.isPassive() && passives
     }

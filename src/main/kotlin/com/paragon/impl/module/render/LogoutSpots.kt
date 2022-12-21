@@ -10,6 +10,7 @@ import com.paragon.impl.managers.notifications.NotificationType
 import com.paragon.impl.module.Category
 import com.paragon.mixins.accessor.IEntityRenderer
 import com.paragon.util.anyNull
+import com.paragon.util.mc
 import com.paragon.util.render.RenderUtil
 import com.paragon.util.render.builder.BoxRenderMode
 import com.paragon.util.render.builder.RenderBuilder
@@ -86,7 +87,7 @@ object LogoutSpots : Module("LogoutSpots", Category.RENDER, "Shows where players
     private var lastDimension: Int = -Int.MAX_VALUE
 
     override fun onTick() {
-        if (minecraft.anyNull) {
+        if (mc.anyNull) {
             // Clear if we aren't in a world
             playerSet.clear()
             logged.clear()
@@ -94,8 +95,8 @@ object LogoutSpots : Module("LogoutSpots", Category.RENDER, "Shows where players
             return
         }
 
-        if (minecraft.player.dimension != lastDimension) {
-            lastDimension = minecraft.player.dimension
+        if (mc.player.dimension != lastDimension) {
+            lastDimension = mc.player.dimension
 
             playerSet.clear()
             logged.clear()
@@ -104,13 +105,13 @@ object LogoutSpots : Module("LogoutSpots", Category.RENDER, "Shows where players
         }
 
         // Refresh player set
-        minecraft.world.playerEntities.filter { it != minecraft.player }.forEach { playerSet.add(it) }
+        mc.world.playerEntities.filter { it != mc.player }.forEach { playerSet.add(it) }
     }
 
     override fun onRender3D() {
         logged.forEach { (player, date) ->
             // Do not render if they are far away
-            if (player.getDistance(minecraft.player) >= range.value) {
+            if (player.getDistance(mc.player) >= range.value) {
                 return@forEach
             }
 
@@ -165,7 +166,7 @@ object LogoutSpots : Module("LogoutSpots", Category.RENDER, "Shows where players
                 frameBuffer!!.framebufferClear()
                 if (lastScaleFactor != event.resolution.scaleFactor.toFloat() || lastScaleWidth != event.resolution.scaledWidth.toFloat() || lastScaleHeight != event.resolution.scaledHeight.toFloat()) {
                     frameBuffer!!.deleteFramebuffer()
-                    frameBuffer = Framebuffer(minecraft.displayWidth, minecraft.displayHeight, true)
+                    frameBuffer = Framebuffer(mc.displayWidth, mc.displayHeight, true)
                     frameBuffer!!.framebufferClear()
                 }
                 lastScaleFactor = event.resolution.scaleFactor.toFloat()
@@ -173,29 +174,29 @@ object LogoutSpots : Module("LogoutSpots", Category.RENDER, "Shows where players
                 lastScaleHeight = event.resolution.scaledHeight.toFloat()
             }
             else {
-                frameBuffer = Framebuffer(minecraft.displayWidth, minecraft.displayHeight, true)
+                frameBuffer = Framebuffer(mc.displayWidth, mc.displayHeight, true)
             }
 
             frameBuffer!!.bindFramebuffer(false)
-            val previousShadows = minecraft.gameSettings.entityShadows
-            minecraft.gameSettings.entityShadows = false
-            (minecraft.entityRenderer as IEntityRenderer).hookSetupCameraTransform(event.partialTicks, 0)
+            val previousShadows = mc.gameSettings.entityShadows
+            mc.gameSettings.entityShadows = false
+            (mc.entityRenderer as IEntityRenderer).hookSetupCameraTransform(event.partialTicks, 0)
 
             logged.forEach { (player, _) ->
                 // Do not render if they are far away
-                if (player.getDistance(minecraft.player) >= range.value) {
+                if (player.getDistance(mc.player) >= range.value) {
                     return@forEach
                 }
 
-                minecraft.renderManager.renderEntityStatic(player, event.partialTicks, false)
+                mc.renderManager.renderEntityStatic(player, event.partialTicks, false)
             }
 
-            minecraft.gameSettings.entityShadows = previousShadows
+            mc.gameSettings.entityShadows = previousShadows
             GlStateManager.enableBlend()
             GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA)
             frameBuffer!!.unbindFramebuffer()
-            minecraft.framebuffer.bindFramebuffer(true)
-            minecraft.entityRenderer.disableLightmap()
+            mc.framebuffer.bindFramebuffer(true)
+            mc.entityRenderer.disableLightmap()
             RenderHelper.disableStandardItemLighting()
             GlStateManager.pushMatrix()
 
@@ -206,7 +207,7 @@ object LogoutSpots : Module("LogoutSpots", Category.RENDER, "Shows where players
             outlineShader.setOutline(outline.value.toBinary())
             outlineShader.startShader()
 
-            minecraft.entityRenderer.setupOverlayRendering()
+            mc.entityRenderer.setupOverlayRendering()
 
             GL11.glBindTexture(GL11.GL_TEXTURE_2D, frameBuffer!!.framebufferTexture)
             GL11.glBegin(GL11.GL_QUADS)
@@ -223,18 +224,18 @@ object LogoutSpots : Module("LogoutSpots", Category.RENDER, "Shows where players
             // Stop drawing shader
             GL20.glUseProgram(0)
             GL11.glPopMatrix()
-            minecraft.entityRenderer.enableLightmap()
+            mc.entityRenderer.enableLightmap()
 
             GlStateManager.popMatrix()
             GlStateManager.popAttrib()
 
-            minecraft.entityRenderer.setupOverlayRendering()
+            mc.entityRenderer.setupOverlayRendering()
         }
     }
 
     @Listener
     fun onPlayerJoin(event: PlayerEvent.PlayerJoinEvent) {
-        if (minecraft.anyNull) {
+        if (mc.anyNull) {
             return
         }
 
@@ -257,7 +258,7 @@ object LogoutSpots : Module("LogoutSpots", Category.RENDER, "Shows where players
 
     @Listener
     fun onPlayerLeave(event: PlayerEvent.PlayerLeaveEvent) {
-        if (minecraft.anyNull) {
+        if (mc.anyNull) {
             return
         }
 

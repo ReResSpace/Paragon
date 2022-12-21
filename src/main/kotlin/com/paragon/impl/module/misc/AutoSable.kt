@@ -2,6 +2,7 @@ package com.paragon.impl.module.misc
 
 import com.paragon.impl.module.Category
 import com.paragon.impl.module.Module
+import com.paragon.util.mc
 
 /**
  * @author Surge
@@ -10,7 +11,7 @@ import com.paragon.impl.module.Module
 object AutoSable : Module("AutoSable", Category.MISC, "Does sable things") {
 
     override fun onEnable() {
-        minecraft.player.sendChatMessage("i just got ratted by sable")
+        mc.player.sendChatMessage("i just got ratted by sable")
 
         // easy crash
         println((null as Int).plus(5))

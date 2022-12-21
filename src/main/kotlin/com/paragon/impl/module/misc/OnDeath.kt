@@ -5,6 +5,7 @@ import com.paragon.impl.module.Category
 import com.paragon.impl.module.Module
 import com.paragon.impl.setting.Setting
 import com.paragon.util.anyNull
+import com.paragon.util.mc
 import net.minecraft.util.text.TextFormatting
 import net.minecraftforge.event.entity.living.LivingDeathEvent
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
@@ -25,7 +26,7 @@ object OnDeath : Module("OnDeath", Category.MISC, "Do certain actions when you d
     @SubscribeEvent
     fun onLivingDeath(event: LivingDeathEvent) {
         // Check that the entity that died has the same ID that the player does
-        if (minecraft.anyNull || event.entity.entityId != minecraft.player.entityId) {
+        if (mc.anyNull || event.entity.entityId != mc.player.entityId) {
             return
         }
 
@@ -39,7 +40,7 @@ object OnDeath : Module("OnDeath", Category.MISC, "Do certain actions when you d
 
         if (respawn.value) {
             // Respawn the player
-            minecraft.player.respawnPlayer()
+            mc.player.respawnPlayer()
         }
     }
 

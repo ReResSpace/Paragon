@@ -2,6 +2,7 @@ package com.paragon.impl.module.hud.impl
 
 import com.paragon.impl.module.client.Colours
 import com.paragon.impl.module.hud.HUDModule
+import com.paragon.util.mc
 import com.paragon.util.render.RenderUtil.drawRoundedOutline
 import com.paragon.util.render.RenderUtil.drawRoundedRect
 import com.paragon.util.render.RenderUtil.renderItemStack
@@ -20,7 +21,7 @@ object Inventory : HUDModule("Inventory", "Displays the contents of your invento
         var y = 2f
 
         for (i in 9..35) {
-            val stack: ItemStack = minecraft.player.inventory.getStackInSlot(i)
+            val stack: ItemStack = mc.player.inventory.getStackInSlot(i)
 
             renderItemStack(stack, this.x + x, this.y + y, true)
 

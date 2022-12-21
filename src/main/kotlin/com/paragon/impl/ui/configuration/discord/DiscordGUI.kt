@@ -6,14 +6,14 @@ import com.paragon.impl.ui.configuration.GuiImplementation
 import com.paragon.impl.ui.configuration.discord.category.CategoryBar
 import com.paragon.impl.ui.configuration.discord.module.ModuleBar
 import com.paragon.impl.ui.configuration.discord.settings.SettingsBar
-import com.paragon.util.Wrapper
+import com.paragon.util.mc
 import org.lwjgl.util.Rectangle
 import java.awt.Color
 
 /**
  * @author SooStrator1136
  */
-class DiscordGUI : GuiImplementation(), Wrapper {
+class DiscordGUI : GuiImplementation() {
 
     private val parts = arrayOf(
         SettingsBar, ModuleBar, CategoryBar
@@ -21,7 +21,7 @@ class DiscordGUI : GuiImplementation(), Wrapper {
 
     override fun drawScreen(mouseX: Int, mouseY: Int, mouseDelta: Int) {
         baseRect.setBounds(
-            ((minecraft.currentScreen ?: return).width / 2) - 200, ((minecraft.currentScreen ?: return).height / 2) - 150, 400, 300
+            ((mc.currentScreen ?: return).width / 2) - 200, ((mc.currentScreen ?: return).height / 2) - 150, 400, 300
         )
 
         dWheel = mouseDelta

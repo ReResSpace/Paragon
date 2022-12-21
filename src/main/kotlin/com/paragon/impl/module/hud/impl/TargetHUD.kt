@@ -9,6 +9,7 @@ import com.paragon.impl.module.hud.HUDModule
 import com.paragon.impl.setting.Setting
 import com.paragon.util.anyNull
 import com.paragon.util.calculations.Timer
+import com.paragon.util.mc
 import com.paragon.util.render.ColourUtil.integrateAlpha
 import com.paragon.util.render.RenderUtil
 import com.paragon.util.render.RenderUtil.scaleTo
@@ -57,8 +58,8 @@ object TargetHUD : HUDModule("TargetHUD", "") {
             }
         }
 
-        @Suppress("SENSELESS_COMPARISON") if (target == null || minecraft.anyNull || minecraft.connection == null || minecraft.connection!!.getPlayerInfo(target!!.uniqueID) == null) {
-            if (minecraft.currentScreen is HUDEditorGUI) { // Dummy for positioning
+        @Suppress("SENSELESS_COMPARISON") if (target == null || mc.anyNull || mc.connection == null || mc.connection!!.getPlayerInfo(target!!.uniqueID) == null) {
+            if (mc.currentScreen is HUDEditorGUI) { // Dummy for positioning
                 RenderUtil.drawRect(
                     x, y, width, height, Color(255, 255, 255, 100)
                 )
@@ -79,7 +80,7 @@ object TargetHUD : HUDModule("TargetHUD", "") {
                 target!!.name, x + 38, y + 5, Color.WHITE
             )
 
-            Minecraft.getMinecraft().textureManager.bindTexture(minecraft.connection!!.getPlayerInfo(target!!.uniqueID).locationSkin)
+            Minecraft.getMinecraft().textureManager.bindTexture(mc.connection!!.getPlayerInfo(target!!.uniqueID).locationSkin)
             Gui.drawModalRectWithCustomSizedTexture(x.toInt() + 5, y.toInt() + 5, 28f, 28f, 28, 28, 225F, 225F)
 
             scaleTo(x + 38F, y + 10F + FontUtil.getHeight(), 1F, 0.7, 0.7, 0.7) {

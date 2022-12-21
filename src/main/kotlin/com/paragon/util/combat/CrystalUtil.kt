@@ -1,6 +1,6 @@
 package com.paragon.util.combat
 
-import com.paragon.util.Wrapper
+import com.paragon.util.mc
 import net.minecraft.enchantment.EnchantmentHelper
 import net.minecraft.entity.EntityLivingBase
 import net.minecraft.entity.SharedMonsterAttributes
@@ -19,7 +19,7 @@ import kotlin.math.max
  * @author Surge
  * @since 10/08/2022
  */
-object CrystalUtil : Wrapper {
+object CrystalUtil {
 
     /**
      * Calculates the damage a crystal if exploded would do to an entity.
@@ -58,13 +58,13 @@ object CrystalUtil : Wrapper {
             Vec3d(vec.x, vec.y, vec.z),
             entity.entityBoundingBox
         ).toDouble()
-        val diff = minecraft.world.difficulty.difficultyId.toFloat()
+        val diff = mc.world.difficulty.difficultyId.toFloat()
 
         @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
         return getBlastReduction(
             entity,
             ((v * v + v) / 2f * 7f * doubleExplosionSize.toDouble() + 1f).toFloat() * if (diff == 0f) 0f else if (diff == 2f) 1f else if (diff == 1f) 0.5f else 1.5f,
-            Explosion(minecraft.world, null, vec.x, vec.y, vec.z, 6f, false, true)
+            Explosion(mc.world, null, vec.x, vec.y, vec.z, 6f, false, true)
         )
     }
 
