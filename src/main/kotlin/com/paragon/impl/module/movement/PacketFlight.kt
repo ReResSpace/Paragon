@@ -7,6 +7,7 @@ import com.paragon.impl.module.Category
 import com.paragon.impl.module.Module
 import com.paragon.impl.setting.Setting
 import com.paragon.mixins.accessor.ISPacketPlayerPosLook
+import com.paragon.util.mc
 import net.minecraft.network.play.client.CPacketConfirmTeleport
 import net.minecraft.network.play.client.CPacketPlayer
 import net.minecraft.network.play.server.SPacketPlayerPosLook
@@ -43,20 +44,20 @@ object PacketFlight : Module("PacketFlight", Category.MOVEMENT, "Allows you to p
 
         var antiKicking = false
 
-        if (minecraft.player.ticksExisted % 10 == 0 && !minecraft.world.collidesWithAnyBlock(minecraft.player.entityBoundingBox)) {
+        if (mc.player.ticksExisted % 10 == 0 && !mc.world.collidesWithAnyBlock(mc.player.entityBoundingBox)) {
             motionY = -0.04
             antiKicking = true
         } else {
-            if (minecraft.gameSettings.keyBindJump.isKeyDown) {
+            if (mc.gameSettings.keyBindJump.isKeyDown) {
                 motionY = 0.0624
-            } else if (minecraft.gameSettings.keyBindSneak.isKeyDown) {
+            } else if (mc.gameSettings.keyBindSneak.isKeyDown) {
                 motionY = -0.0624
             }
         }
 
         var motionH: Double
 
-        var walls = minecraft.world.collidesWithAnyBlock(minecraft.player.entityBoundingBox)
+        var walls = mc.world.collidesWithAnyBlock(mc.player.entityBoundingBox)
 
         if (walls) {
             motionH = 0.0624
@@ -70,7 +71,7 @@ object PacketFlight : Module("PacketFlight", Category.MOVEMENT, "Allows you to p
         } else {
             motionH = 0.2873
 
-            val movingHorizontally = minecraft.player.moveForward != 0f || minecraft.player.moveStrafing != 0f
+            val movingHorizontally = mc.player.moveForward != 0f || mc.player.moveStrafing != 0f
 
             if (movingHorizontally) {
                 motionY = min(0.0, motionY)
@@ -79,27 +80,27 @@ object PacketFlight : Module("PacketFlight", Category.MOVEMENT, "Allows you to p
 
         var dir = doubleArrayOf(0.0, 0.0)
 
-        if (!(minecraft.player.moveForward == 0f && minecraft.player.moveStrafing == 0f)) {
+        if (!(mc.player.moveForward == 0f && mc.player.moveStrafing == 0f)) {
             var strafing = 0
             var forward = 0
 
-            if (minecraft.player.moveStrafing < 0) {
+            if (mc.player.moveStrafing < 0) {
                 strafing = -1
-            } else if (minecraft.player.moveStrafing > 0) {
+            } else if (mc.player.moveStrafing > 0) {
                 strafing = 1
             }
 
-            if (minecraft.player.moveForward < 0) {
+            if (mc.player.moveForward < 0) {
                 forward = -1
-            } else if (minecraft.player.moveForward > 0) {
+            } else if (mc.player.moveForward > 0) {
                 forward = 1
             }
 
             var strafe = (90 * strafing).toFloat()
             strafe *= if (forward.toFloat() != 0f) forward * 0.5f else 1f
 
-            var yaw: Float = minecraft.player.rotationYaw - strafe
-            yaw -= (if (minecraft.player.moveForward < 0f) 180 else 0).toFloat()
+            var yaw: Float = mc.player.rotationYaw - strafe
+            yaw -= (if (mc.player.moveForward < 0f) 180 else 0).toFloat()
 
             yaw *= (1 / (180 / Math.PI)).toFloat()
 
@@ -114,7 +115,7 @@ object PacketFlight : Module("PacketFlight", Category.MOVEMENT, "Allows you to p
 
         var factorInt = floor(factor.value.toDouble()).toInt()
 
-        if (minecraft.player.ticksExisted % 10 < 10 * (factor.value - factorInt)) {
+        if (mc.player.ticksExisted % 10 < 10 * (factor.value - factorInt)) {
             factorInt++
         }
 
@@ -124,7 +125,7 @@ object PacketFlight : Module("PacketFlight", Category.MOVEMENT, "Allows you to p
         event.y = motion.y
         event.z = motion.z
 
-        minecraft.player.noClip = true
+        mc.player.noClip = true
     }
 
     private fun send(motionX: Double, motionY: Double, motionZ: Double, antiKick: Boolean, factor: Int): Vec3d {
@@ -135,7 +136,7 @@ object PacketFlight : Module("PacketFlight", Category.MOVEMENT, "Allows you to p
                 motionY = 0.0
             }
 
-            val pos: Vec3d = minecraft.player.positionVector.add(Vec3d(motionX * i, motionY * i, motionZ * i))
+            val pos: Vec3d = mc.player.positionVector.add(Vec3d(motionX * i, motionY * i, motionZ * i))
 
             val packet = CPacketPlayer.Position(pos.x, pos.y, pos.z, true)
 
@@ -144,8 +145,8 @@ object PacketFlight : Module("PacketFlight", Category.MOVEMENT, "Allows you to p
             allowedPackets.add(packet)
             allowedPackets.add(bounds)
 
-            minecraft.player.connection.sendPacket(packet)
-            minecraft.player.connection.sendPacket(bounds)
+            mc.player.connection.sendPacket(packet)
+            mc.player.connection.sendPacket(bounds)
 
             if (teleportID < 0) {
                 break
@@ -153,7 +154,7 @@ object PacketFlight : Module("PacketFlight", Category.MOVEMENT, "Allows you to p
 
             teleportID++
 
-            minecraft.player.connection.sendPacket(CPacketConfirmTeleport(teleportID))
+            mc.player.connection.sendPacket(CPacketConfirmTeleport(teleportID))
 
             allowedPositionsAndIDs[teleportID] = pos
         }
@@ -179,7 +180,7 @@ object PacketFlight : Module("PacketFlight", Category.MOVEMENT, "Allows you to p
                 if (allowedPositionsAndIDs[id]!! == Vec3d(event.packet.x, event.packet.y, event.packet.z)) {
                     allowedPositionsAndIDs.remove(id)
 
-                    minecraft.player.connection.sendPacket(CPacketConfirmTeleport(id))
+                    mc.player.connection.sendPacket(CPacketConfirmTeleport(id))
 
                     event.cancel()
                     return
@@ -188,10 +189,10 @@ object PacketFlight : Module("PacketFlight", Category.MOVEMENT, "Allows you to p
 
             teleportID = id
 
-            (event.packet as ISPacketPlayerPosLook).hookSetYaw(minecraft.player.rotationYaw)
-            (event.packet as ISPacketPlayerPosLook).hookSetPitch(minecraft.player.rotationPitch)
+            (event.packet as ISPacketPlayerPosLook).hookSetYaw(mc.player.rotationYaw)
+            (event.packet as ISPacketPlayerPosLook).hookSetPitch(mc.player.rotationPitch)
 
-            minecraft.player.connection.sendPacket(CPacketConfirmTeleport(id))
+            mc.player.connection.sendPacket(CPacketConfirmTeleport(id))
         }
     }
 
