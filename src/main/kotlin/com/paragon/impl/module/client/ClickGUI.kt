@@ -6,6 +6,7 @@ import com.paragon.impl.module.Module
 import com.paragon.impl.module.annotation.IgnoredByNotifications
 import com.paragon.impl.setting.Bind
 import com.paragon.impl.setting.Setting
+import com.paragon.impl.ui.configuration.ConfigurationGUI
 import com.paragon.impl.ui.configuration.GuiImplementation
 import com.paragon.impl.ui.configuration.camper.CamperCheatGUI
 import com.paragon.util.mc

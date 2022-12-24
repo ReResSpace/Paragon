@@ -19,7 +19,7 @@ class ConfigurationGUI : GuiScreen() {
     var closeOnEscape = true
 
     private var currentGUI: GuiImplementation? = ClickGUI.getGUI()
-    private val hub = HubWindow(651f, 5f, 90f, 16f)
+    private val hub = HubWindow(this, 651f, 5f, 90f, 16f)
     val windowsList: MutableList<Window> = mutableListOf()
     val removeBuffer: MutableList<Window> = mutableListOf()
 

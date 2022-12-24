@@ -109,30 +109,27 @@ object FontUtil {
 
     @JvmStatic
     fun drawCenteredString(text: String, x: Float, y: Float, colour: Color, centeredY: Boolean) {
-        if (ClientFont.isEnabled) {
-            font.drawStringWithShadow(text, x - (font.getStringWidth(text) / 2f), y - 3f + yIncrease, colour)
-        } else {
-            if (text.contains(System.lineSeparator())) {
-                val parts = text.split(System.lineSeparator().toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
+        if (text.contains(System.lineSeparator())) {
+            val parts = text.split(System.lineSeparator().toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
 
-                var newY = 0.0f
+            var newY = 0.0f
 
-                for (s in parts) {
-                    mc.fontRenderer.drawStringWithShadow(
-                        s,
-                        x - mc.fontRenderer.getStringWidth(s) / 2f,
-                        y + newY,
-                        colour.rgb
-                    )
-                    newY += mc.fontRenderer.FONT_HEIGHT.toFloat()
-                }
+            for (s in parts) {
+                drawStringWithShadow(s, x - getStringWidth(s) / 2f, y + newY, colour)
 
-                GlStateManager.disableBlend()
-
-                return
+                newY += getHeight()
             }
 
             GlStateManager.disableBlend()
+
+            return
+        }
+
+        if (ClientFont.isEnabled) {
+            font.drawStringWithShadow(text, x - (font.getStringWidth(text) / 2f), y - 3f + yIncrease, colour)
+        } else {
+            GlStateManager.disableBlend()
+
             mc.fontRenderer.drawStringWithShadow(
                 text,
                 x - mc.fontRenderer.getStringWidth(text) / 2f,

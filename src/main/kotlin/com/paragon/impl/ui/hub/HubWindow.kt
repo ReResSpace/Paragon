@@ -3,11 +3,13 @@ package com.paragon.impl.ui.hub
 import com.paragon.Paragon
 import com.paragon.impl.module.client.Colours
 import com.paragon.impl.module.hud.impl.HUDEditor
+import com.paragon.impl.ui.configuration.ConfigurationGUI
 import com.paragon.impl.ui.configuration.shared.Panel
 import com.paragon.impl.ui.util.Click
 import com.paragon.impl.ui.windows.impl.BaritoneWindow
 import com.paragon.impl.ui.windows.impl.ChangelogWindow
 import com.paragon.impl.ui.windows.impl.ConfigWindow
+import com.paragon.impl.ui.windows.impl.SnakeWindow
 import com.paragon.util.mc
 import com.paragon.util.render.RenderUtil
 import com.paragon.util.render.font.FontUtil
@@ -19,38 +21,46 @@ import java.awt.Color
  * @author Surge
  * @since 08/12/2022
  */
-class HubWindow(x: Float, y: Float, width: Float, height: Float) : Panel(x, y, width, height) {
+class HubWindow(val gui: ConfigurationGUI, x: Float, y: Float, width: Float, height: Float) : Panel(x, y, width, height) {
 
     private val hover = ColourAnimation(Color(30, 30, 30), Color(35, 35, 35), { 200f }, false, { Easing.LINEAR })
 
     private val tasks = listOf(
         Task("GUI", {
-            if (mc.currentScreen != Paragon.INSTANCE.configurationGUI) {
-                mc.displayGuiScreen(Paragon.INSTANCE.configurationGUI)
+            if (mc.currentScreen != gui) {
+                mc.displayGuiScreen(gui)
             }
         }, x, y, width - 8f, 12f),
 
         Task("Changelog", {
-            if (Paragon.INSTANCE.configurationGUI.windowsList.any { it is ChangelogWindow }) {
-                Paragon.INSTANCE.configurationGUI.windowsList.filterIsInstance<ChangelogWindow>().forEach { Paragon.INSTANCE.configurationGUI.removeBuffer.add(it) }
+            if (gui.windowsList.any { it is ChangelogWindow }) {
+                gui.windowsList.filterIsInstance<ChangelogWindow>().forEach { gui.removeBuffer.add(it) }
             } else {
-                Paragon.INSTANCE.configurationGUI.windowsList.add(ChangelogWindow(200f, 200f, 300f, 250f, 16f))
+                gui.windowsList.add(ChangelogWindow(200f, 200f, 300f, 250f, 16f))
             }
         }, x, y, width - 8f, 12f),
 
         Task("Configs", {
-            if (Paragon.INSTANCE.configurationGUI.windowsList.any { it is ConfigWindow }) {
-                Paragon.INSTANCE.configurationGUI.windowsList.filterIsInstance<ChangelogWindow>().forEach { Paragon.INSTANCE.configurationGUI.removeBuffer.add(it) }
+            if (gui.windowsList.any { it is ConfigWindow }) {
+                gui.windowsList.filterIsInstance<ChangelogWindow>().forEach { gui.removeBuffer.add(it) }
             } else {
-                Paragon.INSTANCE.configurationGUI.windowsList.add(ConfigWindow(200f, 200f, 200f, 150f, 16f))
+                gui.windowsList.add(ConfigWindow(200f, 200f, 200f, 150f, 16f))
             }
         }, x, y, width - 8f, 12f),
 
         Task("Baritone", {
-            if (Paragon.INSTANCE.configurationGUI.windowsList.any { it is BaritoneWindow }) {
-                Paragon.INSTANCE.configurationGUI.windowsList.filterIsInstance<ChangelogWindow>().forEach { Paragon.INSTANCE.configurationGUI.removeBuffer.add(it) }
+            if (gui.windowsList.any { it is BaritoneWindow }) {
+                gui.windowsList.filterIsInstance<ChangelogWindow>().forEach { gui.removeBuffer.add(it) }
             } else {
-                Paragon.INSTANCE.configurationGUI.windowsList.add(BaritoneWindow(200f, 200f, 200f, 150f, 16f))
+                gui.windowsList.add(BaritoneWindow(200f, 200f, 200f, 150f, 16f))
+            }
+        }, x, y, width - 8f, 12f),
+
+        Task("Snake", {
+            if (gui.windowsList.any { it is SnakeWindow }) {
+                gui.windowsList.filterIsInstance<SnakeWindow>().forEach { gui.removeBuffer.add(it) }
+            } else {
+                gui.windowsList.add(SnakeWindow(200f, 200f, 160f, 176f, 16f))
             }
         }, x, y, width - 8f, 12f),
 
