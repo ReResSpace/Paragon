@@ -6,9 +6,11 @@ import com.paragon.util.render.font.FontUtil
 import com.paragon.util.render.shader.Shader
 import net.minecraft.client.gui.ScaledResolution
 import net.minecraft.client.renderer.GlStateManager
+import net.minecraft.client.renderer.OpenGlHelper
 import net.minecraft.client.renderer.RenderHelper
 import net.minecraft.client.renderer.Tessellator
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats
+import net.minecraft.entity.EntityLivingBase
 import net.minecraft.item.ItemStack
 import net.minecraft.util.math.AxisAlignedBB
 import net.minecraft.util.math.Vec3d
@@ -16,8 +18,11 @@ import net.minecraftforge.fml.relauncher.Side
 import net.minecraftforge.fml.relauncher.SideOnly
 import org.lwjgl.opengl.ARBMultisample.*
 import org.lwjgl.opengl.GL11.*
+import org.lwjgl.opengl.GL12.GL_RESCALE_NORMAL
+import org.lwjgl.opengl.GL13.glActiveTexture
 import org.lwjgl.opengl.GL20.*
 import java.awt.Color
+import kotlin.math.atan
 import kotlin.math.cos
 import kotlin.math.max
 import kotlin.math.sin
@@ -113,14 +118,11 @@ object RenderUtil {
      * @param height The height of the rectangle
      * @param colour The colour of the rectangle
      */
-    @JvmStatic
     fun drawRect(x: Float, y: Float, width: Float, height: Float, colour: Color) {
         glPushMatrix()
         glDisable(GL_TEXTURE_2D)
-        glDisable(GL_ALPHA_TEST)
         glEnable(GL_BLEND)
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
-        glShadeModel(GL_SMOOTH)
 
         colour.glColour()
 
@@ -133,8 +135,6 @@ object RenderUtil {
 
         glEnd()
 
-        glShadeModel(GL_FLAT)
-        glEnable(GL_ALPHA_TEST)
         glDisable(GL_BLEND)
         glEnable(GL_TEXTURE_2D)
         glPopMatrix()
@@ -150,14 +150,7 @@ object RenderUtil {
      * @param leftColour The left colour
      * @param rightColour The colour on the right (what we transition to)
      */
-    fun drawHorizontalGradientRect(
-        x: Float,
-        y: Float,
-        width: Float,
-        height: Float,
-        leftColour: Color,
-        rightColour: Color
-    ) {
+    fun drawHorizontalGradientRect(x: Float, y: Float, width: Float, height: Float, leftColour: Color, rightColour: Color) {
         glPushMatrix()
         glDisable(GL_TEXTURE_2D)
         glDisable(GL_ALPHA_TEST)
@@ -196,14 +189,7 @@ object RenderUtil {
      * @param topColour The top colour
      * @param bottomColour The colour on the bottom (what we transition to)
      */
-    fun drawVerticalGradientRect(
-        x: Float,
-        y: Float,
-        width: Float,
-        height: Float,
-        topColour: Color,
-        bottomColour: Color
-    ) {
+    fun drawVerticalGradientRect(x: Float, y: Float, width: Float, height: Float, topColour: Color, bottomColour: Color) {
         glPushMatrix()
         glDisable(GL_TEXTURE_2D)
         glDisable(GL_ALPHA_TEST)
@@ -381,15 +367,7 @@ object RenderUtil {
      * @param thickness How thick the outline is
      * @param colour The colour of the rectangle
      */
-    fun drawRoundedOutline(
-        x: Float,
-        y: Float,
-        width: Float,
-        height: Float,
-        radius: Float,
-        thickness: Float,
-        colour: Color
-    ) {
+    fun drawRoundedOutline(x: Float, y: Float, width: Float, height: Float, radius: Float, thickness: Float, colour: Color) {
         glPushMatrix()
         glDisable(GL_TEXTURE_2D)
         glEnable(GL_BLEND)
@@ -432,33 +410,32 @@ object RenderUtil {
      * @param colour The colour of the circle
      */
     fun drawCircle(x: Double, y: Double, radius: Double, colour: Color) {
-        GlStateManager.alphaFunc(GL_GREATER, 0.001f)
-        GlStateManager.enableAlpha()
-        GlStateManager.enableBlend()
-        GlStateManager.disableTexture2D()
-        GlStateManager.tryBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, 1, 0)
+        glPushMatrix()
+        glDisable(GL_TEXTURE_2D)
+        glDisable(GL_ALPHA_TEST)
+        glEnable(GL_BLEND)
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
+        glShadeModel(GL_SMOOTH)
 
         colour.glColour()
 
-        for (i in 0..359) {
-            val cs = -i * Math.PI / 180.0
-            val ps = (-i - 1) * Math.PI / 180.0
+        glBegin(GL_TRIANGLE_STRIP)
 
-            val outer = doubleArrayOf(cos(cs) * radius, -sin(cs) * radius, cos(ps) * radius, -sin(ps) * radius)
+        var i = 0.0
+        while (i < Math.PI * 2) {
+            i += Math.PI * 4 / 128
 
-            glBegin(GL_QUADS)
+            glVertex2d(x + radius * cos(i), y + radius * sin(i))
             glVertex2d(x, y)
-            glVertex2d(x + outer[2], y + outer[3])
-            glVertex2d(x, y)
-            glVertex2d(x + outer[0], y + outer[1])
-            glEnd()
         }
 
-        GlStateManager.alphaFunc(GL_GREATER, 0.1f)
-        GlStateManager.color(1f, 1f, 1f, 1f)
-        GlStateManager.disableBlend()
-        GlStateManager.enableTexture2D()
-        glLineWidth(1F)
+        glEnd()
+
+        glShadeModel(GL_FLAT)
+        glEnable(GL_ALPHA_TEST)
+        glDisable(GL_BLEND)
+        glEnable(GL_TEXTURE_2D)
+        glPopMatrix()
     }
 
     /**
@@ -472,15 +449,7 @@ object RenderUtil {
      * @param scaleFacZ How much to scale by on the Z axis
      * @param block The code to run during scaling
      */
-    inline fun scaleTo(
-        x: Float,
-        y: Float,
-        z: Float,
-        scaleFacX: Double,
-        scaleFacY: Double,
-        scaleFacZ: Double,
-        block: () -> Unit
-    ) {
+    inline fun scaleTo(x: Float, y: Float, z: Float, scaleFacX: Double, scaleFacY: Double, scaleFacZ: Double, block: () -> Unit) {
         glPushMatrix()
         glTranslatef(x, y, z)
         glScaled(scaleFacX, scaleFacY, scaleFacZ)
@@ -812,15 +781,16 @@ object RenderUtil {
      * @param overlay Whether to draw the overlay or not
      */
     @JvmStatic
-    fun renderItemStack(itemStack: ItemStack?, x: Float, y: Float, overlay: Boolean) {
+    fun drawItemStack(itemStack: ItemStack?, x: Float, y: Float, overlay: Boolean) {
         if (itemStack == null) {
             return
         }
 
-        glEnable(GL_DEPTH_TEST)
         glEnable(GL_BLEND)
+        glEnable(GL_DEPTH_TEST)
+        RenderHelper.enableGUIStandardItemLighting()
 
-        mc.renderItem.zLevel = -150f
+        mc.renderItem.zLevel = 0f
 
         mc.renderItem.renderItemAndEffectIntoGUI(itemStack, x.toInt(), y.toInt())
 
@@ -830,11 +800,11 @@ object RenderUtil {
 
         mc.renderItem.zLevel = 0f
 
-        glDisable(GL_BLEND)
-        glDisable(GL_DEPTH_TEST)
+        RenderHelper.disableStandardItemLighting()
 
-        // ????
-        glDisable(GL_LIGHTING)
+        glColor4f(1f, 1f, 1f, 1f)
+
+        glDisable(GL_DEPTH_TEST)
     }
 
     /**
@@ -850,16 +820,7 @@ object RenderUtil {
      * @param textureHeight The height of the texture in the sprite sheet
      */
     @JvmStatic
-    fun drawModalRectWithCustomSizedTexture(
-        x: Float,
-        y: Float,
-        u: Float,
-        v: Float,
-        width: Float,
-        height: Float,
-        textureWidth: Float,
-        textureHeight: Float
-    ) {
+    fun drawModalRectWithCustomSizedTexture(x: Float, y: Float, u: Float, v: Float, width: Float, height: Float, textureWidth: Float, textureHeight: Float) {
         glColor4f(1.0f, 1.0f, 1.0f, 1.0f)
         val f = 1.0f / textureWidth
         val f1 = 1.0f / textureHeight
@@ -873,68 +834,66 @@ object RenderUtil {
     }
 
     /**
-     * Draws a rounded texture
-     *
-     * @param x The X coordinate
-     * @param y The Y coordinate
-     * @param u The X offset in the texture (for sprite sheets)
-     * @param v The Y offset in the texture (for sprite sheets)
-     * @param width The width to draw
-     * @param height The height to draw
-     * @param textureWidth The width of the texture in the sprite sheet
-     * @param textureHeight The height of the texture in the sprite sheet
+     * Draws an entity at the given position
+     * @param x The X position to draw the entity at
+     * @param y The Y position to draw the entity at
+     * @param scale The scale of the entity
+     * @param entity The entity to draw
      */
     @JvmStatic
-    fun drawRoundedTexture(
-        x: Float,
-        y: Float,
-        u: Float,
-        v: Float,
-        width: Float,
-        height: Float,
-        textureWidth: Float,
-        textureHeight: Float,
-        radius: Float,
-        alpha: Int
-    ) {
-        glColor4f(1.0f, 1.0f, 1.0f, 0.0f)
+    fun drawEntity(x: Float, y: Float, scale: Float, entity: EntityLivingBase) {
+        val yaw = 0f
+        val pitch = 0f
 
-        GlStateManager.pushMatrix()
-        GlStateManager.enableBlend()
-        GlStateManager.tryBlendFuncSeparate(
-            GlStateManager.SourceFactor.SRC_ALPHA,
-            GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA,
-            GlStateManager.SourceFactor.ONE,
-            GlStateManager.DestFactor.ZERO
-        )
+        glColor4f(1f, 1f, 1f, 1f)
+        glEnable(GL_COLOR_MATERIAL)
+        glPushMatrix()
+        glTranslatef(x, y, 0f)
+        glScalef(-(scale * 30f), scale * 30f, scale * 30f)
+        glRotatef(180f, 0f, 0f, 1f)
+        glRotatef(135f, 0f, 1f, 0f)
 
-        roundedTextureShader.alpha = alpha.toFloat()
-        roundedTextureShader.radius = radius
-        roundedTextureShader.width = width
-        roundedTextureShader.height = height
+        RenderHelper.enableStandardItemLighting()
 
-        roundedTextureShader.startShader()
+        glRotatef(-135f, 0f, 1f, 0f)
+        glRotatef(-atan((-pitch / 40.0f).toDouble()).toFloat() * 20.0f, 1f, 0f, 0f)
 
-        glBegin(GL_QUADS)
+        val storedRenderYawOffset = entity.renderYawOffset
+        val storedRotationYaw = entity.rotationYaw
+        val storedRotationPitch = entity.rotationPitch
+        val storedRotationYawHead = entity.rotationYawHead
+        val storedPrevRotationYawHead = entity.prevRotationYawHead
 
-        glTexCoord2f(0f, 0f)
-        glVertex2f(x, y)
-        glTexCoord2f(0f, 1f)
-        glVertex2f(x, y + height)
-        glTexCoord2f(1f, 1f)
-        glVertex2f(x + width, y + height)
-        glTexCoord2f(1f, 0f)
-        glVertex2f(x + width, y)
+        entity.renderYawOffset = atan((yaw / 40.0f).toDouble()).toFloat() * 20.0f
+        entity.rotationYaw = atan((yaw / 40.0f).toDouble()).toFloat() * 40.0f
+        entity.rotationPitch = -atan((pitch / 40.0f).toDouble()).toFloat() * 20.0f
+        entity.rotationYawHead = entity.rotationYaw
+        entity.prevRotationYawHead = entity.rotationYaw
 
-        glEnd()
+        mc.renderManager.setPlayerViewY(180f)
+        mc.renderManager.isRenderShadow = false
 
-        glUseProgram(0)
+        glEnable(GL_DEPTH_TEST)
+        glDepthMask(true)
+        mc.renderManager.renderEntity(entity, 0.0, 0.0, 0.0, 0f, 1f, false)
+        glDisable(GL_DEPTH_TEST)
 
-        GlStateManager.enableAlpha()
-        GlStateManager.disableBlend()
-        GlStateManager.popMatrix()
+        mc.renderManager.isRenderShadow = true
 
-        bufferBuilder
+        entity.renderYawOffset = storedRenderYawOffset
+        entity.rotationYaw = storedRotationYaw
+        entity.rotationPitch = storedRotationPitch
+        entity.rotationYawHead = storedRotationYawHead
+        entity.prevRotationYawHead = storedPrevRotationYawHead
+
+        glPopMatrix()
+
+        RenderHelper.disableStandardItemLighting()
+
+        glDisable(GL_RESCALE_NORMAL)
+        glActiveTexture(OpenGlHelper.lightmapTexUnit)
+        glDisable(GL_TEXTURE_2D)
+        glActiveTexture(OpenGlHelper.defaultTexUnit)
     }
 
 }

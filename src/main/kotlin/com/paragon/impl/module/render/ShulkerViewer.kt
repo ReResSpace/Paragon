@@ -68,7 +68,7 @@ object ShulkerViewer : Module("ShulkerViewer", Category.RENDER, "Preview shulker
                 RenderUtil.drawRect(itemX - 0.5f, itemY - 0.5f, 17f, 17f, Color(35, 35, 38))
 
                 // Render stack
-                RenderUtil.renderItemStack(item, itemX, itemY, true)
+                RenderUtil.drawItemStack(item, itemX, itemY, true)
 
                 // Increase count
                 a++

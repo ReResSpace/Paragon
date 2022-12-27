@@ -9,7 +9,6 @@ import java.awt.Color
 import java.awt.Font
 import kotlin.math.min
 import kotlin.random.Random
-import com.paragon.util.render.font.FontUtil.Align
 
 /**
  * @author Cosmos
@@ -32,22 +31,15 @@ class FontRenderer(font: Font) {
     val size: Int
         get() = defaultFont.font.size
 
-    fun drawStringWithShadow(text: String, x: Float, y: Float, colour: Color, alignment: Align = Align.LEFT): Int {
-        return drawString(text, x, y, colour, true, alignment)
+    fun drawStringWithShadow(text: String, x: Float, y: Float, colour: Color): Int {
+        return drawString(text, x, y, colour, true)
     }
 
-    fun drawString(
-        text: String,
-        x: Float,
-        y: Float,
-        colour: Color,
-        dropShadow: Boolean,
-        alignment: Align = Align.LEFT
-    ): Int {
+    fun drawString(text: String, x: Float, y: Float, colour: Color, dropShadow: Boolean): Int {
         val alpha = colour.alpha.coerceAtLeast(5)
 
-        if (text.contains("\n")) {
-            val parts = text.split("\n".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
+        if (text.contains(System.lineSeparator())) {
+            val parts = text.split(System.lineSeparator().toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
             var newY = 0.0f
 
             for (s in parts) {
@@ -55,7 +47,7 @@ class FontRenderer(font: Font) {
                     drawText(s, x + 0.6f, y + newY + 0.6f, Color(0, 0, 0, min(alpha, 150)), true)
                 }
 
-                drawText(s, x, y + newY, colour, dropShadow)
+                drawText(s, x, y + newY, colour, false)
                 newY += height
             }
 
@@ -63,35 +55,22 @@ class FontRenderer(font: Font) {
         }
 
         if (dropShadow) {
-            drawText(text, x + 0.6f, y + 0.6f, Color(0, 0, 0, min(alpha, 150)), true, alignment)
+            drawText(text, x + 0.6f, y + 0.6f, Color(0, 0, 0, min(alpha, 150)), true)
         }
 
-        return drawText(text, x, y, colour, false, alignment)
+        return drawText(text, x, y, colour, false)
     }
 
-    private fun drawText(
-        text: String?,
-        x: Float,
-        y: Float,
-        colour: Color,
-        ignoreColor: Boolean,
-        alignment: Align = Align.LEFT
-    ): Int {
+    private fun drawText(text: String?, x: Float, y: Float, colour: Color, ignoreColor: Boolean, ): Int {
         if (text == null) {
             return 0
         }
 
-        val _x = x - when(alignment) {
-            Align.LEFT -> 0.0
-            Align.CENTER -> getStringWidth(text) / 2.0
-            Align.RIGHT -> getStringWidth(text).toDouble()
-        }
-
         if (text.isEmpty()) {
-            return _x.toInt()
+            return x.toInt()
         }
 
-        GlStateManager.translate(_x, y.toDouble(), 0.0)
+        GlStateManager.translate(x.toDouble(), y.toDouble(), 0.0)
         GlStateManager.enableAlpha()
         GlStateManager.enableBlend()
         GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0)
@@ -161,9 +140,9 @@ class FontRenderer(font: Font) {
 
         glDisable(GL_LINE_SMOOTH)
         GlStateManager.disableBlend()
-        GlStateManager.translate(-_x, -y.toDouble(), 0.0)
+        GlStateManager.translate(-x.toDouble(), -y.toDouble(), 0.0)
 
-        return _x.toInt()
+        return x.toInt()
     }
 
     fun getStringWidth(text: String): Int {

@@ -4,7 +4,10 @@ import com.paragon.impl.module.Module
 import com.paragon.impl.module.client.*
 import com.paragon.impl.module.combat.*
 import com.paragon.impl.module.hud.impl.*
-import com.paragon.impl.module.hud.impl.graphs.*
+import com.paragon.impl.module.hud.impl.graph.GraphCrystals
+import com.paragon.impl.module.hud.impl.graph.GraphFPS
+import com.paragon.impl.module.hud.impl.graph.GraphPing
+import com.paragon.impl.module.hud.impl.graph.GraphSpeed
 import com.paragon.impl.module.misc.*
 import com.paragon.impl.module.movement.*
 import com.paragon.impl.module.render.*
@@ -114,44 +117,44 @@ class ModuleManager {
         Colours,
         ClickGUI,
         DiscordRPC,
+        Editor,
         MainMenu,
+        Notifications,
 
         // HUD
         Armour,
         ArrayListHUD,
-        CombatInfo,
+        Arrows,
+        BindList,
+        Biome,
         Coordinates,
+        CPS,
         Crystals,
-        CustomText,
         Direction,
         FPS,
-        TPS,
-        CPS,
+        Hunger,
         GraphCrystals,
         GraphFPS,
-        GraphReceivedPackets,
-        GraphSentPackets,
         GraphPing,
         GraphSpeed,
-        HUD,
-        HUDEditor,
         Inventory,
+        IP,
         Keystrokes,
         LagNotifier,
-        Notifications,
+        Memory,
+        ModelView,
         Ping,
-        PotionHUD,
+        Potions,
         ServerBrand,
         Speed,
-        TabGui,
         TargetHUD,
         Totems,
+        TPS,
         Watermark
     )
 
     init {
         MinecraftForge.EVENT_BUS.register(this)
-
         modules.forEach { it.reflectSettings() }
     }
 

@@ -1,10 +1,6 @@
 package com.paragon.impl.ui.configuration.discord.module
 
 import com.paragon.impl.module.Module
-import com.paragon.util.render.font.FontUtil
-import com.paragon.util.render.font.FontUtil.drawStringWithShadow
-import com.paragon.util.render.font.FontUtil.getStringWidth
-import com.paragon.util.render.font.FontUtil.drawCenteredString
 import com.paragon.impl.ui.configuration.discord.DiscordGUI
 import com.paragon.impl.ui.configuration.discord.IRenderable
 import com.paragon.impl.ui.configuration.discord.category.CategoryBar
@@ -12,6 +8,10 @@ import com.paragon.impl.ui.configuration.discord.settings.SettingsBar
 import com.paragon.util.mc
 import com.paragon.util.render.RenderUtil
 import com.paragon.util.render.RenderUtil.scaleTo
+import com.paragon.util.render.font.FontUtil
+import com.paragon.util.render.font.FontUtil.drawCenteredString
+import com.paragon.util.render.font.FontUtil.drawStringWithShadow
+import com.paragon.util.render.font.FontUtil.getStringWidth
 import me.surge.animation.Animation
 import me.surge.animation.Easing
 import net.minecraft.client.renderer.GlStateManager
@@ -107,15 +107,13 @@ object ModuleBar : IRenderable {
             )
             RenderUtil.popScissor()
 
-            //Render the "copied" thing after the name was copied
+            // Render the "copied" thing after the name was copied
             if (lastCopyTime != 0L) {
                 RenderUtil.drawRoundedRect(
                     (userRect.x + ((userRect.width - getStringWidth("Copied!")) / 2f)) - 5f, (userRect.y - (FontUtil.getHeight() / 2f)) - 1.5f, getStringWidth("Copied!") + 10f, FontUtil.getHeight() + 5f, 2f, DiscordGUI.userCopiedColor
                 )
 
-                drawCenteredString(
-                    "Copied!", (userRect.x + (userRect.width / 2)).toFloat(), userRect.y.toFloat() - 3f, Color.WHITE, true
-                )
+                drawCenteredString("Copied!", (userRect.x + (userRect.width / 2)).toFloat(), userRect.y.toFloat() - 3f, Color.WHITE)
 
                 if (System.currentTimeMillis() - 1500L > lastCopyTime) {
                     lastCopyTime = 0L

@@ -51,7 +51,7 @@ class CamperCheatGUI : GuiImplementation() {
         }
 
         if (description.isNotEmpty()) {
-            FontUtil.drawCenteredString(description, sr.scaledWidth / 2f, 3f, Colours.mainColour.value, false)
+            FontUtil.drawCenteredString(description, sr.scaledWidth / 2f, 3f, Colours.mainColour.value)
 		}
 
         Keyboard.enableRepeatEvents(true)
@@ -61,10 +61,10 @@ class CamperCheatGUI : GuiImplementation() {
         val rectWidth = max(12 + FontUtil.getStringWidth("Search") * 1.5, FontUtil.getStringWidth(search).toDouble() + 12).toFloat()
 
         RenderUtil.drawRoundedRect((width / 2f) - (rectWidth / 2), ScaledResolution(Minecraft.getMinecraft()).scaledHeight - (73 * searchAnimation.getAnimationFactor()).toFloat(), rectWidth, 37f, 10f, Color(50, 50, 50, (150 * searchAnimation.getAnimationFactor()).toInt()))
-        FontUtil.drawCenteredString(search, width / 2f, ScaledResolution(Minecraft.getMinecraft()).scaledHeight - (50 * searchAnimation.getAnimationFactor()).toFloat(), Color.WHITE, true)
+        FontUtil.drawCenteredString(search, width / 2f, ScaledResolution(Minecraft.getMinecraft()).scaledHeight - (50 * searchAnimation.getAnimationFactor()).toFloat(), Color.WHITE)
 
         RenderUtil.scaleTo(width / 2f, ScaledResolution(Minecraft.getMinecraft()).scaledHeight - (75 * searchAnimation.getAnimationFactor()).toFloat(), 0f, 1.5, 1.5, 0.0) {
-            FontUtil.drawCenteredString("Search", width / 2f, ScaledResolution(Minecraft.getMinecraft()).scaledHeight - (69 * searchAnimation.getAnimationFactor()).toFloat(), Color.WHITE, true)
+            FontUtil.drawCenteredString("Search", width / 2f, ScaledResolution(Minecraft.getMinecraft()).scaledHeight - (69 * searchAnimation.getAnimationFactor()).toFloat(), Color.WHITE)
         }
     }
 

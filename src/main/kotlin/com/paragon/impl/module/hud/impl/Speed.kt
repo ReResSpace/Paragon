@@ -1,77 +1,18 @@
 package com.paragon.impl.module.hud.impl
 
+import com.paragon.impl.module.hud.TextHUDModule
 import com.paragon.impl.setting.Setting
-import com.paragon.util.render.font.FontUtil
-import com.paragon.util.render.font.FontUtil.drawStringWithShadow
-import com.paragon.util.render.font.FontUtil.getStringWidth
-import com.paragon.impl.module.hud.HUDModule
-import com.paragon.impl.module.client.Colours
-import com.paragon.mixins.accessor.IMinecraft
-import com.paragon.mixins.accessor.ITimer
-import com.paragon.util.mc
+import com.paragon.util.player.PlayerUtil
 import net.minecraft.util.text.TextFormatting
-import java.util.*
-import kotlin.math.hypot
 
 /**
  * @author Surge
+ * @since 24/12/2022
  */
-object Speed : HUDModule("Speed", "Displays your current speed") {
-
-    private val unit = Setting(
-        "Unit", Unit.BPS
-    ) describedBy "The unit to display the speed in"
-
-    override fun render() {
-        drawStringWithShadow(
-            "Speed " + TextFormatting.WHITE + String.format(
-                "%.2f", unit.value.algorithm(
-                    getPlayerSpeed(
-                        mc.player.posX - mc.player.lastTickPosX, mc.player.posZ - mc.player.lastTickPosZ
-                    )
-                )
-            ) + unit.value.name.lowercase(
-                Locale.getDefault()
-            ), x, y, Colours.mainColour.value, alignment.value
-        )
-    }
-
-    override var width = 10F
-        get() = getStringWidth(
-            "Speed " + String.format(
-                "%.2f", unit.value.algorithm(
-                    getPlayerSpeed(
-                        mc.player.posX - mc.player.lastTickPosX, mc.player.posZ - mc.player.lastTickPosZ
-                    )
-                )
-            ) + unit.value.name.lowercase(
-                Locale.getDefault()
-            )
-        )
-
-    override var height = FontUtil.getHeight()
-        get() = FontUtil.getHeight()
-
-    enum class Unit(val algorithm: (Double) -> Double) {
-        /**
-         * Speed in blocks per second
-         */
-        BPS({ it }),
-
-        /**
-         * Speed in kilometers (1000 blocks) per hour
-         */
-        KMH({ it * 3.6 }),
-
-        /**
-         * Speed in miles (1.60934 km) per hour
-         */
-        MPH({ it * 2.237 });
-
-    }
-
-    fun getPlayerSpeed(distX: Double, distZ: Double): Double {
-        return hypot(distX, distZ) * (1000 / ((mc as IMinecraft).hookGetTimer() as ITimer).hookGetTickLength()).toDouble()
-    }
-
+object Speed : TextHUDModule(
+    "Speed",
+    "Draws your current player speed to the screen",
+    { "Speed ${TextFormatting.GRAY}[${TextFormatting.WHITE}%.2f${TextFormatting.GRAY}".format(PlayerUtil.getSpeed(Speed.unit.value)) + "${TextFormatting.WHITE}${Speed.unit.value.name.lowercase()}]" }
+) {
+    private val unit = Setting("Unit", PlayerUtil.Unit.BPS) describedBy "The units in which to display your speed"
 }

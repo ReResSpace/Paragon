@@ -1,14 +1,11 @@
 package com.paragon.impl.ui.windows.impl
 
-import com.paragon.Paragon
-import com.paragon.impl.ui.util.Click
 import com.paragon.impl.ui.windows.Window
 import com.paragon.util.calculations.Timer
 import com.paragon.util.render.ColourUtil.integrateAlpha
 import com.paragon.util.render.RenderUtil
 import com.paragon.util.render.font.FontUtil
 import com.paragon.util.roundToNearest
-import org.lwjgl.opengl.GL11.*
 import org.lwjgl.input.Keyboard
 import java.awt.Color
 import java.awt.Rectangle
@@ -34,7 +31,7 @@ class SnakeWindow(x: Float, y: Float, width: Float, height: Float, grabbableHeig
         // display game over screen if we're dead
         if (snake.isDead()) {
             RenderUtil.drawRect(x, y + grabbableHeight, width, height - grabbableHeight, Color.BLACK.integrateAlpha(150f))
-            FontUtil.drawCenteredString("Game Over${System.lineSeparator()}Reached length ${snake.tiles.size}", x + (width / 2f), y + height / 2f, Color.WHITE, false)
+            FontUtil.drawCenteredString("Game Over${System.lineSeparator()}Reached length ${snake.tiles.size}", x + (width / 2f), y + height / 2f, Color.WHITE)
         }
     }
 

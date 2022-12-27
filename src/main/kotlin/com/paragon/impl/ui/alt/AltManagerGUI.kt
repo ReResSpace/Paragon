@@ -50,8 +50,8 @@ class AltManagerGUI : GuiScreen() {
         RenderUtil.popScissor()
 
         FontUtil.drawStringWithShadow("Logged in as " + TextFormatting.GRAY + (Minecraft.getMinecraft() as IMinecraft).hookGetSession().username, 5f, 30f, Color.WHITE)
-        FontUtil.drawCenteredString("Paragon Alt Manager", width / 2f, 75f, Color.WHITE, false)
-        FontUtil.drawCenteredString(renderString, width / 2f, 100f, Color.WHITE, false)
+        FontUtil.drawCenteredString("Paragon Alt Manager", width / 2f, 75f, Color.WHITE)
+        FontUtil.drawCenteredString(renderString, width / 2f, 100f, Color.WHITE)
 
         super.drawScreen(mouseX, mouseY, partialTicks)
     }

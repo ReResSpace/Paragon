@@ -74,7 +74,7 @@ class CategoryPanel(val gui: CamperCheatGUI?, val category: Category, x: Float, 
         scroll = MathHelper.clamp(scroll.toDouble(), -max(0.0, totalHeight - moduleHeight), 0.0).toFloat() * expanded.getAnimationFactor().toFloat()
         real = MathHelper.clamp(real.toDouble(), -max(0.0, totalHeight - moduleHeight), 0.0).toFloat() * expanded.getAnimationFactor().toFloat()
 
-        FontUtil.drawCenteredString(StringUtil.getFormattedText(category), x + width / 2f, y + 3f, Color.WHITE, false)
+        FontUtil.drawCenteredString(StringUtil.getFormattedText(category), x + width / 2f, y + 3f, Color.WHITE)
 
         moduleHeight = MathHelper.clamp(totalHeight.toDouble(), 0.0, maxHeight) * expanded.getAnimationFactor()
 

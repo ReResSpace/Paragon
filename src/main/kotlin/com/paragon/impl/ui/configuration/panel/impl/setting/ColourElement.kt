@@ -341,7 +341,7 @@ class ColourElement(parent: ModuleElement, setting: Setting<Color>, x: Float, y:
             RenderUtil.drawRoundedRect((x + width / 2f) - 6f, y, 12f, 12f, 5f, if (enabledState.get()) Colours.mainColour.value.integrateAlpha(255f) else Color(40, 40, 40))
 
             RenderUtil.scaleTo(x + (width / 2), y + 15f, 0f, 0.6, 0.6, 0.6) {
-                FontUtil.drawCenteredString(name, x + (width / 2), y + 15f, Color.WHITE, false)
+                FontUtil.drawCenteredString(name, x + (width / 2), y + 15f, Color.WHITE)
             }
         }
 

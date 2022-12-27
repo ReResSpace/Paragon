@@ -22,7 +22,7 @@ public abstract class MixinAbstractClientPlayer extends EntityPlayer {
     @Inject(method = "getLocationCape", at = @At("HEAD"), cancellable = true)
     public void hookGetLocationCape(CallbackInfoReturnable<ResourceLocation> cir) {
         if (Paragon.INSTANCE.getCapeManager().isCaped(getName())) {
-            cir.setReturnValue(new ResourceLocation(Paragon.modID, Paragon.INSTANCE.getCapeManager().getCape(getName()).getPath()));
+            cir.setReturnValue(new ResourceLocation(Paragon.MOD_ID, Paragon.INSTANCE.getCapeManager().getCape(getName()).getPath()));
         }
     }
 

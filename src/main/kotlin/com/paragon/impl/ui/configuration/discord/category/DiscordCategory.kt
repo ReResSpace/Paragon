@@ -39,7 +39,7 @@ class DiscordCategory(val category: Category) : IRenderable {
 
             val scaleFac = rect.width / 20.0
             scaleTo(rect.x.toFloat() + 3f + if (category == Category.RENDER) 0.5f else 0f, rect.y.toFloat() + 3, 0F, scaleFac, scaleFac, 1.0) {
-                RenderUtil.renderItemStack(indicator, rect.x.toFloat() + 3f + if (category == Category.RENDER || category == Category.COMBAT) 0.5f else 0f, rect.y.toFloat() + 3, false)
+                RenderUtil.drawItemStack(indicator, rect.x.toFloat() + 3f + if (category == Category.RENDER || category == Category.COMBAT) 0.5f else 0f, rect.y.toFloat() + 3, false)
             }
         }
 

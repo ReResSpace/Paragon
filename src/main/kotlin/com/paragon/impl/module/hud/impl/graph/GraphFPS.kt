@@ -1,4 +1,4 @@
-package com.paragon.impl.module.hud.impl.graphs
+package com.paragon.impl.module.hud.impl.graph
 
 import com.paragon.impl.module.hud.HUDModule
 import com.paragon.impl.setting.Setting
@@ -10,11 +10,9 @@ import net.minecraft.client.Minecraft
 /**
  * @author SooStrator1136
  */
-object GraphFPS : HUDModule("FPSGraph", "Graph showing your Ping") {
+object GraphFPS : HUDModule("FPSGraph", "Graph showing your FPS", { 75f }, { 30f }) {
 
-    private val scale = Setting(
-        "Size", 1.0, 0.1, 2.0, 0.1
-    ) describedBy "Size of the graph"
+    private val scale = Setting("Size", 1.0, 0.1, 2.0, 0.1) describedBy "Size of the graph"
 
     private val background = Setting("Background", Graph.Background.ALL)
 
@@ -24,15 +22,7 @@ object GraphFPS : HUDModule("FPSGraph", "Graph showing your Ping") {
         graph = Graph("FPS") { background.value }
     }
 
-    override fun onTick() {
-        if (mc.anyNull) {
-            return
-        }
-
-        graph.update(Minecraft.getDebugFPS().toDouble())
-    }
-
-    override fun render() {
+    override fun draw() {
         graph.bounds.setRect(x, y, 75F, 30F)
 
         RenderUtil.scaleTo(x, y, 1F, scale.value, scale.value, 1.0) {
@@ -40,7 +30,12 @@ object GraphFPS : HUDModule("FPSGraph", "Graph showing your Ping") {
         }
     }
 
-    override var width = 75F
-    override var height = 30F
+    override fun onTick() {
+        if (mc.anyNull) {
+            return
+        }
+
+        graph.update(Minecraft.getDebugFPS().toDouble())
+    }
 
 }

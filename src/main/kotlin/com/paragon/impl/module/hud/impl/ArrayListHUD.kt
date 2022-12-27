@@ -1,5 +1,4 @@
 package com.paragon.impl.module.hud.impl
-
 import com.paragon.Paragon
 import com.paragon.impl.module.Category
 import com.paragon.impl.module.Module

@@ -6,6 +6,9 @@ import com.paragon.impl.event.network.PacketEvent.PreReceive
 import com.paragon.impl.event.network.PlayerEvent.PlayerJoinEvent
 import com.paragon.impl.event.network.PlayerEvent.PlayerLeaveEvent
 import com.paragon.impl.event.render.gui.RenderChatGuiEvent
+import com.paragon.impl.module.client.Notifications
+import com.paragon.impl.module.hud.EditorGUI
+import com.paragon.impl.module.hud.HUDModule
 import com.paragon.util.mc
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.ScaledResolution
@@ -18,6 +21,7 @@ import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent
 import org.lwjgl.input.Keyboard
+import org.lwjgl.opengl.GL11.*
 import java.awt.Color
 
 class EventFactory {
@@ -47,8 +51,42 @@ class EventFactory {
             Paragon.INSTANCE.moduleManager.modules.forEach {
                 if (it.isEnabled) {
                     it.onRender2D()
+
+                    if (it is HUDModule && mc.currentScreen !is EditorGUI) {
+                        it.draw()
+                    }
                 }
             }
+
+            if (Notifications.isEnabled) {
+                when (Notifications.display.value) {
+                    Notifications.Display.POP_OUT -> {
+                        val resolution = ScaledResolution(mc)
+                        var notificationY = resolution.scaledHeight - 25f
+
+                        Paragon.INSTANCE.notificationManager.notifications.removeIf { it.animation.getAnimationFactor() == 0.0 && it.progress.getAnimationFactor() == 1.0 }
+
+                        Paragon.INSTANCE.notificationManager.notifications.forEach {
+                            it.render(notificationY)
+
+                            notificationY -= 25 * it.animation.getAnimationFactor().toFloat()
+                        }
+                    }
+
+                    Notifications.Display.CHAT -> {
+                        Paragon.INSTANCE.notificationManager.notifications.forEach {
+                            Paragon.INSTANCE.commandManager.sendClientMessage(it.message)
+                        }
+
+                        Paragon.INSTANCE.notificationManager.notifications.clear()
+                    }
+                }
+            }
+
+            // kek
+            // just to prevent funny rendering issues
+            glEnable(GL_BLEND)
+            glEnable(GL_DEPTH_TEST)
         }
     }
 

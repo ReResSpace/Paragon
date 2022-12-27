@@ -1,5 +1,7 @@
 package com.paragon.util.player
 
+import com.paragon.mixins.accessor.IMinecraft
+import com.paragon.mixins.accessor.ITimer
 import com.paragon.util.mc
 import com.paragon.util.world.BlockUtil.getBlockAtPos
 import net.minecraft.client.renderer.EnumFaceDirection
@@ -11,6 +13,7 @@ import net.minecraft.util.EnumFacing
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Vec3d
 import kotlin.math.cos
+import kotlin.math.hypot
 import kotlin.math.sin
 
 object PlayerUtil {
@@ -153,6 +156,28 @@ object PlayerUtil {
             pos = pos.down()
         }
         return if (pos.y < 0) null else pos
+    }
+
+    fun getSpeed(unit: Unit): Double {
+        return unit.algorithm.invoke(hypot(mc.player.posX - mc.player.lastTickPosX, mc.player.posZ - mc.player.lastTickPosZ) * (1000 / ((mc as IMinecraft).hookGetTimer() as ITimer).hookGetTickLength()).toDouble())
+    }
+
+    enum class Unit(val algorithm: (Double) -> Double) {
+        /**
+         * Speed in blocks per second
+         */
+        BPS({ it }),
+
+        /**
+         * Speed in kilometers (1000 blocks) per hour
+         */
+        KMH({ it * 3.6 }),
+
+        /**
+         * Speed in miles (1.60934 km) per hour
+         */
+        MPH({ it * 2.237 });
+
     }
 
 }

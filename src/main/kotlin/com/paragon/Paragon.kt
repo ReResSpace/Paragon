@@ -23,7 +23,7 @@ import java.awt.Desktop
 import java.net.URI
 import javax.swing.JOptionPane
 
-@Mod(name = Paragon.modName, modid = Paragon.modID, version = Paragon.modVersion)
+@Mod(name = Paragon.NAME, modid = Paragon.MOD_ID, version = Paragon.VERSION)
 class Paragon {
 
     @EventHandler
@@ -51,7 +51,7 @@ class Paragon {
 
     @EventHandler
     fun init(event: FMLInitializationEvent?) {
-        logger.info("Starting Paragon $modVersion initialisation")
+        logger.info("Starting Paragon $VERSION initialisation")
 
         storageManager = StorageManager()
         logger.info("StorageManager initialised")
@@ -123,13 +123,13 @@ class Paragon {
         configurationGUI = ConfigurationGUI()
         logger.info("Configuration GUI Initialised")
 
-        logger.info("Paragon $modVersion Initialised Successfully")
+        logger.info("Paragon $VERSION Initialised Successfully")
     }
 
     companion object {
-        const val modName = "Paragon"
-        const val modID = "paragon"
-        const val modVersion = "1.1.0"
+        const val NAME = "Paragon"
+        const val MOD_ID = "paragon"
+        const val VERSION = "1.1.0"
 
         @JvmField
         @Mod.Instance

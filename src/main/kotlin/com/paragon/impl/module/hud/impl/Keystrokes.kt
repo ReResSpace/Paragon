@@ -1,123 +1,88 @@
 package com.paragon.impl.module.hud.impl
 
-import com.paragon.impl.setting.Setting
-import com.paragon.util.render.font.FontUtil
-import com.paragon.impl.module.hud.HUDModule
 import com.paragon.impl.module.client.Colours
+import com.paragon.impl.module.hud.HUDModule
+import com.paragon.impl.setting.Setting
+import com.paragon.util.mc
 import com.paragon.util.render.RenderUtil
+import com.paragon.util.render.font.FontUtil
 import me.surge.animation.Animation
 import me.surge.animation.Easing
 import org.lwjgl.input.Keyboard
 import java.awt.Color
 import java.awt.geom.Point2D
-import java.awt.geom.Rectangle2D
 
 /**
- * @author SooStrator1136
+ * @author Surge
+ * @since 24/12/2022
  */
-object Keystrokes : HUDModule("Keystrokes", "Keystrokes duh?") {
+object Keystrokes : HUDModule("Keystrokes", "Draws the keys you are currently pressing to the screen", { 90f }, { 89.5f }) {
 
-    //Bounds
-    private val keySize = Setting(
-        "Size", 20F, 10F, 50F, 1F
-    ) describedBy "Size of the keys"
-    private val keyDistance = Setting(
-        "Distance", 2F, 1F, 10F, 0.1F
-    ) describedBy "Distance between the keys"
-
-    //Animation
-    private val animationSpeed = Setting(
-        "Animation Speed", 300F, 100F, 2000F, 50F
-    ) describedBy "The time to fill the rect with a circle"
-
+    private val animationSpeed = Setting("AnimationSpeed", 300F, 100F, 2000F, 50F) describedBy "The time to fill the rect with a circle"
     private val animationEasing = Setting("Easing", Easing.LINEAR) excludes Easing.BACK_IN
 
-    //Coloring
-    private val backgroundColor = Setting(
-        "Background", Color(0, 0, 0, 35)
-    ) describedBy "Color of the background"
-    private val circleColor = Setting(
-        "Fill color", Colours.mainColour.value
-    ) describedBy "Color of the circle filling indicating the pressed keys"
+    private val backgroundColor = Setting("Background", Color(0, 0, 0, 35)) describedBy "Color of the background"
+    private val circleColor = Setting("Fill color", Colours.mainColour.value) describedBy "Color of the circle filling indicating the pressed keys"
 
-    //Could have used an array but uhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh
-    private val keyW = KeyEntry(Keyboard.KEY_W)
-    private val keyA = KeyEntry(Keyboard.KEY_A)
-    private val keyS = KeyEntry(Keyboard.KEY_S)
-    private val keyD = KeyEntry(Keyboard.KEY_D)
-    private val keySpace = KeyEntry(Keyboard.KEY_SPACE)
+    private val keys = arrayListOf(
+        Key(Keyboard.KEY_W, 1, 0f, 0f, 28f, 28f),
+        Key(Keyboard.KEY_A, 2, 0f, 0f, 28f, 28f),
+        Key(Keyboard.KEY_S, 2, 0f, 0f, 28f, 28f),
+        Key(Keyboard.KEY_D, 2, 0f, 0f, 28f, 28f),
+        Key(Keyboard.KEY_SPACE, 3, 0f, 0f, 43f, 28f),
+        Key(mc.gameSettings.keyBindSprint.keyCode, 3, 0f, 0f, 43f, 28f)
+    )
 
-    override fun render() {
-        //Set postions
-        run {
-            keyW.bounds.setRect(
-                x + keySize.value + keyDistance.value, y, keySize.value, keySize.value
-            )
+    override fun draw() {
+        var secondLayer = x + 1
+        var thirdLayer = x + 1
 
-            keyA.bounds.setRect(
-                x, y + keySize.value + keyDistance.value, keySize.value, keySize.value
-            )
+        keys.forEach {
+            when (it.layer) {
+                1 -> {
+                    it.x = (x + (width.invoke() / 2f)) - (it.width / 2f)
+                    it.y = y + 1
+                }
 
-            keyS.bounds.setRect(
-                x + keySize.value + keyDistance.value, y + keySize.value + keyDistance.value, keySize.value, keySize.value
-            )
+                2 -> {
+                    it.x = secondLayer
+                    it.y = y + 31
 
-            keyD.bounds.setRect(
-                x + (keySize.value * 2F) + (keyDistance.value * 2F), y + keySize.value + keyDistance.value, keySize.value, keySize.value
-            )
+                    secondLayer += it.width + 2
+                }
 
-            keySpace.bounds.setRect(
-                x, y + (keySize.value * 2F) + (keyDistance.value * 2F), (keySize.value * 3F) + (keyDistance.value * 2F), keySize.value
-            )
-        }
+                3 -> {
+                    it.x = thirdLayer
+                    it.y = y + 61
 
-        //Render
-        run {
-            keyW.render()
-            keyA.render()
-            keyS.render()
-            keyD.render()
-            keySpace.render()
+                    thirdLayer += it.width + 2
+                }
+            }
+
+            it.draw()
         }
     }
 
-    internal class KeyEntry(private val keyCode: Int) {
-        val bounds = Rectangle2D.Float()
+    internal class Key(val keyCode: Int, val layer: Int, var x: Float, var y: Float, var width: Float, var height: Float) {
 
-        private val animation = Animation(animationSpeed::value, false, animationEasing::value)
+        private val animation = Animation({ animationSpeed.value }, false, { animationEasing.value })
 
-        fun render() {
+        fun draw() {
             animation.state = Keyboard.isKeyDown(keyCode)
 
-            RenderUtil.pushScissor(
-                bounds.x, bounds.y, bounds.width, bounds.height
-            )
+            RenderUtil.pushScissor(x, y, width, height)
 
-            RenderUtil.drawRect(
-                bounds.x, bounds.y, bounds.width, bounds.height, backgroundColor.value
-            )
+            RenderUtil.drawRect(x, y, width, height, backgroundColor.value)
 
             if (animation.getAnimationFactor() > 0.0) {
-                RenderUtil.drawCircle(
-                    bounds.centerX, bounds.centerY, Point2D.distance(
-                        bounds.centerX, bounds.centerY, bounds.x.toDouble(), bounds.y.toDouble()
-                    ) * animation.getAnimationFactor(), circleColor.value
-                )
+                RenderUtil.drawCircle(x + (width / 2.0), y + (height / 2.0), Point2D.distance(x + (width / 2.0), y + (height / 2.0), x.toDouble(), y.toDouble()) * animation.getAnimationFactor(), circleColor.value)
             }
 
-            FontUtil.drawCenteredString(
-                Keyboard.getKeyName(keyCode), bounds.centerX.toFloat(), bounds.centerY.toFloat(), Color.WHITE, true
-            )
+            FontUtil.drawCenteredString(Keyboard.getKeyName(keyCode), x + (width / 2f), y + (height / 2f) - 4, Color.WHITE)
 
             RenderUtil.popScissor()
         }
 
     }
-
-    override var width = 0F
-        get() = (keySize.value * 3F) + (keyDistance.value * 2F)
-
-    override var height = 0F
-        get() = (keySize.value * 3F) + (keyDistance.value * 2F)
 
 }

@@ -1,8 +1,6 @@
 package com.paragon.impl.ui.menu
 
 import com.paragon.Paragon
-import com.paragon.impl.module.client.Colours
-import com.paragon.impl.module.client.MainMenu
 import com.paragon.util.render.BlurUtil
 import com.paragon.util.render.font.FontUtil
 import com.paragon.util.render.RenderUtil
@@ -10,11 +8,7 @@ import me.surge.animation.Animation
 import me.surge.animation.ColourAnimation
 import me.surge.animation.Easing
 import net.minecraft.client.gui.*
-import net.minecraft.client.renderer.GlStateManager
-import net.minecraft.client.shader.Framebuffer
 import net.minecraft.util.ResourceLocation
-import org.lwjgl.opengl.GL11
-import org.lwjgl.opengl.GL20.*
 import java.awt.Color
 import java.awt.Desktop
 import java.net.URI
@@ -67,7 +61,7 @@ class ParagonMenu : GuiScreen() {
         }
 
         FontUtil.drawString(
-            "Version ${ Paragon.modVersion }",
+            "Version ${ Paragon.VERSION }",
             3f,
             3f,
             Color(180, 180, 180)

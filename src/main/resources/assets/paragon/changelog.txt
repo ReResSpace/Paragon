@@ -22,8 +22,15 @@ HUD modules added:
   - LagNotifier
   - TPS
   - CPS
-  - Packet Graphs
-  - Serverbrance
+  - Packets
+  - ServerBrand
+  - BindList
+  - Biome
+  - Hunger
+  - IP
+  - Memory
+  - ModelView
+  - Arrows
 
 Commands added:
   - SaveMap command
@@ -37,6 +44,7 @@ Settings added:
   - ChatModifications -> Infinite
   - Timer -> Movement
   - NoRender -> Particles
+  - Armour -> Durability
 
 Other additions:
   - Command Syntax Preview
@@ -44,10 +52,12 @@ Other additions:
   - Panel in HUD Editor
   - Hub Panel in GUIs
   - Console window
+  - Snake window
 
 Removed:
   - Taskbar
   - Console
+  - CombatInfo
 
 Reworked:
   - Main Menu
@@ -63,6 +73,7 @@ Changed:
   - Changed the AutoWalk module's category to Movement
   - Updated Nametags
   - The style of most HUD modules
+  - Renamed HUDEditor to Editor and moved to Client category
 
 Bug Fixes:
   - Fixed unicode character error in ShulkerViewer

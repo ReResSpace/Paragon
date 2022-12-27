@@ -1,9 +1,9 @@
 package com.paragon.impl.ui.alt
 
 import com.paragon.Paragon
-import com.paragon.util.render.font.FontUtil.drawStringWithShadow
 import com.paragon.impl.managers.alt.Alt
 import com.paragon.util.render.font.FontUtil
+import com.paragon.util.render.font.FontUtil.drawStringWithShadow
 import net.minecraft.client.gui.GuiButton
 import net.minecraft.client.gui.GuiScreen
 import net.minecraft.client.gui.GuiTextField
@@ -35,7 +35,7 @@ class AddAltGUI : GuiScreen() {
             drawStringWithShadow("Password", width / 2f - 97, height / 2f - 17, Color(150, 150, 150))
         }
 
-        FontUtil.drawCenteredString("Add Alt Account", width / 2f, 50f, Color.WHITE, false)
+        FontUtil.drawCenteredString("Add Alt Account", width / 2f, 50f, Color.WHITE)
 
         super.drawScreen(mouseX, mouseY, partialTicks)
     }

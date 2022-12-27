@@ -42,7 +42,7 @@ class ParagonButton(buttonId: Int, x: Int, y: Int, widthIn: Int, heightIn: Int, 
 
             mouseDragged(mc, mouseX, mouseY)
 
-            FontUtil.drawCenteredString(displayString, x + width / 2f, y + (height / 2f) + 1.5f, Color.WHITE, true)
+            FontUtil.drawCenteredString(displayString, x + width / 2f, y + (height / 2f) + 1.5f, Color.WHITE)
         }
     }
 

@@ -12,7 +12,6 @@ import java.awt.Font
 import java.awt.Graphics2D
 import java.awt.RenderingHints
 import java.awt.image.BufferedImage
-import com.paragon.util.render.font.FontUtil.Align
 
 /**
  * @author Surge
@@ -37,13 +36,7 @@ class ImageAWT(val font: Font, startChar: Int, stopChar: Int) {
         activeFontRenderers.add(this)
     }
 
-    fun drawString(text: String, x: Double, y: Double, colour: Int, alignment: Align = Align.LEFT) {
-        val x = x - when (alignment) {
-            Align.LEFT -> 0f
-            Align.CENTER -> getStringWidth(text) / 2f
-            Align.RIGHT -> getStringWidth(text).toFloat()
-        }
-
+    fun drawString(text: String, x: Double, y: Double, colour: Int) {
         gcTick()
 
         glPushMatrix()

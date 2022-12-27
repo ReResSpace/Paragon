@@ -32,48 +32,45 @@ object FontUtil {
 
     fun init() {
         Paragon.INSTANCE.logger.info("Initialising fonts")
+
         font = FontRenderer(getFont("font"))
         fontLarge = FontRenderer(getFont("font", 120f))
-        icons = FontRenderer(
-            Font.createFont(
-                0,
-                javaClass.getResourceAsStream("/assets/paragon/font/icons.ttf")
-            ).deriveFont(Font.PLAIN, 80f)
-        )
+
+        icons = FontRenderer(Font.createFont(0, javaClass.getResourceAsStream("/assets/paragon/font/icons.ttf")).deriveFont(Font.PLAIN, 80f))
     }
 
     /**
      * Draws a string at the given position.
      */
-    fun drawString(text: String, x: Float, y: Float, color: Color, alignment: Align = Align.LEFT) {
+    fun drawString(text: String, x: Float, y: Float, color: Color) {
         if (ClientFont.isEnabled) {
-            font.drawString(text, x, y - 2.5f, color, false, alignment)
+            font.drawString(text, x, y - 2.5f, color, false)
         } else {
-            mc.fontRenderer.drawString(
-                text,
-                when (alignment) {
-                    Align.LEFT -> 0f
-                    Align.CENTER -> getStringWidth(text) / 2f
-                    Align.RIGHT -> getStringWidth(text)
-                },
-                y,
-                color.rgb,
-                false
-            )
+            if (text.contains(System.lineSeparator())) {
+                val parts = text.split(System.lineSeparator().toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
+
+                var newY = 0
+
+                for (s in parts) {
+                    mc.fontRenderer.drawString(s, x.toInt(), y.toInt() + newY, color.rgb)
+                    newY += mc.fontRenderer.FONT_HEIGHT
+                }
+
+                return
+            }
+
+            mc.fontRenderer.drawString(text, x.toInt(), y.toInt(), color.rgb)
         }
+
+        // we love minecraft's font renderer
+        //glEnable(GL_BLEND)
     }
 
     @JvmStatic
-    fun drawStringWithShadow(text: String, x: Float, y: Float, colour: Color, alignment: Align = Align.LEFT) {
+    fun drawStringWithShadow(text: String, x: Float, y: Float, colour: Color) {
         if (ClientFont.isEnabled) {
-            font.drawStringWithShadow(text, x, y - 2.5f, colour, alignment)
+            font.drawStringWithShadow(text, x, y - 2.5f, colour)
             return
-        }
-
-        val x = x - when (alignment) {
-            Align.LEFT -> 0f
-            Align.CENTER -> getStringWidth(text) / 2f
-            Align.RIGHT -> getStringWidth(text)
         }
 
         if (text.contains(System.lineSeparator())) {
@@ -90,25 +87,12 @@ object FontUtil {
         }
 
         mc.fontRenderer.drawStringWithShadow(text, x, y, colour.rgb)
-    }
 
-    fun drawCenteredY(
-        text: String,
-        x: Float,
-        y: Float,
-        color: Color,
-        dropShadow: Boolean,
-        alignment: Align = Align.LEFT
-    ) {
-        if (dropShadow) {
-            drawStringWithShadow(text, x, y - (getHeight() / 2), color, alignment)
-        } else {
-            drawString(text, x, y - (getHeight() / 2), color, alignment)
-        }
+        //glEnable(GL_BLEND)
     }
 
     @JvmStatic
-    fun drawCenteredString(text: String, x: Float, y: Float, colour: Color, centeredY: Boolean) {
+    fun drawCenteredString(text: String, x: Float, y: Float, colour: Color) {
         if (text.contains(System.lineSeparator())) {
             val parts = text.split(System.lineSeparator().toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
 
@@ -130,37 +114,7 @@ object FontUtil {
         } else {
             GlStateManager.disableBlend()
 
-            mc.fontRenderer.drawStringWithShadow(
-                text,
-                x - mc.fontRenderer.getStringWidth(text) / 2f,
-                y,
-                colour.rgb
-            )
-        }
-    }
-
-    fun drawStringInBounds(text: String, x: Float, y: Float, maxWidth: Float, color: Color) {
-        var currY = y
-
-        fun drawLine(str: String, lineX: Float, lineY: Float): String? {
-            var currStr = str
-            val strBuilder = StringBuilder()
-
-            while (getStringWidth(currStr) > maxWidth) {
-                strBuilder.append(currStr[currStr.length - 1])
-                currStr = currStr.substring(0, currStr.length - 1)
-            }
-
-            drawString(currStr, lineX, lineY, color)
-
-            currY += getHeight() + 1
-            return strBuilder.reverse().toString().ifEmpty { null }
-        }
-
-        var currText: String? = text
-
-        while (currText != null) {
-            currText = drawLine(currText, x, currY)
+            mc.fontRenderer.drawStringWithShadow(text, x - mc.fontRenderer.getStringWidth(text) / 2f, y, colour.rgb)
         }
     }
 
@@ -274,10 +228,6 @@ object FontUtil {
                 e.printStackTrace()
             }
         }
-    }
-
-    enum class Align {
-        LEFT, CENTER, RIGHT
     }
 
     enum class Icon(val char: Char) {

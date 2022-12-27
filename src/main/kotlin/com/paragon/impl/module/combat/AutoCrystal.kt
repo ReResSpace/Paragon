@@ -131,7 +131,7 @@ object AutoCrystal : Module("AutoCrystal", Category.COMBAT, "Automatically place
     private val targets = arrayListOf<EntityLivingBase>()
 
     // Current crystal and placement
-    private var crystal: Crystal? = null
+    var crystal: Crystal? = null
     private var placement: Placement? = null
 
     // Delay timers
@@ -635,17 +635,17 @@ object AutoCrystal : Module("AutoCrystal", Category.COMBAT, "Automatically place
             val crystal = isValid(it)
 
             // Add to [validCrystals] if it's a valid placement
-            if (crystal.first && crystal.second != null) {
-                validCrystals.add(Crystal(it, crystal.second!!.first, crystal.second!!.second))
+            if (crystal.first.first && crystal.second != null) {
+                validCrystals.add(Crystal(it, crystal.first.second, crystal.second!!.first, crystal.second!!.second))
             }
         }
 
         return validCrystals
     }
 
-    private fun isValid(crystal: EntityEnderCrystal): Pair<Boolean, Pair<Float, Float>?> {
+    private fun isValid(crystal: EntityEnderCrystal): Pair<Pair<Boolean, EntityLivingBase?>, Pair<Float, Float>?> {
         if (crystal.isDead) {
-            return Pair(false, null)
+            return Pair(Pair(false, null), null)
         }
 
         // The distance to the crystal
@@ -653,12 +653,12 @@ object AutoCrystal : Module("AutoCrystal", Category.COMBAT, "Automatically place
 
         // Ignore if we're past the attack limit or the crystal isn't old enough
         if (explodeLimit.value && attackedCrystals.any { (key, value) -> key.crystal == crystal && value > explodeLimitThreshold.value.toInt() } || crystal.ticksExisted < explodeTicksExisted.value) {
-            return Pair(false, null)
+            return Pair(Pair(false, null), null)
         }
 
         // Ignore if we only want to explode our crystals
         if (explodeSelf.value && !placedCrystals.contains(crystal.position)) {
-            return Pair(false, null)
+            return Pair(Pair(false, null), null)
         }
 
         // Whether we can't see the position
@@ -681,12 +681,12 @@ object AutoCrystal : Module("AutoCrystal", Category.COMBAT, "Automatically place
         if (nonVisibility) {
             // Check the range through a wall
             if (range > explodeWallRange.value) {
-                return Pair(false, null)
+                return Pair(Pair(false, null), null)
             }
         } else {
             // Check the normal range
             if (range > explodeRange.value) {
-                return Pair(false, null)
+                return Pair(Pair(false, null), null)
             }
         }
 
@@ -695,15 +695,17 @@ object AutoCrystal : Module("AutoCrystal", Category.COMBAT, "Automatically place
 
         // Prevent killing / popping us
         if (selfDamage >= EntityUtil.getEntityHealth(mc.player) && explodeAntiSuicide.value) {
-            return Pair(false, null)
+            return Pair(Pair(false, null), null)
         }
 
         var highestTargetDamage = 0f
+        var target: EntityLivingBase? = null
 
         targets.forEach { entity ->
             val damage = BlockUtil.calculateExplosionDamage(crystal.positionVector, entity)
 
             if (damage > highestTargetDamage) {
+                target = entity
                 highestTargetDamage = damage
             }
         }
@@ -713,10 +715,10 @@ object AutoCrystal : Module("AutoCrystal", Category.COMBAT, "Automatically place
 
         // Ignore if the damage isn't within our damage bounds
         if (!(highestTargetDamage > explodeMinimum.value && selfDamage < explodeMaximum.value)) {
-            return Pair(false, null)
+            return Pair(Pair(false, null), null)
         }
 
-        return Pair(true, Pair(highestTargetDamage, selfDamage))
+        return Pair(Pair(true, target), Pair(highestTargetDamage, selfDamage))
     }
 
     private fun calculateDamage(self: Float, target: Float, distance: Float): Float {
@@ -892,7 +894,7 @@ object AutoCrystal : Module("AutoCrystal", Category.COMBAT, "Automatically place
         NEVER
     }
 
-    private data class Crystal(val crystal: EntityEnderCrystal, val targetDamage: Float, val selfDamage: Float)
+    data class Crystal(val crystal: EntityEnderCrystal, val target: EntityLivingBase?, val targetDamage: Float, val selfDamage: Float)
     private data class Placement(val position: BlockPos, val targetDamage: Float, val selfDamage: Float, val facing: EnumFacing, val facingVec: Vec3d)
 
 }

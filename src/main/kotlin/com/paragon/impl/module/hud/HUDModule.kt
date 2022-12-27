@@ -2,41 +2,35 @@ package com.paragon.impl.module.hud
 
 import com.paragon.impl.module.Category
 import com.paragon.impl.module.Module
-import com.paragon.impl.module.annotation.NotVisibleByDefault
-import com.paragon.impl.module.hud.impl.HUDEditor
-import com.paragon.impl.setting.Setting
+import com.paragon.impl.module.client.Editor
+import com.paragon.impl.ui.util.Click
 import com.paragon.util.isHovered
 import com.paragon.util.mc
-import com.paragon.util.render.font.FontUtil
 import com.paragon.util.roundToNearest
 import net.minecraft.client.gui.ScaledResolution
-import net.minecraftforge.fml.relauncher.Side
-import net.minecraftforge.fml.relauncher.SideOnly
 
 /**
- * @author Surge, SooStrator1136
+ * @author Surge
+ * @since 24/12/2022
  */
-@SideOnly(Side.CLIENT)
-@NotVisibleByDefault
-abstract class HUDModule(name: String, description: String) : Module(name, Category.HUD, description) {
+abstract class HUDModule(name: String, description: String, val width: () -> Float, val height: () -> Float) : Module(name, Category.HUD, description) {
 
-    val alignment = Setting("Alignment", FontUtil.Align.LEFT) describedBy "Align text HUDs"
+    var x: Float = 50f
+    var y: Float = 50f
 
-    open var width = 50F
-    open var height = 50F
-
-    var x = 50F
-    var y = 50F
     private var lastX = 0F
     private var lastY = 0F
-    var isDragging = false
-        private set
 
-    abstract fun render()
+    var dragging = false
 
-    fun updateComponent(mouseX: Int, mouseY: Int) {
-        // Set X and Y
-        if (isDragging) {
+    abstract fun draw()
+
+    open fun dummy() {
+        draw()
+    }
+
+    fun updatePosition(mouseX: Int, mouseY: Int) {
+        if (dragging) {
             val sr = ScaledResolution(mc)
             val newX = mouseX - lastX
             val newY = mouseY - lastY
@@ -44,49 +38,43 @@ abstract class HUDModule(name: String, description: String) : Module(name, Categ
             x = newX
             y = newY
 
-            val centerX = newX + width / 2f
-            val centerY = newY + height / 2f
+            val centerX = newX + width.invoke() / 2f
+            val centerY = newY + height.invoke() / 2f
 
             if (centerX > sr.scaledWidth / 2f - 5 && centerX < sr.scaledWidth / 2f + 5) {
-                x = sr.scaledWidth / 2f - width / 2f
+                x = sr.scaledWidth / 2f - width.invoke() / 2f
             }
 
             if (centerY > sr.scaledHeight / 2f - 5 && centerY < sr.scaledHeight / 2f + 5) {
-                y = sr.scaledHeight / 2f - height / 2f
+                y = sr.scaledHeight / 2f - height.invoke() / 2f
             }
 
-            x = x.roundToNearest(HUDEditor.snap.value.toFloat()).toFloat()
-            y = y.roundToNearest(HUDEditor.snap.value.toFloat()).toFloat()
+            x = x.roundToNearest(Editor.snap.value).toFloat()
+            y = y.roundToNearest(Editor.snap.value).toFloat()
         }
     }
 
     fun mouseClicked(mouseX: Int, mouseY: Int, mouseButton: Int): Boolean {
-        if (isHovered(x - when (alignment.value) {
-                FontUtil.Align.CENTER -> width / 2f
-                FontUtil.Align.RIGHT -> width
-                else -> 0f
-            }, y, width, height, mouseX, mouseY)) {
-            if (mouseButton == 0) {
-                lastX = mouseX - x
-                lastY = mouseY - y
-                isDragging = true
-            }
-            else if (mouseButton == 1) {
-                if (isEnabled) {
-                    toggle()
-                    return true
+        if (isHovered(x, y, width.invoke(), height.invoke(), mouseX, mouseY)) {
+            when (Click.getClick(mouseButton)) {
+                Click.LEFT -> {
+                    lastX = mouseX - x
+                    lastY = mouseY - y
+                    dragging = true
                 }
-            }
-            else if (mouseButton == 2) {
-                alignment.setValue(alignment.nextMode)
-                return true
+
+                Click.RIGHT -> {
+                    if (isEnabled) {
+                        toggle()
+                        return true
+                    }
+                }
+
+                else -> {}
             }
         }
-        return false
-    }
 
-    fun mouseReleased(mouseX: Int, mouseY: Int, mouseButton: Int) {
-        isDragging = false
+        return false
     }
 
 }

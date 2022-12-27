@@ -1,8 +1,7 @@
 package com.paragon.impl.ui.hub
 
-import com.paragon.Paragon
 import com.paragon.impl.module.client.Colours
-import com.paragon.impl.module.hud.impl.HUDEditor
+import com.paragon.impl.module.client.Editor
 import com.paragon.impl.ui.configuration.ConfigurationGUI
 import com.paragon.impl.ui.configuration.shared.Panel
 import com.paragon.impl.ui.util.Click
@@ -65,7 +64,7 @@ class HubWindow(val gui: ConfigurationGUI, x: Float, y: Float, width: Float, hei
         }, x, y, width - 8f, 12f),
 
         Task("HUD Editor", {
-            HUDEditor.toggle()
+            Editor.toggle()
         }, x, y, width - 8f, 12f)
     )
 

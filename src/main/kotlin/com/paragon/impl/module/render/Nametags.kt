@@ -95,7 +95,7 @@ object Nametags : Module("Nametags", Category.RENDER, "Draws nametags above play
                 glTranslated(-(width / 2.0), 0.0, 0.0)
 
                 RenderUtil.drawRect(0f, 0f, width, height, Color(0, 0, 0, 130))
-                RenderUtil.drawBorder(0f, 0f, width, height, 1f, Color.BLACK)
+                RenderUtil.drawBorder(0f, 0f, width, height, 0.5f, Color.BLACK)
                 FontUtil.drawStringWithShadow(string, 1f, 1f, Color.WHITE)
 
                 if (healthBar.value) {
@@ -133,7 +133,7 @@ object Nametags : Module("Nametags", Category.RENDER, "Draws nametags above play
                     RenderHelper.enableStandardItemLighting()
                     GlStateManager.scale(1f, 1f, 0f)
 
-                    RenderUtil.renderItemStack(it, itemX, -18f, true)
+                    RenderUtil.drawItemStack(it, itemX, -18f, true)
 
                     RenderHelper.disableStandardItemLighting()
                     GlStateManager.enableDepth()

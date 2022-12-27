@@ -1,7 +1,9 @@
-package com.paragon.impl.module.hud.impl.graphs
+package com.paragon.impl.module.hud.impl.graph
 
 import com.paragon.impl.module.client.Colours
+import com.paragon.impl.module.hud.EditorGUI
 import com.paragon.util.calculations.MathsUtil
+import com.paragon.util.mc
 import com.paragon.util.render.ColourUtil.glColour
 import com.paragon.util.render.RenderUtil
 import com.paragon.util.render.font.FontUtil
@@ -15,9 +17,7 @@ import java.math.RoundingMode
 /**
  * @author SooStrator1136
  */
-class Graph(
-    private val name: String, private val backgroundMode: () -> Background
-) {
+class Graph(private val name: String, private val backgroundMode: () -> Background) {
 
     private val graphRect = Rectangle2D.Float()
     val bounds = Rectangle2D.Float()
@@ -34,20 +34,11 @@ class Graph(
 
         //Basic background & border
         run {
-            if (background != Background.NONE) {
-                RenderUtil.drawRoundedRect(
-                    bounds.x,
-                    bounds.y,
-                    bounds.width,
-                    bounds.height,
-                    5f,
-                    Color(0, 0, 0, 180)
-                )
+            if (background != Background.NONE && mc.currentScreen !is EditorGUI) {
+                RenderUtil.drawRect(bounds.x, bounds.y, bounds.width, bounds.height, Color(0, 0, 0, 180))
             }
 
-            FontUtil.drawStringWithShadow(
-                name, bounds.x + 2.5f, bounds.y + bounds.height - FontUtil.getHeight() - 1.5f, Color.WHITE
-            )
+            FontUtil.drawStringWithShadow(name, bounds.x + 2.5f, bounds.y + bounds.height - FontUtil.getHeight() - 1.5f, Color.WHITE)
 
             var value = BigDecimal(currentVal).setScale(2, RoundingMode.HALF_EVEN).toString()
 
@@ -55,9 +46,7 @@ class Graph(
                 value = value.split(".")[0]
             }
 
-            FontUtil.drawStringWithShadow(
-                value, bounds.x + bounds.width - FontUtil.getStringWidth(value) - 3, bounds.y + bounds.height - FontUtil.getHeight() - 1.5f, Color.WHITE
-            )
+            FontUtil.drawStringWithShadow(value, bounds.x + bounds.width - FontUtil.getStringWidth(value) - 3, bounds.y + bounds.height - FontUtil.getHeight() - 1.5f, Color.WHITE)
         }
 
         run {
@@ -78,11 +67,7 @@ class Graph(
             Colours.mainColour.value.glColour()
 
             points.forEachIndexed { i, percentage ->
-                glVertex2f(
-                    graphRect.x + i,
-                    (graphRect.y + (graphRect.height - MathsUtil.getPercentOf(percentage, graphRect.height.toDouble())
-                    )).toFloat()
-                )
+                glVertex2f(graphRect.x + i, (graphRect.y + (graphRect.height - MathsUtil.getPercentOf(percentage, graphRect.height.toDouble()))).toFloat())
             }
 
             glEnd()
@@ -96,15 +81,7 @@ class Graph(
         }
 
         if (background == Background.ALL) {
-            RenderUtil.drawRoundedOutline(
-                bounds.x,
-                bounds.y,
-                bounds.width,
-                bounds.height,
-                5f,
-                1F,
-                Colours.mainColour.value
-            )
+            RenderUtil.drawBorder(bounds.x, bounds.y, bounds.width, bounds.height, 0.5f, Colours.mainColour.value)
         }
     }
 
