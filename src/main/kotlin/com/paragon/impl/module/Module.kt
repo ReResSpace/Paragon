@@ -6,7 +6,6 @@ import com.paragon.impl.module.annotation.Aliases
 import com.paragon.impl.module.annotation.Constant
 import com.paragon.impl.module.annotation.IgnoredByNotifications
 import com.paragon.impl.module.annotation.NotVisibleByDefault
-import com.paragon.impl.module.hud.HUDModule
 import com.paragon.impl.module.hud.impl.ArrayListHUD
 import com.paragon.impl.setting.Bind
 import com.paragon.impl.setting.Setting
@@ -19,7 +18,9 @@ open class Module(val name: String, val category: Category, val description: Str
     // Whether the module is visible in the Array List or not
     private val visible = Setting(
         "Visible",
-        !javaClass.isAnnotationPresent(NotVisibleByDefault::class.java) || this is HUDModule
+        run {
+            !(javaClass.isAnnotationPresent(NotVisibleByDefault::class.java) || category == Category.HUD)
+        }
     ) describedBy "Whether the module is visible in the array list or not"
 
     val bind = Setting("Bind", Bind(Keyboard.KEY_NONE, Bind.Device.KEYBOARD)) describedBy "The keybind of the module"

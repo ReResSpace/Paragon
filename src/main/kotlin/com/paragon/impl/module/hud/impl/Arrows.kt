@@ -25,8 +25,8 @@ object Arrows : Module("Arrows", Category.HUD, "Draws arrows pointing to other p
             val vec = it.positionVector
             val rotation = RotationUtil.getRotationToVec3d(vec).x
 
-            RenderUtil.rotate(((rotation - mc.player.rotationYaw)).toFloat() - 90f, resolution.scaledWidth / 2f, resolution.scaledHeight / 2f, 0f) {
-                RenderUtil.drawArrow((resolution.scaledWidth / 2f) + 30f, resolution.scaledHeight / 2f, 3f, 5f, 1f, Color.WHITE, 0f)
+            RenderUtil.rotate(rotation - mc.player.rotationYaw - 90f, resolution.scaledWidth / 2f, resolution.scaledHeight / 2f, 0f) {
+                RenderUtil.drawArrow((resolution.scaledWidth / 2f) + 30.5f, resolution.scaledHeight / 2f, 6f, 10f, 1f, Color.WHITE, 0f)
             }
         }
     }
