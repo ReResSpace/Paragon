@@ -6,7 +6,6 @@ import com.paragon.impl.module.Module
 import com.paragon.impl.module.annotation.IgnoredByNotifications
 import com.paragon.impl.setting.Bind
 import com.paragon.impl.setting.Setting
-import com.paragon.impl.ui.configuration.ConfigurationGUI
 import com.paragon.impl.ui.configuration.GuiImplementation
 import com.paragon.impl.ui.configuration.camper.CamperCheatGUI
 import com.paragon.util.mc
@@ -20,7 +19,7 @@ import org.lwjgl.input.Keyboard
 object ClickGUI : Module("ClickGUI", Category.CLIENT, "The ClickGUI of the client", Bind(Keyboard.KEY_RSHIFT, Bind.Device.KEYBOARD)) {
 
     @JvmStatic
-    val style: Setting<Style> = Setting("Style", Style.PANEL) describedBy "The style of the ClickGUI"
+    val style: Setting<Style> = Setting("Style", Style.CAMPER_CHEAT) describedBy "The style of the ClickGUI"
 
     // Windows settings
     @JvmStatic
