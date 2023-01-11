@@ -73,7 +73,8 @@ always work correctly.
 
 # Contributing
 
-Fork the repository and push your changes to the fork. Then, create a pull request to this repository and it will be
+Fork the repository and push your changes to the fork, you may use the startClient task instead of the runClient task.
+Then, create a pull request to this repository and it will be
 reviewed.
 
 Follow the [java](https://www.oracle.com/technetwork/java/codeconventions-150003.pdf)

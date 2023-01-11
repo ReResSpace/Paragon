@@ -1,4 +1,7 @@
+import me.soostrator.cti.plugin.ResolveDirectoryTask
+import me.soostrator.cti.plugin.ResolverExtension
 import net.minecraftforge.gradle.userdev.UserDevExtension
+import org.jetbrains.kotlin.gradle.dsl.KotlinJvmCompile
 import org.spongepowered.asm.gradle.plugins.MixinExtension
 
 buildscript {
@@ -13,6 +16,7 @@ buildscript {
         classpath("net.minecraftforge.gradle:ForgeGradle:4.+")
         classpath("org.spongepowered:mixingradle:0.7.+")
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.7.20")
+        classpath(files("libs${File.separator}CtiPlugin-1.0.jar"))
     }
 }
 
@@ -22,6 +26,7 @@ plugins {
 }
 
 apply {
+    plugin("me.soostrator.resolver")
     plugin("net.minecraftforge.gradle")
     plugin("org.spongepowered.mixin")
     plugin("kotlin")
@@ -60,6 +65,8 @@ configure<UserDevExtension> {
 configurations.create("libraries")
 
 dependencies {
+    implementation("com.github.SooStrator1136:CompileTimeInheritance:master-SNAPSHOT")
+
     "minecraft"("net.minecraftforge:forge:1.12.2-14.23.5.2860")
 
     "libraries"("org.spongepowered:mixin:0.8") {
@@ -150,3 +157,21 @@ tasks.register<Jar>("buildApi") {
 }
 
 tasks.getByName("classes").dependsOn("prepareAssets")
+
+configure<ResolverExtension> {
+    isUseClassForName = false
+    isResolveFoundJars = false
+}
+
+tasks.register<ResolveDirectoryTask>("resolveClasses") {
+    group = "paragon"
+
+    inputDirectory = sourceSets["main"].output.classesDirs.first { it.parentFile.name == "kotlin" }.absoluteFile
+}
+
+tasks.register<DefaultTask>("startClient") {
+    group = "paragon"
+
+    tasks.getByName("compileKotlin").finalizedBy("resolveClasses")
+    finalizedBy(tasks.first { it.name.contentEquals("runClient") })
+}

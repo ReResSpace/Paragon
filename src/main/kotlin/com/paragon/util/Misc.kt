@@ -100,3 +100,5 @@ fun Number.roundToNearest(a: Number): Number {
 fun isHovered(x: Float, y: Float, width: Float, height: Float, mouseX: Int, mouseY: Int): Boolean {
     return mouseX >= x && mouseX <= x + width && mouseY >= y && mouseY <= y + height
 }
+
+fun Class<*>.hasField(fieldName: String) = (fields + declaredFields).any { it.name!!.contentEquals(fieldName) }
