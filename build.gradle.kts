@@ -1,7 +1,7 @@
 import me.soostrator.cti.plugin.ResolveDirectoryTask
+import me.soostrator.cti.plugin.ResolveJarTask
 import me.soostrator.cti.plugin.ResolverExtension
 import net.minecraftforge.gradle.userdev.UserDevExtension
-import org.jetbrains.kotlin.gradle.dsl.KotlinJvmCompile
 import org.spongepowered.asm.gradle.plugins.MixinExtension
 
 buildscript {
@@ -169,9 +169,16 @@ tasks.register<ResolveDirectoryTask>("resolveClasses") {
     inputDirectory = sourceSets["main"].output.classesDirs.first { it.parentFile.name == "kotlin" }.absoluteFile
 }
 
-tasks.register<DefaultTask>("startClient") {
+tasks.getByName("compileKotlin").finalizedBy("resolveClasses")
+
+tasks.register<ResolveJarTask>("resolveJar") {
     group = "paragon"
 
-    tasks.getByName("compileKotlin").finalizedBy("resolveClasses")
-    finalizedBy(tasks.first { it.name.contentEquals("runClient") })
+    val jarName = "${rootProject.name}-${version}"
+
+    inputJar = File("build${File.separator}libs${File.separator}${jarName}.jar")
+    outputJar = File("build${File.separator}libs${File.separator}${jarName}-resolved.jar")
+    println(rootProject.name)
 }
+
+tasks.getByName("build").finalizedBy("resolveJar")
