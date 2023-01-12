@@ -2,6 +2,7 @@ package com.paragon.impl.module.misc
 
 import com.paragon.Paragon
 import com.paragon.bus.listener.Listener
+import com.paragon.impl.event.client.SettingUpdateEvent
 import com.paragon.impl.event.render.gui.GetChatLineCountEvent
 import com.paragon.impl.module.Category
 import com.paragon.impl.module.Module
@@ -15,6 +16,7 @@ import net.minecraftforge.client.event.ClientChatReceivedEvent
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import java.io.File
 import java.util.*
+import java.util.concurrent.ConcurrentLinkedQueue
 import kotlin.random.Random
 
 
@@ -29,7 +31,9 @@ object ChatModifications : Module("ChatModifications", Category.MISC, "Changes t
     private val suffix = Setting("Suffix", true) describedBy "Adds a Paragon suffix to the end of the message"
 
     private val spammer = Setting("Spammer", false) describedBy "Sends messages in chat (defined in paragon/spammer.txt)"
-    private val spammerDelay = Setting("Delay", 1f, 0.1f, 10f, 0.1f) describedBy "Delay between messages (in minutes)" subOf spammer
+    private val spammerMode = Setting("Mode", SpammerMode.DOWN) describedBy "How to select messages from spammer.txt" subOf spammer
+    private val spammerLimit = Setting("Limit", 100.0, -1.0, 300.0, 1.0) describedBy "The maximum amount of characters per message. any message longer than this will be split into two." subOf spammer
+    private val spammerDelay = Setting("Delay", 10.0, 1.0, 120.0, 1.0) describedBy "Delay between messages (in seconds)" subOf spammer
 
     val cryptic = Setting("Cryptic", false) describedBy "Encrypts and decrypts messages"
     val requirePrefix = Setting("RequirePrefix", true) describedBy "Require a prefix ('crypt <message>') to be used before the message" subOf cryptic
@@ -37,6 +41,8 @@ object ChatModifications : Module("ChatModifications", Category.MISC, "Changes t
 
     private var lines: Array<String> = arrayOf()
     private var lastMS: Long = 0L
+    private var messageIndex = 0
+    private val messageQueue = ConcurrentLinkedQueue<String>()
 
     const val alpha = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
     private val suffixes: Array<String> = arrayOf(
@@ -151,14 +157,30 @@ object ChatModifications : Module("ChatModifications", Category.MISC, "Changes t
             return
         }
 
-        if (System.currentTimeMillis() - lastMS > (spammerDelay.value * 60) * 1000) {
+        if (System.currentTimeMillis() - lastMS > spammerDelay.value * 1000) {
             lastMS = System.currentTimeMillis()
 
             if (lines.isEmpty()) {
                 loadLines()
             }
 
-            mc.player.sendChatMessage(lines[(Math.random() * lines.size).toInt()])
+            when (spammerMode.value) {
+                SpammerMode.RANDOM -> sendMessage(lines[(Math.random() * lines.size).toInt()])
+
+                SpammerMode.DOWN -> {
+                    if (messageIndex > lines.size - 1) {
+                        messageIndex = 0
+                    }
+
+                    sendMessage(lines[messageIndex])
+
+                    messageIndex++
+                }
+            }
+
+            if (!messageQueue.isEmpty()) {
+                mc.player.sendChatMessage(messageQueue.poll())
+            }
         }
     }
 
@@ -166,6 +188,13 @@ object ChatModifications : Module("ChatModifications", Category.MISC, "Changes t
     fun onGetChatLineCount(event: GetChatLineCountEvent) {
         if (infinite.value) {
             event.size = -Int.MAX_VALUE
+        }
+    }
+
+    @Listener
+    fun onSettingUpdate(event: SettingUpdateEvent) {
+        if (event.setting == spammerMode) {
+            loadLines()
         }
     }
 
@@ -231,6 +260,7 @@ object ChatModifications : Module("ChatModifications", Category.MISC, "Changes t
         }
 
         lines = file.readLines().toTypedArray()
+        messageIndex = 0
     }
 
     private fun encrypt(message: String, shiftKey: Int): String? {
@@ -273,6 +303,25 @@ object ChatModifications : Module("ChatModifications", Category.MISC, "Changes t
         }
 
         return message
+    }
+
+    private fun sendMessage(message: String) {
+        if (spammerLimit.value >= 0) {
+            val length: Int = message.length
+
+            var i = 0
+            while (i < length) {
+                messageQueue.add(message.substring(i, length.coerceAtMost(i + spammerLimit.value.toInt())))
+                i += spammerLimit.value.toInt()
+            }
+        } else {
+            messageQueue.add(message)
+        }
+    }
+
+    private enum class SpammerMode {
+        RANDOM,
+        DOWN
     }
 
 }
