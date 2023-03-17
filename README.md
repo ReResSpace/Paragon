@@ -6,7 +6,7 @@
 
 # Paragon
 
-A 1.12.2 Anarchy Client. Still in development.
+A 1.12.2 Anarchy Client. Probably never going to be worked on again, although I will test and merge any pull requests that are submitted.
 Download the client from the latest
 commit [here](https://nightly.link/Wolfsurge/Paragon/workflows/build/master/Paragon-Build.zip)
 
